@@ -1,40 +1,44 @@
 import { useMemo, useState } from 'react';
 import {
   UNIVERSIDADES,
-  REGIONES_BUSQUEDA,
   ZONAS_COLOMBIA,
-  META_DATOS,
 } from './data/universidades.js';
+import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
 import DetalleUniversidad from './components/DetalleUniversidad.jsx';
+import ExplorarAreas from './components/ExplorarAreas.jsx';
 import Simulador from './components/Simulador.jsx';
 import Becas from './components/Becas.jsx';
-
-const BADGE_ADMISION = {
-  propio: { txt: 'Examen propio', cls: 'bg-blue-100 text-blue-700' },
-  icfes: { txt: 'Admisión con ICFES', cls: 'bg-emerald-100 text-emerald-700' },
-  abierta: { txt: 'Admisión abierta', cls: 'bg-slate-200 text-slate-700' },
-};
-
-const BADGE_TIPO = {
-  'pública': 'bg-emerald-600 text-white',
-  privada: 'bg-violet-600 text-white',
-};
+import TestVocacional from './components/TestVocacional.jsx';
+import LogoUniversidad from './components/LogoUniversidad.jsx';
 
 export default function App() {
   const [pestana, setPestana] = useState('buscar');
+  const [sidebarAbierto, setSidebarAbierto] = useState(true);
+
+  // Filters
   const [region, setRegion] = useState('colombia');
   const [zona, setZona] = useState('Todas');
-  const [tipo, setTipo] = useState('todas'); // 'todas' | 'pública' | 'privada'
-  const [carrera, setCarrera] = useState(''); // selección de la lista desplegable
-  const [consulta, setConsulta] = useState(''); // se aplica al dar clic en la lupa
+  const [tipo, setTipo] = useState('todas');
+  const [admisionTipo, setAdmisionTipo] = useState('todos');
+  const [nivelFormacion, setNivelFormacion] = useState('todas');
+  const [universidadFiltro, setUniversidadFiltro] = useState('todas');
+  const [areaFiltro, setAreaFiltro] = useState('todas');
+
+  // Sorted list of universities for the dropdown
+  const listaUniversidades = useMemo(() => {
+    return [...UNIVERSIDADES].sort((a, b) => a.nombre.localeCompare(b.nombre));
+  }, []);
+
+  // Search
+  const [carreraInput, setCarreraInput] = useState('');
+  const [consulta, setConsulta] = useState('');
+
+  // Interactions
   const [seleccion, setSeleccion] = useState(null);
-  const [soloFavoritas, setSoloFavoritas] = useState(false);
-  const [orden, setOrden] = useState('ranking'); // 'ranking' | 'nombre'
-  // Favoritos persistentes en el dispositivo (sin necesidad de cuenta).
   const [favoritos, setFavoritos] = useState(() => {
     try {
-      return new Set(JSON.parse(localStorage.getItem('buscadoru-favoritos') || '[]'));
+      return new Set(JSON.parse(localStorage.getItem('buscadoru-favs-yt') || '[]'));
     } catch {
       return new Set();
     }
@@ -45,278 +49,481 @@ export default function App() {
       const sig = new Set(prev);
       if (sig.has(id)) sig.delete(id);
       else sig.add(id);
-      localStorage.setItem('buscadoru-favoritos', JSON.stringify([...sig]));
+      localStorage.setItem('buscadoru-favs-yt', JSON.stringify([...sig]));
       return sig;
     });
   }
 
-  // Catálogo único de carreras para la lista desplegable (coincidencia EXACTA:
-  // elegir "Medicina" ya no trae "Medicina Veterinaria").
-  const carreras = useMemo(() => {
-    const set = new Set();
-    UNIVERSIDADES.forEach((u) => u.programas.forEach((p) => set.add(p)));
-    return [...set].sort((a, b) => a.localeCompare(b, 'es'));
-  }, []);
+  // Helper for technical careers
+  const esTecnica = (nombre) => {
+    const norm = nombre.toLowerCase();
+    return norm.includes('tecnolog') || norm.includes('técnic') || norm.includes('tecnic');
+  };
 
+  // Filter logic
   const resultados = useMemo(() => {
-    return UNIVERSIDADES.filter(
-      (u) =>
-        (zona === 'Todas' || u.zona === zona) &&
-        (tipo === 'todas' || u.tipo === tipo) &&
-        (!soloFavoritas || favoritos.has(u.id))
-    )
+    return UNIVERSIDADES.filter((u) => {
+      if (region !== 'todas' && (u.region ?? 'colombia') !== region) return false;
+      if (region === 'colombia' && zona !== 'Todas' && u.zona !== zona) return false;
+      if (tipo !== 'todas' && u.tipo !== tipo) return false;
+      if (admisionTipo !== 'todos' && u.tipoAdmision !== admisionTipo) return false;
+      if (universidadFiltro !== 'todas' && u.id !== universidadFiltro) return false;
+
+      if (areaFiltro !== 'todas') {
+        const areaObj = TAXONOMIA.find(t => t.area === areaFiltro);
+        const carrerasDelArea = areaObj ? areaObj.subgrupos.flatMap(s => s.carreras).map(normalizar) : [];
+        const tieneCarreraDelArea = u.programas.some(p => carrerasDelArea.some(c => normalizar(p).includes(c)));
+        if (!tieneCarreraDelArea) return false;
+      }
+
+      if (nivelFormacion !== 'todas') {
+        const tieneNivel = u.programas.some(p =>
+          nivelFormacion === 'tecnica' ? esTecnica(p) : !esTecnica(p)
+        );
+        if (!tieneNivel) return false;
+      }
+      return true;
+    })
       .map((u) => {
-        if (!consulta) return { uni: u, programas: [] };
-        const programas = u.programas.filter((p) => normalizar(p) === normalizar(consulta));
-        return programas.length ? { uni: u, programas } : null;
+        let progsAFiltrar = u.programas;
+        if (nivelFormacion !== 'todas') {
+          progsAFiltrar = progsAFiltrar.filter(p => nivelFormacion === 'tecnica' ? esTecnica(p) : !esTecnica(p));
+        }
+        if (areaFiltro !== 'todas') {
+          const areaObj = TAXONOMIA.find(t => t.area === areaFiltro);
+          const carrerasDelArea = areaObj ? areaObj.subgrupos.flatMap(s => s.carreras).map(normalizar) : [];
+          progsAFiltrar = progsAFiltrar.filter(p => carrerasDelArea.some(c => normalizar(p).includes(c)));
+        }
+
+        if (!consulta) return { uni: u, programas: progsAFiltrar.slice(0, 3) };
+
+        const term = normalizar(consulta);
+        const matchNombre = normalizar(u.nombre).includes(term) || normalizar(u.sigla).includes(term);
+
+        // Semantic search: also match taxonomy area names
+        const matchedAreas = TAXONOMIA.filter(t => normalizar(t.area).includes(term));
+        const carrerasFromMatchedAreas = matchedAreas.flatMap(a => a.subgrupos.flatMap(s => s.carreras)).map(normalizar);
+
+        const programasMatch = progsAFiltrar.filter((p) => {
+          const pNorm = normalizar(p);
+          return pNorm.includes(term) || carrerasFromMatchedAreas.some(c => pNorm.includes(c));
+        });
+
+        if (matchNombre || programasMatch.length > 0) return { uni: u, programas: programasMatch };
+        return null;
       })
       .filter(Boolean)
-      .sort((a, b) =>
-        orden === 'ranking'
-          ? (a.uni.ranking ?? 999) - (b.uni.ranking ?? 999)
-          : a.uni.nombre.localeCompare(b.uni.nombre, 'es')
-      );
-  }, [consulta, zona, tipo, soloFavoritas, favoritos, orden]);
+      .sort((a, b) => (a.uni.ranking ?? 999) - (b.uni.ranking ?? 999));
+  }, [region, zona, tipo, admisionTipo, nivelFormacion, universidadFiltro, areaFiltro, consulta]);
 
   function buscar(e) {
     e.preventDefault();
-    setConsulta(carrera);
+    setConsulta(carreraInput);
+    if (pestana !== 'buscar') setPestana('buscar');
   }
 
+  const sidebarItemClass = (id) => `flex items-center gap-4 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+    pestana === id ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-700 hover:bg-slate-100'
+  }`;
+
+  const getColors = (id) => {
+    const colors = [
+      'from-blue-100 to-indigo-100', 'from-emerald-100 to-teal-100',
+      'from-rose-100 to-pink-100', 'from-amber-100 to-orange-100',
+      'from-purple-100 to-fuchsia-100', 'from-cyan-100 to-blue-100',
+      'from-slate-100 to-gray-200'
+    ];
+    let sum = 0;
+    for (let i = 0; i < id.length; i++) sum += id.charCodeAt(i);
+    return colors[sum % colors.length];
+  };
+
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-16">
-      {/* Encabezado */}
-      <header className="pt-8 text-center">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-          🎓 Buscador de Oportunidades Universitarias
-        </h1>
-        <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-500">
-          Encuentra tu carrera en las universidades públicas y privadas de Colombia: links
-          oficiales para el trámite, fechas, costos, pasos de inscripción, becas y un análisis de
-          tus opciones reales.
-        </p>
+    <div className="flex h-screen flex-col bg-white font-sans antialiased text-slate-900 overflow-hidden">
+
+      {/* ── HEADER ── */}
+      <header className="flex h-16 shrink-0 items-center justify-between px-4 w-full bg-white relative z-20 border-b border-slate-100">
+
+        <div className="flex items-center gap-4 w-1/4">
+          <button
+            onClick={() => setSidebarAbierto(!sidebarAbierto)}
+            className="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition-colors"
+            aria-label="Toggle Menu"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <div
+            className="flex items-center gap-1.5 cursor-pointer"
+            onClick={() => { setPestana('buscar'); setConsulta(''); setCarreraInput(''); setSeleccion(null); }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-blue-800">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+            <span className="text-lg font-bold tracking-tight hidden sm:block">UniScoop</span>
+          </div>
+        </div>
+
+        <div className="flex-1 flex justify-center max-w-2xl px-4">
+          <form onSubmit={buscar} className="flex w-full">
+            <div className="flex w-full items-center rounded-l-full border border-slate-300 bg-white px-4 py-1.5 focus-within:border-blue-500 focus-within:shadow-inner ml-2">
+              <input
+                type="text"
+                placeholder="Buscar universidades o carreras..."
+                value={carreraInput}
+                onChange={(e) => setCarreraInput(e.target.value)}
+                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+              />
+              {carreraInput && (
+                <button
+                  type="button"
+                  onClick={() => { setCarreraInput(''); setConsulta(''); }}
+                  className="text-slate-400 hover:text-slate-600 px-1"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="rounded-r-full border border-l-0 border-slate-300 bg-slate-50 px-5 py-1.5 hover:bg-slate-100 text-slate-600 transition-colors"
+              title="Buscar"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <div className="flex items-center justify-end gap-3 w-1/4">
+          <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold shadow-sm">
+            TÚ
+          </div>
+        </div>
       </header>
 
-      {/* Banner gratuidad — el dato que más estudiantes desconocen */}
-      <div className="mt-5 rounded-xl bg-emerald-50 p-3 text-center text-sm text-emerald-800 ring-1 ring-emerald-200">
-        💡 ¿Sabías que con la <strong>Política de Gratuidad</strong> la matrícula de pregrado en
-        universidades <strong>públicas</strong> es <strong>$0</strong> para la mayoría de
-        estudiantes? Solo pagas la inscripción (PIN).
-      </div>
+      {/* ── BODY: Sidebar + Main ── */}
+      <div className="flex flex-1 overflow-hidden">
 
-      {/* Pestañas */}
-      <nav className="mt-6 flex justify-center gap-2">
-        {[
-          ['buscar', '🔍 Buscar universidad'],
-          ['simulador', '📊 Simulador de admisión'],
-          ['becas', '🎁 Becas y apoyos'],
-        ].map(([id, label]) => (
-          <button
-            key={id}
-            onClick={() => setPestana(id)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-              pestana === id
-                ? 'bg-blue-600 text-white shadow'
-                : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </nav>
+        {/* ── SIDEBAR ── */}
+        <aside
+          className={`flex-col overflow-y-auto bg-white transition-all duration-200 z-10 ${
+            sidebarAbierto ? 'w-60 px-3' : 'w-0 sm:w-[72px] sm:px-1'
+          } hidden sm:flex shrink-0 border-r border-slate-100 hover:overflow-y-scroll`}
+        >
+          <div className="py-2 space-y-1">
+            <button onClick={() => { setSeleccion(null); setPestana('buscar'); }} className={sidebarItemClass('buscar')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Inicio</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('explorar'); }} className={sidebarItemClass('explorar')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Explorar Áreas</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('test'); }} className={sidebarItemClass('test')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Test Vocacional</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('simulador'); }} className={sidebarItemClass('simulador')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Simulador</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('becas'); }} className={sidebarItemClass('becas')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                <rect x="2" y="7" width="20" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Becas y Apoyos</span>}
+            </button>
+          </div>
 
-      <main className="mt-6">
-        {pestana === 'buscar' && (
-          <>
-            {/* Barra de búsqueda */}
-            <form
-              onSubmit={buscar}
-              className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200"
-            >
-              <div className="flex flex-wrap gap-3">
-                <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                >
-                  {REGIONES_BUSQUEDA.map((r) => (
-                    <option key={r.id} value={r.id} disabled={!r.activo}>
-                      {r.nombre}
-                      {!r.activo ? ' (próximamente)' : ''}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={tipo}
-                  onChange={(e) => setTipo(e.target.value)}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                >
-                  <option value="todas">Públicas y privadas</option>
-                  <option value="pública">Solo públicas</option>
-                  <option value="privada">Solo privadas</option>
-                </select>
-                <select
-                  value={zona}
-                  onChange={(e) => setZona(e.target.value)}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                >
-                  {ZONAS_COLOMBIA.map((z) => (
-                    <option key={z} value={z}>
-                      {z === 'Todas' ? 'Todas las regiones del país' : `Región ${z}`}
-                    </option>
-                  ))}
-                </select>
-                <div className="flex min-w-60 flex-1">
-                  <select
-                    value={carrera}
-                    onChange={(e) => setCarrera(e.target.value)}
-                    className="w-full rounded-l-lg border border-r-0 border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                  >
-                    <option value="">— Elige la carrera que quieres estudiar —</option>
-                    {carreras.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="submit"
-                    aria-label="Buscar"
-                    title="Buscar"
-                    className="rounded-r-lg bg-blue-600 px-4 text-white hover:bg-blue-700"
-                  >
-                    🔍
-                  </button>
-                </div>
-                <select
-                  value={orden}
-                  onChange={(e) => setOrden(e.target.value)}
-                  title="Orden de los resultados"
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                >
-                  <option value="ranking">🏆 Ordenar por ranking</option>
-                  <option value="nombre">🔤 Ordenar A–Z</option>
-                </select>
-                <label className="flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-2 text-sm text-slate-600">
-                  <input
-                    type="checkbox"
-                    checked={soloFavoritas}
-                    onChange={(e) => setSoloFavoritas(e.target.checked)}
-                    className="h-4 w-4 accent-amber-500"
-                  />
-                  ⭐ Solo mis favoritas
-                </label>
-              </div>
-            </form>
+          {sidebarAbierto && (
+            <>
+              <div className="my-3 border-t border-slate-200"></div>
 
-            {/* Resultados */}
-            <p className="mt-4 text-sm text-slate-500">
-              {consulta
-                ? `${resultados.length} universidades ofrecen «${consulta}»`
-                : `${resultados.length} universidades en la base — elige una carrera de la lista y da clic en la lupa`}
-              {tipo !== 'todas' ? ` (solo ${tipo}s)` : ''}
-              {zona !== 'Todas' ? ` en la región ${zona}` : ''}.
-            </p>
+              <div className="px-3 pb-1 pt-2">
+                <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">Filtros de Búsqueda</h3>
 
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              {resultados.map(({ uni, programas }) => {
-                const badge = BADGE_ADMISION[uni.tipoAdmision];
-                const esFav = favoritos.has(uni.id);
-                return (
-                  <div
-                    key={uni.id}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setSeleccion({ uni, programas })}
-                    onKeyDown={(e) => e.key === 'Enter' && setSeleccion({ uni, programas })}
-                    className="cursor-pointer rounded-xl bg-white p-4 text-left shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-slate-900">{uni.nombre}</h3>
-                      <div className="flex shrink-0 items-center gap-1.5">
-                        {uni.ranking && (
-                          <span
-                            title={META_DATOS.fuenteRanking}
-                            className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800"
-                          >
-                            🏆 #{uni.ranking}
-                          </span>
-                        )}
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${BADGE_TIPO[uni.tipo]}`}
-                        >
-                          {uni.tipo}
-                        </span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFavorito(uni.id);
-                          }}
-                          aria-label={esFav ? 'Quitar de favoritas' : 'Marcar como favorita'}
-                          title={esFav ? 'Quitar de favoritas' : 'Marcar como favorita'}
-                          className={`text-lg leading-none transition ${
-                            esFav ? '' : 'opacity-30 grayscale hover:opacity-70'
-                          }`}
-                        >
-                          ⭐
-                        </button>
-                      </div>
-                    </div>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      {uni.ciudad} · Región {uni.zona}
-                    </p>
-                    <span
-                      className={`mt-2 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold ${badge.cls}`}
-                    >
-                      {badge.txt}
-                    </span>
-                    {programas.length > 0 && (
-                      <p className="mt-2 text-sm text-blue-700">✓ {programas.join(' · ')}</p>
-                    )}
-                    <p className="mt-2 text-xs font-semibold text-slate-400">
-                      Ver fechas, costos, pasos y link de inscripción →
-                    </p>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">Financiación</label>
+                    <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="todas">Todas</option>
+                      <option value="pública">Solo Públicas ($0)</option>
+                      <option value="privada">Solo Privadas</option>
+                    </select>
                   </div>
-                );
-              })}
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">País / Región</label>
+                    <select value={region} onChange={(e) => setRegion(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="colombia">🇨🇴 Colombia</option>
+                      <option value="latam">🌎 Latinoamérica</option>
+                      <option value="todas">Todas las regiones</option>
+                    </select>
+                  </div>
+
+                  {region === 'colombia' && (
+                    <div>
+                      <label className="text-xs font-medium text-slate-700 block mb-1">Ubicación</label>
+                      <select value={zona} onChange={(e) => setZona(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                        {ZONAS_COLOMBIA.map((z) => (
+                          <option key={z} value={z}>{z === 'Todas' ? 'Todo Colombia' : `Región ${z}`}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">Admisión</label>
+                    <select value={admisionTipo} onChange={(e) => setAdmisionTipo(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="todos">Cualquiera</option>
+                      <option value="icfes">ICFES / Saber 11</option>
+                      <option value="propio">Examen Propio</option>
+                      <option value="abierta">Abierta</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">Nivel de Formación</label>
+                    <select value={nivelFormacion} onChange={(e) => setNivelFormacion(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="todas">Todas las Carreras</option>
+                      <option value="profesional">Profesional / Universitaria</option>
+                      <option value="tecnica">Técnica / Tecnológica</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">Universidad Específica</label>
+                    <select value={universidadFiltro} onChange={(e) => setUniversidadFiltro(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="todas">Todas las Universidades</option>
+                      {listaUniversidades.map((uni) => (
+                        <option key={uni.id} value={uni.id}>{uni.nombre} ({uni.sigla})</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">Área de Conocimiento</label>
+                    <select value={areaFiltro} onChange={(e) => setAreaFiltro(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="todas">Todas las Áreas</option>
+                      {TAXONOMIA.map((t) => (
+                        <option key={t.area} value={t.area}>{t.area}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="my-3 border-t border-slate-200"></div>
+
+              <div className="px-3 pb-4 text-[10px] text-slate-400 space-y-1">
+                <p>Curado con propósitos educativos.</p>
+                <p>Verifica fuentes oficiales.</p>
+                <p>© 2026 UniScoop Col.</p>
+              </div>
+            </>
+          )}
+        </aside>
+
+        {/* ── MAIN CONTENT ── */}
+        <main className="flex-1 overflow-y-auto bg-slate-50 relative">
+
+          {seleccion ? (
+            /* ── WATCH PAGE: Universidad Seleccionada ── */
+            <div className="w-full h-full">
+              <DetalleUniversidad
+                uni={seleccion.uni}
+                programasCoinciden={seleccion.programas}
+                onCerrar={() => setSeleccion(null)}
+                universidadesRelacionadas={resultados.filter(r => r.uni.id !== seleccion.uni.id).slice(0, 10)}
+                onSelectRelated={(item) => { window.scrollTo({ top: 0, behavior: 'smooth' }); setSeleccion(item); }}
+              />
             </div>
 
-            {consulta && resultados.length === 0 && (
-              <div className="mt-6 rounded-xl bg-white p-6 text-center text-sm text-slate-500 ring-1 ring-slate-200">
-                Ninguna universidad de la base ofrece «{consulta}» con los filtros actuales.
-                Prueba quitando el filtro de tipo o región, o consulta la oferta oficial completa
-                en el{' '}
-                <a
-                  href={META_DATOS.linkHecaa}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-blue-700 hover:underline"
-                >
-                  SNIES del Ministerio de Educación
-                </a>
-                .
+          ) : pestana === 'explorar' ? (
+            /* ── EXPLORAR ÁREAS ── */
+            <ExplorarAreas
+              onAreaClick={(area) => { setCarreraInput(area); setConsulta(area); setPestana('buscar'); }}
+              onCarreraClick={(carrera) => { setCarreraInput(carrera); setConsulta(carrera); setPestana('buscar'); }}
+            />
+
+          ) : pestana === 'test' ? (
+            /* ── TEST VOCACIONAL ── */
+            <div className="p-4 sm:p-6 lg:p-8">
+              <TestVocacional
+                onElegirCarrera={(carrera) => {
+                  setCarreraInput(carrera);
+                  setConsulta(carrera);
+                  setPestana('buscar');
+                }}
+              />
+            </div>
+
+          ) : pestana === 'simulador' ? (
+            /* ── SIMULADOR ── */
+            <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+              <Simulador />
+            </div>
+
+          ) : pestana === 'becas' ? (
+            /* ── BECAS ── */
+            <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+              <Becas />
+            </div>
+
+          ) : (
+            /* ── INICIO / BUSCAR (default) ── */
+            <div className="p-4 sm:p-6 pb-24">
+
+              {/* Category Chips (YouTube style quick filters) */}
+              <div className="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
+                {['Todas', 'Públicas', 'Privadas', 'Examen de Admisión', 'Acceso con ICFES'].map((chip) => (
+                  <button
+                    key={chip}
+                    onClick={() => {
+                      if (chip === 'Públicas') { setTipo('pública'); setAdmisionTipo('todos'); }
+                      else if (chip === 'Privadas') { setTipo('privada'); setAdmisionTipo('todos'); }
+                      else if (chip === 'Examen de Admisión') { setAdmisionTipo('propio'); setTipo('todas'); }
+                      else if (chip === 'Acceso con ICFES') { setAdmisionTipo('icfes'); setTipo('todas'); }
+                      else { setTipo('todas'); setAdmisionTipo('todos'); setUniversidadFiltro('todas'); setAreaFiltro('todas'); setConsulta(''); setCarreraInput(''); }
+                      setPestana('buscar');
+                    }}
+                    className={`whitespace-nowrap px-3.5 py-1.5 text-sm rounded-lg transition-colors font-medium ${
+                      (chip === 'Todas' && tipo === 'todas' && admisionTipo === 'todos') ||
+                      (chip === 'Públicas' && tipo === 'pública') ||
+                      (chip === 'Privadas' && tipo === 'privada') ||
+                      (chip === 'Examen de Admisión' && admisionTipo === 'propio') ||
+                      (chip === 'Acceso con ICFES' && admisionTipo === 'icfes')
+                        ? 'bg-slate-900 text-white hover:bg-slate-800'
+                        : 'bg-slate-200/60 hover:bg-slate-200 text-slate-900'
+                    }`}
+                  >
+                    {chip}
+                  </button>
+                ))}
               </div>
-            )}
-          </>
-        )}
 
-        {pestana === 'simulador' && <Simulador />}
-        {pestana === 'becas' && <Becas />}
-      </main>
+              {/* Status */}
+              {consulta && (
+                <p className="text-sm text-slate-500 mb-4 px-2">
+                  Resultados para <span className="font-semibold text-slate-800">"{consulta}"</span> ({resultados.length})
+                </p>
+              )}
 
-      {/* Detalle */}
-      {seleccion && (
-        <DetalleUniversidad
-          uni={seleccion.uni}
-          programasCoinciden={seleccion.programas}
-          onCerrar={() => setSeleccion(null)}
-        />
-      )}
+              {/* Grid de tarjetas */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
+                {resultados.map(({ uni, programas }) => {
+                  const esFav = favoritos.has(uni.id);
 
-      <footer className="mt-12 text-center text-xs text-slate-400">
-        Base curada · última revisión {META_DATOS.ultimaRevision} · Verifica siempre en las fuentes
-        oficiales antes de hacer un trámite. Hecho para facilitar el acceso a la universidad. 🇨🇴
-      </footer>
+                  return (
+                    <div
+                      key={uni.id}
+                      className="group cursor-pointer flex flex-col"
+                      onClick={() => setSeleccion({ uni, programas })}
+                    >
+                      {/* Thumbnail 16:9 */}
+                      <div className={`relative w-full aspect-video rounded-xl overflow-hidden bg-gradient-to-br ${getColors(uni.id)} flex items-center justify-center p-6 border border-slate-200/60 transition-all duration-300 group-hover:shadow-md`}>
+                        <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">
+                          <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="md" />
+                        </div>
+                        {/* Favorito */}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleFavorito(uni.id); }}
+                          className="absolute top-2 right-2 p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 backdrop-blur-sm"
+                          title="Guardar en favoritos"
+                        >
+                          <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-4 h-4 ${esFav ? 'text-amber-400' : ''}`}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                          </svg>
+                        </button>
+                        {/* Tipo Badge */}
+                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/80 text-white text-[10px] font-medium backdrop-blur-sm">
+                          {uni.tipo === 'pública' ? 'Matrícula $0' : 'Privada'}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 mt-3 pr-2">
+                        <div className="shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-white border border-slate-200 overflow-hidden flex items-center justify-center">
+                            <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
+                          </div>
+                        </div>
+                        <div className="flex flex-col flex-1 min-w-0">
+                          <h3 className="text-sm font-semibold text-slate-900 leading-tight line-clamp-2 group-hover:text-blue-700 transition-colors">
+                            {uni.nombre}
+                          </h3>
+                          <div className="text-xs text-slate-500 mt-1 flex flex-col gap-0.5">
+                            <span className="truncate">{uni.sigla} • Región {uni.zona}</span>
+                            <span className="truncate flex items-center gap-1">
+                              {uni.ranking ? (
+                                <>
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-amber-500">
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                  </svg>
+                                  <span>Rank #{uni.ranking}</span>
+                                </>
+                              ) : <span>Sin Rank</span>} • {uni.tipoAdmision}
+                            </span>
+                            {programas.length > 0 && (
+                              <span className="text-blue-600 truncate mt-0.5">
+                                ✓ {programas.join(', ')}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Empty state */}
+              {resultados.length === 0 && (
+                <div className="flex flex-col items-center justify-center mt-20 text-slate-500">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-16 h-16 mb-4 text-slate-300">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <h3 className="text-lg font-medium">No se encontraron resultados</h3>
+                  <p className="text-sm">Prueba ajustando los filtros o buscando otro término.</p>
+                  <button
+                    onClick={() => setPestana('explorar')}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                  >
+                    Explorar Áreas de Conocimiento
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+        </main>
+      </div>
     </div>
   );
 }
