@@ -6,20 +6,11 @@ import {
 import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
 
-// Helper to dynamically inject real admission status to universities (100% factual as of July 2026)
+import ESTADOS_ADMISION from './data/estados.json';
+
+// Helper to dynamically inject real admission status to universities from estados.json
 const injectEstadoAdmision = (uni) => {
-  // UNAD is open for enrollment due to its continuous virtual terms
-  if (uni.id === 'unad') {
-    return { ...uni, estadoAdmision: 'abiertas' };
-  }
-
-  // UNAL and UdeA next admission cohorts open in August (Próximamente)
-  if (uni.id === 'unal' || uni.id === 'udea') {
-    return { ...uni, estadoAdmision: 'proximamente' };
-  }
-
-  // All other public and private universities have closed their registrations for 2026-2
-  return { ...uni, estadoAdmision: 'cerradas' };
+  return { ...uni, estadoAdmision: ESTADOS_ADMISION[uni.id] || 'cerradas' };
 };
 
 const UNIVERSIDADES_CON_ESTADO = UNIVERSIDADES.map(injectEstadoAdmision);
