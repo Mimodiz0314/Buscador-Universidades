@@ -166,7 +166,7 @@ export default function App() {
       })
       .filter(Boolean)
       .sort((a, b) => (a.uni.ranking ?? 999) - (b.uni.ranking ?? 999));
-  }, [region, zona, tipo, admisionTipo, nivelFormacion, universidadFiltro, areaFiltro, carreraFiltro, estadoFiltro, consulta]);
+  }, [region, zona, chipsActivos, admisionTipo, nivelFormacion, universidadFiltro, areaFiltro, carreraFiltro, consulta]);
 
   function buscar(e) {
     e.preventDefault();
