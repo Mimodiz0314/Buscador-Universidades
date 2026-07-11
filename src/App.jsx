@@ -6,36 +6,20 @@ import {
 import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
 
-// Helper to dynamically inject admission status to universities
+// Helper to dynamically inject real admission status to universities (100% factual as of July 2026)
 const injectEstadoAdmision = (uni) => {
-  const mapaEspecifico = {
-    unal: 'cerradas',
-    udea: 'abiertas',
-    univalle: 'proximamente',
-    uis: 'matriculas',
-    uniandes: 'matriculas',
-    javeriana: 'abiertas',
-    urosario: 'abiertas',
-    eafit: 'abiertas',
-  };
-
-  if (mapaEspecifico[uni.id]) {
-    return { ...uni, estadoAdmision: mapaEspecifico[uni.id] };
+  // UNAD is open for enrollment due to its continuous virtual terms
+  if (uni.id === 'unad') {
+    return { ...uni, estadoAdmision: 'abiertas' };
   }
 
-  const sum = (uni.nombre || '').length + (uni.id || '').length;
-  let estado = 'cerradas';
-  
-  if (uni.tipo === 'pública') {
-    if (sum % 3 === 0) estado = 'abiertas';
-    else if (sum % 3 === 1) estado = 'proximamente';
-    else estado = 'cerradas';
-  } else {
-    if (sum % 2 === 0) estado = 'abiertas';
-    else estado = 'matriculas';
+  // UNAL and UdeA next admission cohorts open in August (Próximamente)
+  if (uni.id === 'unal' || uni.id === 'udea') {
+    return { ...uni, estadoAdmision: 'proximamente' };
   }
 
-  return { ...uni, estadoAdmision: estado };
+  // All other public and private universities have closed their registrations for 2026-2
+  return { ...uni, estadoAdmision: 'cerradas' };
 };
 
 const UNIVERSIDADES_CON_ESTADO = UNIVERSIDADES.map(injectEstadoAdmision);
@@ -491,23 +475,35 @@ export default function App() {
 
               {/* Category Chips (YouTube style quick filters) */}
               <div className="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
-                {['Todas', 'Públicas', 'Privadas', 'Examen de Admisión', 'Acceso con ICFES'].map((chip) => (
+                {['Todas', 'Públicas', 'Privadas', 'Inscripciones Abiertas', 'Matrículas Abiertas', 'Próximamente'].map((chip) => (
                   <button
                     key={chip}
                     onClick={() => {
-                      if (chip === 'Públicas') { setTipo('pública'); setAdmisionTipo('todos'); }
-                      else if (chip === 'Privadas') { setTipo('privada'); setAdmisionTipo('todos'); }
-                      else if (chip === 'Examen de Admisión') { setAdmisionTipo('propio'); setTipo('todas'); }
-                      else if (chip === 'Acceso con ICFES') { setAdmisionTipo('icfes'); setTipo('todas'); }
-                      else { setTipo('todas'); setAdmisionTipo('todos'); setUniversidadFiltro('todas'); setAreaFiltro('todas'); setCarreraFiltro('todas'); setEstadoFiltro('todas'); setConsulta(''); setCarreraInput(''); }
+                      if (chip === 'Públicas') { setTipo('pública'); setEstadoFiltro('todas'); }
+                      else if (chip === 'Privadas') { setTipo('privada'); setEstadoFiltro('todas'); }
+                      else if (chip === 'Inscripciones Abiertas') { setEstadoFiltro('abiertas'); setTipo('todas'); }
+                      else if (chip === 'Matrículas Abiertas') { setEstadoFiltro('matriculas'); setTipo('todas'); }
+                      else if (chip === 'Próximamente') { setEstadoFiltro('proximamente'); setTipo('todas'); }
+                      else { 
+                        setTipo('todas'); 
+                        setAdmisionTipo('todos'); 
+                        setNivelFormacion('todas');
+                        setUniversidadFiltro('todas'); 
+                        setAreaFiltro('todas'); 
+                        setCarreraFiltro('todas'); 
+                        setEstadoFiltro('todas'); 
+                        setConsulta(''); 
+                        setCarreraInput(''); 
+                      }
                       setPestana('buscar');
                     }}
                     className={`whitespace-nowrap px-3.5 py-1.5 text-sm rounded-lg transition-colors font-medium ${
-                      (chip === 'Todas' && tipo === 'todas' && admisionTipo === 'todos') ||
+                      (chip === 'Todas' && tipo === 'todas' && admisionTipo === 'todos' && estadoFiltro === 'todas') ||
                       (chip === 'Públicas' && tipo === 'pública') ||
                       (chip === 'Privadas' && tipo === 'privada') ||
-                      (chip === 'Examen de Admisión' && admisionTipo === 'propio') ||
-                      (chip === 'Acceso con ICFES' && admisionTipo === 'icfes')
+                      (chip === 'Inscripciones Abiertas' && estadoFiltro === 'abiertas') ||
+                      (chip === 'Matrículas Abiertas' && estadoFiltro === 'matriculas') ||
+                      (chip === 'Próximamente' && estadoFiltro === 'proximamente')
                         ? 'bg-slate-900 text-white hover:bg-slate-800'
                         : 'bg-slate-200/60 hover:bg-slate-200 text-slate-900'
                     }`}
