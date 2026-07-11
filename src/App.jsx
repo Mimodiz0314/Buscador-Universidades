@@ -96,7 +96,7 @@ export default function App() {
   // Smart matching with exclusion logic (e.g. separates "Medicina" from "Medicina Veterinaria")
   const matchConExclusion = (programStr, searchStr) => {
     const pNorm = normalizar(programStr);
-    const sNorm = normalizar(searchStr);
+    const sNorm = normalizar(searchStr).trim();
     
     // Exclude veterinary medicine if the search query does not explicitly ask for it
     if (pNorm.includes('veterinaria') && !sNorm.includes('veterinaria')) {
@@ -151,7 +151,7 @@ export default function App() {
 
         if (!consulta) return { uni: u, programas: progsAFiltrar.slice(0, 3) };
 
-        const term = normalizar(consulta);
+        const term = normalizar(consulta).trim();
         const matchNombre = normalizar(u.nombre).includes(term) || normalizar(u.sigla).includes(term);
 
         // Semantic search: also match taxonomy area names
@@ -229,7 +229,11 @@ export default function App() {
                 type="text"
                 placeholder="Buscar universidades o carreras..."
                 value={carreraInput}
-                onChange={(e) => setCarreraInput(e.target.value)}
+                onChange={(e) => {
+                  setCarreraInput(e.target.value);
+                  setConsulta(e.target.value);
+                  if (pestana !== 'buscar') setPestana('buscar');
+                }}
                 className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
               />
               {carreraInput && (
@@ -244,6 +248,7 @@ export default function App() {
             </div>
             <button
               type="submit"
+              onClick={(e) => e.preventDefault()}
               className="rounded-r-full border border-l-0 border-slate-300 bg-slate-50 px-5 py-1.5 hover:bg-slate-100 text-slate-600 transition-colors"
               title="Buscar"
             >

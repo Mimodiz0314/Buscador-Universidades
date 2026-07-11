@@ -204,7 +204,7 @@ const PUBLICAS = [
     departamento: 'Bolívar',
     zona: 'Caribe',
     web: 'https://www.unicartagena.edu.co', // Mantenemos el dominio oficial aunque tenga intermitencias
-    admisiones: 'https://sma.unicartagena.edu.co:8443/Smaix12/', // Plataforma SMA exacta
+    admisiones: 'https://sma.unicartagena.edu.co:8443/Smaix20/vista/admisiones/convocatorias/formCalls.jsp', // Plataforma SMA exacta (Convocatorias)
     tipoAdmision: 'icfes',
     notaAdmision: 'Admisión por puntaje del examen Saber 11 (ICFES).',
     selectividad: 'alta',
