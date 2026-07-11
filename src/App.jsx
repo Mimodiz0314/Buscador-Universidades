@@ -28,13 +28,12 @@ export default function App() {
   // Filters
   const [region, setRegion] = useState('colombia');
   const [zona, setZona] = useState('Todas');
-  const [tipo, setTipo] = useState('todas');
+  const [chipsActivos, setChipsActivos] = useState([]);
   const [admisionTipo, setAdmisionTipo] = useState('todos');
   const [nivelFormacion, setNivelFormacion] = useState('todas');
   const [universidadFiltro, setUniversidadFiltro] = useState('todas');
   const [areaFiltro, setAreaFiltro] = useState('todas');
   const [carreraFiltro, setCarreraFiltro] = useState('todas');
-  const [estadoFiltro, setEstadoFiltro] = useState('todas');
 
   // Sorted list of universities for the dropdown
   const listaUniversidades = useMemo(() => {
@@ -101,10 +100,19 @@ export default function App() {
     return UNIVERSIDADES_CON_ESTADO.filter((u) => {
       if (region !== 'todas' && (u.region ?? 'colombia') !== region) return false;
       if (region === 'colombia' && zona !== 'Todas' && u.zona !== zona) return false;
-      if (tipo !== 'todas' && u.tipo !== tipo) return false;
+      const selectedTipos = [];
+      if (chipsActivos.includes('Públicas')) selectedTipos.push('pública');
+      if (chipsActivos.includes('Privadas')) selectedTipos.push('privada');
+      if (selectedTipos.length > 0 && !selectedTipos.includes(u.tipo)) return false;
+
+      const selectedEstados = [];
+      if (chipsActivos.includes('Inscripciones Abiertas')) selectedEstados.push('abiertas');
+      if (chipsActivos.includes('Matrículas Abiertas')) selectedEstados.push('matriculas');
+      if (chipsActivos.includes('Próximamente')) selectedEstados.push('proximamente');
+      if (selectedEstados.length > 0 && !selectedEstados.includes(u.estadoAdmision)) return false;
+
       if (admisionTipo !== 'todos' && u.tipoAdmision !== admisionTipo) return false;
       if (universidadFiltro !== 'todas' && u.id !== universidadFiltro) return false;
-      if (estadoFiltro !== 'todas' && u.estadoAdmision !== estadoFiltro) return false;
 
       if (areaFiltro !== 'todas') {
         const areaObj = TAXONOMIA.find(t => t.area === areaFiltro);
@@ -318,13 +326,12 @@ export default function App() {
                   <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Filtros Avanzados</h3>
                   <button 
                     onClick={() => {
-                      setTipo('todas'); 
+                      setChipsActivos([]);
                       setAdmisionTipo('todos'); 
                       setNivelFormacion('todas');
                       setUniversidadFiltro('todas'); 
                       setAreaFiltro('todas'); 
                       setCarreraFiltro('todas'); 
-                      setEstadoFiltro('todas'); 
                       setRegion('colombia');
                       setZona('Todas');
                       setConsulta(''); 
@@ -481,31 +488,25 @@ export default function App() {
                   <button
                     key={chip}
                     onClick={() => {
-                      if (chip === 'Públicas') { setTipo('pública'); setEstadoFiltro('todas'); }
-                      else if (chip === 'Privadas') { setTipo('privada'); setEstadoFiltro('todas'); }
-                      else if (chip === 'Inscripciones Abiertas') { setEstadoFiltro('abiertas'); setTipo('todas'); }
-                      else if (chip === 'Matrículas Abiertas') { setEstadoFiltro('matriculas'); setTipo('todas'); }
-                      else if (chip === 'Próximamente') { setEstadoFiltro('proximamente'); setTipo('todas'); }
-                      else { 
-                        setTipo('todas'); 
+                      if (chip === 'Todas') {
+                        setChipsActivos([]);
                         setAdmisionTipo('todos'); 
                         setNivelFormacion('todas');
                         setUniversidadFiltro('todas'); 
                         setAreaFiltro('todas'); 
                         setCarreraFiltro('todas'); 
-                        setEstadoFiltro('todas'); 
                         setConsulta(''); 
                         setCarreraInput(''); 
+                      } else {
+                        setChipsActivos(prev => {
+                          if (prev.includes(chip)) return prev.filter(c => c !== chip);
+                          return [...prev, chip];
+                        });
                       }
                       setPestana('buscar');
                     }}
                     className={`whitespace-nowrap px-3.5 py-1.5 text-sm rounded-lg transition-colors font-medium ${
-                      (chip === 'Todas' && tipo === 'todas' && admisionTipo === 'todos' && estadoFiltro === 'todas') ||
-                      (chip === 'Públicas' && tipo === 'pública') ||
-                      (chip === 'Privadas' && tipo === 'privada') ||
-                      (chip === 'Inscripciones Abiertas' && estadoFiltro === 'abiertas') ||
-                      (chip === 'Matrículas Abiertas' && estadoFiltro === 'matriculas') ||
-                      (chip === 'Próximamente' && estadoFiltro === 'proximamente')
+                      (chip === 'Todas' && chipsActivos.length === 0) || chipsActivos.includes(chip)
                         ? 'bg-slate-900 text-white hover:bg-slate-800'
                         : 'bg-slate-200/60 hover:bg-slate-200 text-slate-900'
                     }`}
