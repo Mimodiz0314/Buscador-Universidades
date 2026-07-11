@@ -3,6 +3,7 @@
 // marcarlo como "por verificar" y llevar SIEMPRE al link oficial.
 // La lista de programas es parcial y orientativa — la oferta completa está en el
 // SNIES (https://snies.mineducacion.gov.co) y en el sitio de cada universidad.
+import { LATAM } from './latam.js';
 
 export const REGIONES_BUSQUEDA = [
   { id: 'colombia', nombre: 'Colombia', activo: true },
@@ -1257,6 +1258,64 @@ const PRIVADAS = [
       'Contaduría Pública', 'Economía', 'Negocios Internacionales', 'Psicología', 'Ciencia Política',
     ],
   },
+  {
+    id: 'umb',
+    nombre: 'Universidad Manuela Beltrán',
+    sigla: 'UMB',
+    ciudad: 'Bogotá',
+    departamento: 'Bogotá D.C.',
+    zona: 'Andina',
+    web: 'https://umb.edu.co',
+    admisiones: 'https://umb.edu.co',
+    tipoAdmision: 'abierta',
+    notaAdmision: 'Entrevista y revisión de ICFES.',
+    selectividad: 'media',
+    pasos: PASOS_PRIVADA,
+    fechas: FECHAS_GENERICAS,
+    costoInscripcion: COSTO_PRIVADA,
+    programas: [
+      'Ingeniería de Software', 'Enfermería', 'Fisioterapia', 'Terapia Ocupacional',
+      'Ingeniería Biomédica', 'Derecho'
+    ],
+  },
+  {
+    id: 'unicorsalud',
+    nombre: 'Unicorsalud',
+    sigla: 'Unicorsalud',
+    ciudad: 'Barranquilla',
+    departamento: 'Atlántico',
+    zona: 'Caribe',
+    web: 'https://unicorsalud.edu.co',
+    admisiones: 'https://unicorsalud.edu.co',
+    tipoAdmision: 'abierta',
+    notaAdmision: 'Inscripción directa y entrevista.',
+    selectividad: 'media',
+    pasos: PASOS_PRIVADA,
+    fechas: FECHAS_GENERICAS,
+    costoInscripcion: COSTO_PRIVADA,
+    programas: [
+      'Ingeniería de Software', 'Administración en Salud', 'Enfermería'
+    ],
+  },
+  {
+    id: 'unicervantes',
+    nombre: 'Unicervantes',
+    sigla: 'Unicervantes',
+    ciudad: 'Bogotá',
+    departamento: 'Bogotá D.C.',
+    zona: 'Andina',
+    web: 'https://unicervantes.edu.co',
+    admisiones: 'https://unicervantes.edu.co',
+    tipoAdmision: 'abierta',
+    notaAdmision: 'Inscripción y validación de requisitos.',
+    selectividad: 'media',
+    pasos: PASOS_PRIVADA,
+    fechas: FECHAS_GENERICAS,
+    costoInscripcion: COSTO_PRIVADA,
+    programas: [
+      'Ingeniería en Sistemas de Software e IA', 'Teología', 'Derecho', 'Trabajo Social'
+    ],
+  }
 ];
 
 // ── RANKING NACIONAL ORIENTATIVO ────────────────────────────────────────────
@@ -1320,12 +1379,17 @@ const RANKING_NACIONAL = {
   unipacifico: 52,
 };
 
-// Export combinado: cada universidad lleva su tipo (pública/privada) y su
-// posición de ranking nacional orientativo.
-export const UNIVERSIDADES = [
+// Export combinado: cada universidad lleva su tipo (pública/privada), región,
+// país y ranking. Colombia usa el ranking nacional; Latam trae su propio
+// ranking (QS Latam) definido en latam.js. Es aditivo: Colombia no se altera.
+const COLOMBIA = [
   ...PUBLICAS.map((u) => ({ ...u, tipo: 'pública' })),
   ...PRIVADAS.map((u) => ({ ...u, tipo: 'privada' })),
-].map((u) => ({ ...u, ranking: RANKING_NACIONAL[u.id] ?? null }));
+].map((u) => ({ ...u, ranking: RANKING_NACIONAL[u.id] ?? null, region: 'colombia', pais: 'Colombia' }));
+
+const LATAM_UNIS = LATAM.map((u) => ({ ...u, region: 'latam' }));
+
+export const UNIVERSIDADES = [...COLOMBIA, ...LATAM_UNIS];
 
 // Metadatos de la base — se muestran en la UI para transparencia.
 export const META_DATOS = {

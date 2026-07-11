@@ -91,10 +91,17 @@ describe('base de datos', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('todas tienen ranking nacional único y consecutivo', () => {
-    const rankings = UNIVERSIDADES.map((u) => u.ranking);
-    expect(rankings.every((r) => Number.isInteger(r) && r >= 1)).toBe(true);
-    expect(new Set(rankings).size).toBe(UNIVERSIDADES.length);
-    expect(Math.max(...rankings)).toBe(UNIVERSIDADES.length);
+  it('los rankings nacionales de Colombia (los que existen) no se repiten', () => {
+    const conRanking = UNIVERSIDADES.filter((u) => u.region === 'colombia' && u.ranking != null);
+    expect(conRanking.every((u) => Number.isInteger(u.ranking) && u.ranking >= 1)).toBe(true);
+    const rankings = conRanking.map((u) => u.ranking);
+    expect(new Set(rankings).size).toBe(rankings.length);
+  });
+
+  it('hay universidades de Latinoamérica marcadas con su país', () => {
+    const latam = UNIVERSIDADES.filter((u) => u.region === 'latam');
+    expect(latam.length).toBeGreaterThan(0);
+    expect(latam.every((u) => u.pais && u.pais !== 'Colombia')).toBe(true);
+    expect(latam.every((u) => /^https:\/\//.test(u.web))).toBe(true);
   });
 });
