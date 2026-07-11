@@ -15,10 +15,10 @@ export default defineConfig({
         start_url: '/',
         scope: '/',
         lang: 'es',
-        name: 'Buscador de Oportunidades Universitarias',
-        short_name: 'Buscador U',
+        name: 'UniScoop — Encuentra tu universidad',
+        short_name: 'UniScoop',
         description:
-          'Encuentra tu carrera en las universidades de Colombia: links oficiales, fechas, costos, pasos de inscripción, becas y simulador de admisión.',
+          'UniScoop: encuentra tu carrera en las universidades de Colombia y Latinoamérica — links oficiales, fechas, costos, pasos de inscripción, becas, simulador de admisión y test vocacional.',
         theme_color: '#2563eb',
         background_color: '#f8fafc',
         display: 'standalone',

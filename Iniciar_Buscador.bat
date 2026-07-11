@@ -1,5 +1,5 @@
 @echo off
-title Buscador de Oportunidades Universitarias - Servidor local
+title UniScoop - Servidor local
 color 0B
 echo ==========================================
 echo    BUSCADOR DE OPORTUNIDADES UNIVERSITARIAS

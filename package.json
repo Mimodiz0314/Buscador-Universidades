@@ -1,9 +1,9 @@
 {
-  "name": "buscador-universidades",
+  "name": "uniscoop",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Buscador de oportunidades universitarias — universidades públicas y privadas de Colombia",
+  "description": "UniScoop — buscador de oportunidades universitarias en Colombia y Latinoamérica",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

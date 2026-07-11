@@ -1,6 +1,6 @@
 @echo off
 setlocal
-title Buscador U - Deploy a Vercel (seguro)
+title UniScoop - Deploy a Vercel (seguro)
 color 0A
 
 echo.
