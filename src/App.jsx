@@ -109,7 +109,12 @@ export default function App() {
       if (chipsActivos.includes('Inscripciones Abiertas')) selectedEstados.push('abiertas');
       if (chipsActivos.includes('Matrículas Abiertas')) selectedEstados.push('matriculas');
       if (chipsActivos.includes('Próximamente')) selectedEstados.push('proximamente');
-      if (selectedEstados.length > 0 && !selectedEstados.includes(u.estadoAdmision)) return false;
+      if (selectedEstados.length > 0) {
+        let matchedEstado = false;
+        if (selectedEstados.includes(u.estadoAdmision)) matchedEstado = true;
+        if (u.estadoAdmision === 'ambas' && (selectedEstados.includes('abiertas') || selectedEstados.includes('matriculas'))) matchedEstado = true;
+        if (!matchedEstado) return false;
+      }
 
       if (admisionTipo !== 'todos' && u.tipoAdmision !== admisionTipo) return false;
       if (universidadFiltro !== 'todas' && u.id !== universidadFiltro) return false;
@@ -545,8 +550,21 @@ export default function App() {
                       {/* Thumbnail 16:9 */}
                       <div className={`relative w-full aspect-video rounded-xl overflow-hidden bg-gradient-to-br ${getColors(uni.id)} flex items-center justify-center p-6 border border-slate-200/60 transition-all duration-300 group-hover:shadow-md`}>
                         {/* Estado Badge flotante en esquina superior izquierda */}
-                        <div className={`absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm z-10 backdrop-blur-sm bg-opacity-90 ${estadoConfig.bg}`}>
-                          {estadoConfig.text}
+                        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
+                          {uni.estadoAdmision === 'ambas' ? (
+                            <>
+                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-sm bg-opacity-90 bg-emerald-500">
+                                Inscripciones
+                              </div>
+                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-sm bg-opacity-90 bg-blue-600">
+                                Matrículas
+                              </div>
+                            </>
+                          ) : (
+                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-sm bg-opacity-90 ${estadoConfig.bg}`}>
+                              {estadoConfig.text}
+                            </div>
+                          )}
                         </div>
 
                         <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">

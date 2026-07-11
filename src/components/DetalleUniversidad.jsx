@@ -105,23 +105,34 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                 <span className={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${uni.tipo === 'pública' ? 'bg-emerald-600' : 'bg-indigo-600'}`}>
                   {uni.tipo}
                 </span>
-                <span className={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${
-                  {
-                    abiertas: 'bg-emerald-500',
-                    matriculas: 'bg-blue-600',
-                    proximamente: 'bg-amber-500',
-                    cerradas: 'bg-slate-500'
-                  }[uni.estadoAdmision] || 'bg-slate-500'
-                }`}>
-                  {
+                {uni.estadoAdmision === 'ambas' ? (
+                  <>
+                    <span className="inline-block px-2 py-0.5 text-xs font-bold uppercase rounded bg-emerald-500">
+                      Inscripciones
+                    </span>
+                    <span className="inline-block px-2 py-0.5 text-xs font-bold uppercase rounded bg-blue-600">
+                      Matrículas
+                    </span>
+                  </>
+                ) : (
+                  <span className={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${
                     {
-                      abiertas: 'Inscripciones Abiertas',
-                      matriculas: 'Matrículas Abiertas',
-                      proximamente: 'Próximamente',
-                      cerradas: 'Cerrado'
-                    }[uni.estadoAdmision] || 'Cerrado'
-                  }
-                </span>
+                      abiertas: 'bg-emerald-500',
+                      matriculas: 'bg-blue-600',
+                      proximamente: 'bg-amber-500',
+                      cerradas: 'bg-slate-500'
+                    }[uni.estadoAdmision] || 'bg-slate-500'
+                  }`}>
+                    {
+                      {
+                        abiertas: 'Inscripciones Abiertas',
+                        matriculas: 'Matrículas Abiertas',
+                        proximamente: 'Próximamente',
+                        cerradas: 'Cerrado'
+                      }[uni.estadoAdmision] || 'Cerrado'
+                    }
+                  </span>
+                )}
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold leading-tight drop-shadow-md">
                 {uni.nombre}
