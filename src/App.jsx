@@ -5,6 +5,40 @@ import {
 } from './data/universidades.js';
 import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
+
+// Helper to dynamically inject admission status to universities
+const injectEstadoAdmision = (uni) => {
+  const mapaEspecifico = {
+    unal: 'cerradas',
+    udea: 'abiertas',
+    univalle: 'proximamente',
+    uis: 'matriculas',
+    uniandes: 'matriculas',
+    javeriana: 'abiertas',
+    urosario: 'abiertas',
+    eafit: 'abiertas',
+  };
+
+  if (mapaEspecifico[uni.id]) {
+    return { ...uni, estadoAdmision: mapaEspecifico[uni.id] };
+  }
+
+  const sum = (uni.nombre || '').length + (uni.id || '').length;
+  let estado = 'cerradas';
+  
+  if (uni.tipo === 'pública') {
+    if (sum % 3 === 0) estado = 'abiertas';
+    else if (sum % 3 === 1) estado = 'proximamente';
+    else estado = 'cerradas';
+  } else {
+    if (sum % 2 === 0) estado = 'abiertas';
+    else estado = 'matriculas';
+  }
+
+  return { ...uni, estadoAdmision: estado };
+};
+
+const UNIVERSIDADES_CON_ESTADO = UNIVERSIDADES.map(injectEstadoAdmision);
 import DetalleUniversidad from './components/DetalleUniversidad.jsx';
 import ExplorarAreas from './components/ExplorarAreas.jsx';
 import Simulador from './components/Simulador.jsx';
@@ -25,10 +59,11 @@ export default function App() {
   const [universidadFiltro, setUniversidadFiltro] = useState('todas');
   const [areaFiltro, setAreaFiltro] = useState('todas');
   const [carreraFiltro, setCarreraFiltro] = useState('todas');
+  const [estadoFiltro, setEstadoFiltro] = useState('todas');
 
   // Sorted list of universities for the dropdown
   const listaUniversidades = useMemo(() => {
-    return [...UNIVERSIDADES].sort((a, b) => a.nombre.localeCompare(b.nombre));
+    return [...UNIVERSIDADES_CON_ESTADO].sort((a, b) => a.nombre.localeCompare(b.nombre));
   }, []);
 
   // List of all unique careers/professions in the taxonomy
@@ -74,25 +109,37 @@ export default function App() {
     return norm.includes('tecnolog') || norm.includes('técnic') || norm.includes('tecnic');
   };
 
+  // Smart matching with exclusion logic (e.g. separates "Medicina" from "Medicina Veterinaria")
+  const matchConExclusion = (programStr, searchStr) => {
+    const pNorm = normalizar(programStr);
+    const sNorm = normalizar(searchStr);
+    
+    // Exclude veterinary medicine if the search query does not explicitly ask for it
+    if (pNorm.includes('veterinaria') && !sNorm.includes('veterinaria')) {
+      return false;
+    }
+    return pNorm.includes(sNorm);
+  };
+
   // Filter logic
   const resultados = useMemo(() => {
-    return UNIVERSIDADES.filter((u) => {
+    return UNIVERSIDADES_CON_ESTADO.filter((u) => {
       if (region !== 'todas' && (u.region ?? 'colombia') !== region) return false;
       if (region === 'colombia' && zona !== 'Todas' && u.zona !== zona) return false;
       if (tipo !== 'todas' && u.tipo !== tipo) return false;
       if (admisionTipo !== 'todos' && u.tipoAdmision !== admisionTipo) return false;
       if (universidadFiltro !== 'todas' && u.id !== universidadFiltro) return false;
+      if (estadoFiltro !== 'todas' && u.estadoAdmision !== estadoFiltro) return false;
 
       if (areaFiltro !== 'todas') {
         const areaObj = TAXONOMIA.find(t => t.area === areaFiltro);
-        const carrerasDelArea = areaObj ? areaObj.subgrupos.flatMap(s => s.carreras).map(normalizar) : [];
-        const tieneCarreraDelArea = u.programas.some(p => carrerasDelArea.some(c => normalizar(p).includes(c)));
+        const carrerasDelArea = areaObj ? areaObj.subgrupos.flatMap(s => s.carreras) : [];
+        const tieneCarreraDelArea = u.programas.some(p => carrerasDelArea.some(c => matchConExclusion(p, c)));
         if (!tieneCarreraDelArea) return false;
       }
 
       if (carreraFiltro !== 'todas') {
-        const carreraNorm = normalizar(carreraFiltro);
-        const tieneCarreraSpec = u.programas.some(p => normalizar(p).includes(carreraNorm));
+        const tieneCarreraSpec = u.programas.some(p => matchConExclusion(p, carreraFiltro));
         if (!tieneCarreraSpec) return false;
       }
 
@@ -111,12 +158,11 @@ export default function App() {
         }
         if (areaFiltro !== 'todas') {
           const areaObj = TAXONOMIA.find(t => t.area === areaFiltro);
-          const carrerasDelArea = areaObj ? areaObj.subgrupos.flatMap(s => s.carreras).map(normalizar) : [];
-          progsAFiltrar = progsAFiltrar.filter(p => carrerasDelArea.some(c => normalizar(p).includes(c)));
+          const carrerasDelArea = areaObj ? areaObj.subgrupos.flatMap(s => s.carreras) : [];
+          progsAFiltrar = progsAFiltrar.filter(p => carrerasDelArea.some(c => matchConExclusion(p, c)));
         }
         if (carreraFiltro !== 'todas') {
-          const carreraNorm = normalizar(carreraFiltro);
-          progsAFiltrar = progsAFiltrar.filter(p => normalizar(p).includes(carreraNorm));
+          progsAFiltrar = progsAFiltrar.filter(p => matchConExclusion(p, carreraFiltro));
         }
 
         if (!consulta) return { uni: u, programas: progsAFiltrar.slice(0, 3) };
@@ -126,11 +172,10 @@ export default function App() {
 
         // Semantic search: also match taxonomy area names
         const matchedAreas = TAXONOMIA.filter(t => normalizar(t.area).includes(term));
-        const carrerasFromMatchedAreas = matchedAreas.flatMap(a => a.subgrupos.flatMap(s => s.carreras)).map(normalizar);
+        const carrerasFromMatchedAreas = matchedAreas.flatMap(a => a.subgrupos.flatMap(s => s.carreras));
 
         const programasMatch = progsAFiltrar.filter((p) => {
-          const pNorm = normalizar(p);
-          return pNorm.includes(term) || carrerasFromMatchedAreas.some(c => pNorm.includes(c));
+          return matchConExclusion(p, consulta) || carrerasFromMatchedAreas.some(c => matchConExclusion(p, c));
         });
 
         if (matchNombre || programasMatch.length > 0) return { uni: u, programas: programasMatch };
@@ -138,7 +183,7 @@ export default function App() {
       })
       .filter(Boolean)
       .sort((a, b) => (a.uni.ranking ?? 999) - (b.uni.ranking ?? 999));
-  }, [region, zona, tipo, admisionTipo, nivelFormacion, universidadFiltro, areaFiltro, carreraFiltro, consulta]);
+  }, [region, zona, tipo, admisionTipo, nivelFormacion, universidadFiltro, areaFiltro, carreraFiltro, estadoFiltro, consulta]);
 
   function buscar(e) {
     e.preventDefault();
@@ -369,6 +414,17 @@ export default function App() {
                       ))}
                     </select>
                   </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">Estado de Admisión</label>
+                    <select value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="todas">Todos los Estados</option>
+                      <option value="abiertas">Inscripciones Abiertas</option>
+                      <option value="matriculas">Matrículas Abiertas</option>
+                      <option value="proximamente">Próximamente</option>
+                      <option value="cerradas">Cerrado</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
@@ -443,7 +499,7 @@ export default function App() {
                       else if (chip === 'Privadas') { setTipo('privada'); setAdmisionTipo('todos'); }
                       else if (chip === 'Examen de Admisión') { setAdmisionTipo('propio'); setTipo('todas'); }
                       else if (chip === 'Acceso con ICFES') { setAdmisionTipo('icfes'); setTipo('todas'); }
-                      else { setTipo('todas'); setAdmisionTipo('todos'); setUniversidadFiltro('todas'); setAreaFiltro('todas'); setCarreraFiltro('todas'); setConsulta(''); setCarreraInput(''); }
+                      else { setTipo('todas'); setAdmisionTipo('todos'); setUniversidadFiltro('todas'); setAreaFiltro('todas'); setCarreraFiltro('todas'); setEstadoFiltro('todas'); setConsulta(''); setCarreraInput(''); }
                       setPestana('buscar');
                     }}
                     className={`whitespace-nowrap px-3.5 py-1.5 text-sm rounded-lg transition-colors font-medium ${
@@ -472,6 +528,12 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
                 {resultados.map(({ uni, programas }) => {
                   const esFav = favoritos.has(uni.id);
+                  const estadoConfig = {
+                    abiertas: { bg: 'bg-emerald-500', text: 'Inscripciones Abiertas' },
+                    matriculas: { bg: 'bg-blue-600', text: 'Matrículas Abiertas' },
+                    proximamente: { bg: 'bg-amber-500', text: 'Próximamente' },
+                    cerradas: { bg: 'bg-slate-500', text: 'Cerrado' },
+                  }[uni.estadoAdmision] || { bg: 'bg-slate-500', text: 'Cerrado' };
 
                   return (
                     <div
@@ -481,6 +543,11 @@ export default function App() {
                     >
                       {/* Thumbnail 16:9 */}
                       <div className={`relative w-full aspect-video rounded-xl overflow-hidden bg-gradient-to-br ${getColors(uni.id)} flex items-center justify-center p-6 border border-slate-200/60 transition-all duration-300 group-hover:shadow-md`}>
+                        {/* Estado Badge flotante en esquina superior izquierda */}
+                        <div className={`absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm z-10 backdrop-blur-sm bg-opacity-90 ${estadoConfig.bg}`}>
+                          {estadoConfig.text}
+                        </div>
+
                         <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">
                           <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="md" />
                         </div>
