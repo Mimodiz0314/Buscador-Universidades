@@ -24,10 +24,24 @@ export default function App() {
   const [nivelFormacion, setNivelFormacion] = useState('todas');
   const [universidadFiltro, setUniversidadFiltro] = useState('todas');
   const [areaFiltro, setAreaFiltro] = useState('todas');
+  const [carreraFiltro, setCarreraFiltro] = useState('todas');
 
   // Sorted list of universities for the dropdown
   const listaUniversidades = useMemo(() => {
     return [...UNIVERSIDADES].sort((a, b) => a.nombre.localeCompare(b.nombre));
+  }, []);
+
+  // List of all unique careers/professions in the taxonomy
+  const listaCarreras = useMemo(() => {
+    const setCarreras = new Set();
+    TAXONOMIA.forEach((t) => {
+      t.subgrupos.forEach((s) => {
+        s.carreras.forEach((c) => {
+          setCarreras.add(c);
+        });
+      });
+    });
+    return Array.from(setCarreras).sort((a, b) => a.localeCompare(b));
   }, []);
 
   // Search
@@ -76,6 +90,12 @@ export default function App() {
         if (!tieneCarreraDelArea) return false;
       }
 
+      if (carreraFiltro !== 'todas') {
+        const carreraNorm = normalizar(carreraFiltro);
+        const tieneCarreraSpec = u.programas.some(p => normalizar(p).includes(carreraNorm));
+        if (!tieneCarreraSpec) return false;
+      }
+
       if (nivelFormacion !== 'todas') {
         const tieneNivel = u.programas.some(p =>
           nivelFormacion === 'tecnica' ? esTecnica(p) : !esTecnica(p)
@@ -93,6 +113,10 @@ export default function App() {
           const areaObj = TAXONOMIA.find(t => t.area === areaFiltro);
           const carrerasDelArea = areaObj ? areaObj.subgrupos.flatMap(s => s.carreras).map(normalizar) : [];
           progsAFiltrar = progsAFiltrar.filter(p => carrerasDelArea.some(c => normalizar(p).includes(c)));
+        }
+        if (carreraFiltro !== 'todas') {
+          const carreraNorm = normalizar(carreraFiltro);
+          progsAFiltrar = progsAFiltrar.filter(p => normalizar(p).includes(carreraNorm));
         }
 
         if (!consulta) return { uni: u, programas: progsAFiltrar.slice(0, 3) };
@@ -114,7 +138,7 @@ export default function App() {
       })
       .filter(Boolean)
       .sort((a, b) => (a.uni.ranking ?? 999) - (b.uni.ranking ?? 999));
-  }, [region, zona, tipo, admisionTipo, nivelFormacion, universidadFiltro, areaFiltro, consulta]);
+  }, [region, zona, tipo, admisionTipo, nivelFormacion, universidadFiltro, areaFiltro, carreraFiltro, consulta]);
 
   function buscar(e) {
     e.preventDefault();
@@ -328,10 +352,20 @@ export default function App() {
 
                   <div>
                     <label className="text-xs font-medium text-slate-700 block mb-1">Área de Conocimiento</label>
-                    <select value={areaFiltro} onChange={(e) => setAreaFiltro(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                    <select value={areaFiltro} onChange={(e) => { setAreaFiltro(e.target.value); setCarreraFiltro('todas'); }} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
                       <option value="todas">Todas las Áreas</option>
                       {TAXONOMIA.map((t) => (
                         <option key={t.area} value={t.area}>{t.area}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 block mb-1">Carrera / Profesión</label>
+                    <select value={carreraFiltro} onChange={(e) => { setCarreraFiltro(e.target.value); if (e.target.value !== 'todas') setAreaFiltro('todas'); }} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
+                      <option value="todas">Todas las Profesiones</option>
+                      {listaCarreras.map((c) => (
+                        <option key={c} value={c}>{c}</option>
                       ))}
                     </select>
                   </div>
@@ -409,7 +443,7 @@ export default function App() {
                       else if (chip === 'Privadas') { setTipo('privada'); setAdmisionTipo('todos'); }
                       else if (chip === 'Examen de Admisión') { setAdmisionTipo('propio'); setTipo('todas'); }
                       else if (chip === 'Acceso con ICFES') { setAdmisionTipo('icfes'); setTipo('todas'); }
-                      else { setTipo('todas'); setAdmisionTipo('todos'); setUniversidadFiltro('todas'); setAreaFiltro('todas'); setConsulta(''); setCarreraInput(''); }
+                      else { setTipo('todas'); setAdmisionTipo('todos'); setUniversidadFiltro('todas'); setAreaFiltro('todas'); setCarreraFiltro('todas'); setConsulta(''); setCarreraInput(''); }
                       setPestana('buscar');
                     }}
                     className={`whitespace-nowrap px-3.5 py-1.5 text-sm rounded-lg transition-colors font-medium ${
