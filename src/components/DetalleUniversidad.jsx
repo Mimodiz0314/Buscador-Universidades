@@ -101,9 +101,28 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
           
           <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between pointer-events-none">
             <div className="text-white">
-              <span className={`inline-block px-2 py-1 text-xs font-bold uppercase rounded mb-2 ${uni.tipo === 'pública' ? 'bg-emerald-600' : 'bg-indigo-600'}`}>
-                {uni.tipo}
-              </span>
+              <div className="flex gap-2 mb-2">
+                <span className={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${uni.tipo === 'pública' ? 'bg-emerald-600' : 'bg-indigo-600'}`}>
+                  {uni.tipo}
+                </span>
+                <span className={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${
+                  {
+                    abiertas: 'bg-emerald-500',
+                    matriculas: 'bg-blue-600',
+                    proximamente: 'bg-amber-500',
+                    cerradas: 'bg-slate-500'
+                  }[uni.estadoAdmision] || 'bg-slate-500'
+                }`}>
+                  {
+                    {
+                      abiertas: 'Inscripciones Abiertas',
+                      matriculas: 'Matrículas Abiertas',
+                      proximamente: 'Próximamente',
+                      cerradas: 'Cerrado'
+                    }[uni.estadoAdmision] || 'Cerrado'
+                  }
+                </span>
+              </div>
               <h2 className="text-2xl sm:text-3xl font-bold leading-tight drop-shadow-md">
                 {uni.nombre}
               </h2>
