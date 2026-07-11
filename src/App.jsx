@@ -531,6 +531,18 @@ export default function App() {
                 </p>
               )}
 
+              {/* Aviso de responsabilidad legal */}
+              <div className="bg-amber-50/80 border-l-4 border-amber-500 p-3 mb-6 rounded-r-lg text-xs text-amber-800 flex gap-2 items-start">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-amber-600 mt-0.5 shrink-0">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <div>
+                  <span className="font-bold">Nota informativa:</span> Los estados de admisión se basan en calendarios generales de referencia. Te aconsejamos **confirmar siempre los plazos vigentes y requisitos oficiales** directamente en el enlace del portal de cada universidad antes de tu postulación.
+                </div>
+              </div>
+
               {/* Grid de tarjetas */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
                 {resultados.map(({ uni, programas }) => {

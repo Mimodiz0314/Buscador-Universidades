@@ -167,6 +167,11 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
             </div>
           </div>
 
+          {/* Aviso legal en el detalle */}
+          <div className="mt-3 bg-amber-50 text-[11px] text-amber-800 border border-amber-200/60 rounded-lg p-2.5">
+            ⚠️ <span className="font-bold">Aviso importante:</span> Los calendarios y estados son orientativos. El estudiante tiene la responsabilidad de validar los plazos oficiales ingresando al enlace de **Admisiones** arriba provisto antes de iniciar trámites.
+          </div>
+
           {/* Description Box */}
           <div className="mt-4 bg-slate-50 hover:bg-slate-100 transition-colors rounded-xl p-4 sm:p-5 text-sm text-slate-800">
             {programasCoinciden?.length > 0 && (
