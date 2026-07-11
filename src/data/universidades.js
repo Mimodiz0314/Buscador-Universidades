@@ -1256,16 +1256,80 @@ const PRIVADAS = [
   },
 ];
 
-// Export combinado: cada universidad lleva su tipo (pública/privada) para el filtro.
+// ── RANKING NACIONAL ORIENTATIVO ────────────────────────────────────────────
+// Posición aproximada en Colombia combinando los rankings públicos más citados
+// (QS, THE, U-Sapiens de Sapiens Research y Webometrics), consultados 2026-07.
+// Es una GUÍA de reputación general — cada ranking mide cosas distintas y la
+// mejor universidad depende de la carrera (p. ej. CES en salud, Distrital en
+// ingenierías). La UI debe presentarlo siempre como "orientativo".
+const RANKING_NACIONAL = {
+  uniandes: 1,
+  unal: 2,
+  udea: 3,
+  javeriana: 4,
+  univalle: 5,
+  urosario: 6,
+  uis: 7,
+  uninorte: 8,
+  eafit: 9,
+  unisabana: 10,
+  uexternado: 11,
+  upb: 12,
+  icesi: 13,
+  ces: 14,
+  utp: 15,
+  ucaldas: 16,
+  unicauca: 17,
+  uptc: 18,
+  unicartagena: 19,
+  udistrital: 20,
+  udemedellin: 21,
+  unab: 22,
+  unimagdalena: 23,
+  umng: 24,
+  udenar: 25,
+  uao: 26,
+  usantotomas: 27,
+  utadeo: 28,
+  lasalle: 29,
+  unbosque: 30,
+  unilibre: 31,
+  uniatlantico: 32,
+  ut: 33,
+  upn: 34,
+  usco: 35,
+  uniquindio: 36,
+  unicordoba: 37,
+  unipamplona: 38,
+  ufps: 39,
+  unisimon: 40,
+  ucc: 41,
+  uniminuto: 42,
+  unad: 43,
+  unisucre: 44,
+  unillanos: 45,
+  ucundinamarca: 46,
+  unicolmayor: 47,
+  unicesar: 48,
+  uniguajira: 49,
+  uniamazonia: 50,
+  utch: 51,
+  unipacifico: 52,
+};
+
+// Export combinado: cada universidad lleva su tipo (pública/privada) y su
+// posición de ranking nacional orientativo.
 export const UNIVERSIDADES = [
   ...PUBLICAS.map((u) => ({ ...u, tipo: 'pública' })),
   ...PRIVADAS.map((u) => ({ ...u, tipo: 'privada' })),
-];
+].map((u) => ({ ...u, ranking: RANKING_NACIONAL[u.id] ?? null }));
 
 // Metadatos de la base — se muestran en la UI para transparencia.
 export const META_DATOS = {
   ultimaRevision: '2026-07-10',
   fuentePrograma: 'Lista parcial curada. Oferta oficial completa: SNIES (MinEducación).',
+  fuenteRanking:
+    'Posición orientativa en Colombia combinando rankings públicos (QS, THE, U-Sapiens, Webometrics), consultados 2026-07. La mejor universidad depende de la carrera.',
   linkSnies: 'https://snies.mineducacion.gov.co/portal/CONSULTAS/',
   linkHecaa: 'https://hecaa.mineducacion.gov.co/consultaspublicas/programas',
 };

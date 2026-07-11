@@ -42,6 +42,12 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar }
             <p className="text-sm text-slate-500">
               {uni.ciudad} · {uni.departamento} · Región {uni.zona}
             </p>
+            {uni.ranking && (
+              <p className="mt-1 text-sm font-semibold text-amber-700" title={META_DATOS.fuenteRanking}>
+                🏆 #{uni.ranking} en Colombia{' '}
+                <span className="font-normal text-slate-400">(orientativo — según QS, THE, U-Sapiens y Webometrics)</span>
+              </p>
+            )}
           </div>
           <button
             onClick={onCerrar}

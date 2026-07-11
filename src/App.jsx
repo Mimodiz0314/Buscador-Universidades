@@ -30,6 +30,7 @@ export default function App() {
   const [consulta, setConsulta] = useState(''); // se aplica al dar clic en la lupa
   const [seleccion, setSeleccion] = useState(null);
   const [soloFavoritas, setSoloFavoritas] = useState(false);
+  const [orden, setOrden] = useState('ranking'); // 'ranking' | 'nombre'
   // Favoritos persistentes en el dispositivo (sin necesidad de cuenta).
   const [favoritos, setFavoritos] = useState(() => {
     try {
@@ -69,8 +70,13 @@ export default function App() {
         const programas = u.programas.filter((p) => normalizar(p) === normalizar(consulta));
         return programas.length ? { uni: u, programas } : null;
       })
-      .filter(Boolean);
-  }, [consulta, zona, tipo, soloFavoritas, favoritos]);
+      .filter(Boolean)
+      .sort((a, b) =>
+        orden === 'ranking'
+          ? (a.uni.ranking ?? 999) - (b.uni.ranking ?? 999)
+          : a.uni.nombre.localeCompare(b.uni.nombre, 'es')
+      );
+  }, [consulta, zona, tipo, soloFavoritas, favoritos, orden]);
 
   function buscar(e) {
     e.preventDefault();
@@ -182,6 +188,15 @@ export default function App() {
                     🔍
                   </button>
                 </div>
+                <select
+                  value={orden}
+                  onChange={(e) => setOrden(e.target.value)}
+                  title="Orden de los resultados"
+                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                >
+                  <option value="ranking">🏆 Ordenar por ranking</option>
+                  <option value="nombre">🔤 Ordenar A–Z</option>
+                </select>
                 <label className="flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-2 text-sm text-slate-600">
                   <input
                     type="checkbox"
@@ -219,6 +234,14 @@ export default function App() {
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="font-semibold text-slate-900">{uni.nombre}</h3>
                       <div className="flex shrink-0 items-center gap-1.5">
+                        {uni.ranking && (
+                          <span
+                            title={META_DATOS.fuenteRanking}
+                            className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800"
+                          >
+                            🏆 #{uni.ranking}
+                          </span>
+                        )}
                         <span
                           className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${BADGE_TIPO[uni.tipo]}`}
                         >

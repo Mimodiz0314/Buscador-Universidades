@@ -90,4 +90,11 @@ describe('base de datos', () => {
     const ids = UNIVERSIDADES.map((u) => u.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it('todas tienen ranking nacional único y consecutivo', () => {
+    const rankings = UNIVERSIDADES.map((u) => u.ranking);
+    expect(rankings.every((r) => Number.isInteger(r) && r >= 1)).toBe(true);
+    expect(new Set(rankings).size).toBe(UNIVERSIDADES.length);
+    expect(Math.max(...rankings)).toBe(UNIVERSIDADES.length);
+  });
 });

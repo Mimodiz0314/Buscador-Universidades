@@ -49,7 +49,12 @@ export default function Simulador() {
       const prog = u.programas.find((p) => normalizar(p) === normalizar(carrera));
       return { uni: u, programa: prog, est: estimarAdmision(pts, prog, u) };
     });
-    lista.sort((a, b) => ORDEN_NIVEL[a.est.nivel] - ORDEN_NIVEL[b.est.nivel]);
+    // Primero por viabilidad; a igual nivel, la mejor rankeada de primera.
+    lista.sort(
+      (a, b) =>
+        ORDEN_NIVEL[a.est.nivel] - ORDEN_NIVEL[b.est.nivel] ||
+        (a.uni.ranking ?? 999) - (b.uni.ranking ?? 999)
+    );
     setResultados({ lista, recs: recomendaciones(pts, lista) });
   }
 
@@ -111,6 +116,11 @@ export default function Simulador() {
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
+                    {uni.ranking && (
+                      <span className="mr-1.5 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">
+                        🏆 #{uni.ranking}
+                      </span>
+                    )}
                     <span className="font-semibold text-slate-900">{uni.nombre}</span>
                     <span className="ml-2 text-sm text-slate-500">— {programa}</span>
                   </div>
