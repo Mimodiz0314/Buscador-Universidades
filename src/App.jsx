@@ -318,7 +318,29 @@ export default function App() {
               <div className="my-3 border-t border-slate-200"></div>
 
               <div className="px-3 pb-1 pt-2">
-                <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">Filtros de Búsqueda</h3>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Filtros Avanzados</h3>
+                  <button 
+                    onClick={() => {
+                      setTipo('todas'); 
+                      setAdmisionTipo('todos'); 
+                      setNivelFormacion('todas');
+                      setUniversidadFiltro('todas'); 
+                      setAreaFiltro('todas'); 
+                      setCarreraFiltro('todas'); 
+                      setEstadoFiltro('todas'); 
+                      setRegion('colombia');
+                      setZona('Todas');
+                      setConsulta(''); 
+                      setCarreraInput(''); 
+                      setPestana('buscar');
+                    }}
+                    className="text-[10px] text-blue-600 hover:text-blue-800 font-semibold bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded transition-colors"
+                    title="Limpiar todos los filtros"
+                  >
+                    Reiniciar
+                  </button>
+                </div>
 
                 <div className="space-y-4">
                   {/* El filtro de Financiación se maneja exclusivamente con los Chips superiores */}
