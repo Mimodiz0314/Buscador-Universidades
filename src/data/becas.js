@@ -25,7 +25,7 @@ export const BECAS = [
     nombre: 'Fondo Álvaro Ulcué Chocué (ICETEX)',
     cobertura: 'Créditos condonables para matrícula y sostenimiento.',
     quienes: 'Estudiantes pertenecientes a comunidades indígenas.',
-    link: 'https://web.icetex.gov.co/es/-/fondo-comunidades-indigenas-alvaro-ulcue-chocue',
+    link: 'https://web.icetex.gov.co/prensa/especiales/fondo-de-comunidades-indigenas-alvaro-ulcue-chocue',
     destacada: false,
   },
   {
@@ -33,7 +33,7 @@ export const BECAS = [
     nombre: 'Fondo de Comunidades Negras (ICETEX)',
     cobertura: 'Créditos condonables para matrícula y sostenimiento.',
     quienes: 'Estudiantes de comunidades negras, afrocolombianas, raizales y palenqueras.',
-    link: 'https://web.icetex.gov.co/es/-/fondo-de-comunidades-negras',
+    link: 'https://web.icetex.gov.co/es/-/comunidades-negras',
     destacada: false,
   },
   {
