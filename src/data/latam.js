@@ -54,7 +54,8 @@ export const LATAM = [
   U({
     id: 'ar-uba', nombre: 'Universidad de Buenos Aires', sigla: 'UBA',
     ciudad: 'Buenos Aires', pais: 'Argentina', zona: 'Argentina', tipo: 'pública', ranking: 3,
-    web: 'https://www.uba.ar', admisiones: 'https://www.uba.ar/internacionales',
+    web: 'https://www.uba.ar',
+    admisiones: 'https://www.cbc.uba.ar/',
     notaAdmision:
       'Pública y GRATUITA, incluso para extranjeros (una de las razones por las que muchos colombianos la eligen). El primer año suele ser un Ciclo Básico Común (CBC) de nivelación, sin examen de corte.',
     costoInscripcion: costoIntl('Matrícula de grado GRATUITA para nacionales y extranjeros. El costo real es el sostenimiento en Buenos Aires y el trámite migratorio.'),

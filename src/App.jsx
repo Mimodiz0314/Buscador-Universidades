@@ -321,14 +321,7 @@ export default function App() {
                 <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">Filtros de Búsqueda</h3>
 
                 <div className="space-y-4">
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">Financiación</label>
-                    <select value={tipo} onChange={(e) => setTipo(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="todas">Todas</option>
-                      <option value="pública">Solo Públicas ($0)</option>
-                      <option value="privada">Solo Privadas</option>
-                    </select>
-                  </div>
+                  {/* El filtro de Financiación se maneja exclusivamente con los Chips superiores */}
 
                   <div>
                     <label className="text-xs font-medium text-slate-700 block mb-1">País / Región</label>
@@ -399,16 +392,7 @@ export default function App() {
                     </select>
                   </div>
 
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">Estado de Admisión</label>
-                    <select value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="todas">Todos los Estados</option>
-                      <option value="abiertas">Inscripciones Abiertas</option>
-                      <option value="matriculas">Matrículas Abiertas</option>
-                      <option value="proximamente">Próximamente</option>
-                      <option value="cerradas">Cerrado</option>
-                    </select>
-                  </div>
+                  {/* El filtro de Estado se maneja exclusivamente con los Chips superiores */}
                 </div>
               </div>
 
