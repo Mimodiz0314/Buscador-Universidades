@@ -36,6 +36,7 @@ const FONT_SIZES = {
 
 export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md', className }) {
   const [imgError, setImgError] = useState(false);
+  const [localFailed, setLocalFailed] = useState(false);
   const paleta = getPaleta(uniId || sigla);
   const iniciales = getIniciales(sigla, nombre);
   const fs = FONT_SIZES[size] || FONT_SIZES.md;
@@ -47,7 +48,10 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
 
   const domain = getDomain(url);
   // Google S2 Favicon API — alta disponibilidad, no requiere API key
-  const logoSrc = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
+  const s2Src = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
+  const localSrc = uniId ? `/logos/${uniId}.png` : s2Src;
+
+  const logoSrc = localFailed ? s2Src : localSrc;
 
   const containerClass = {
     sm: 'w-9 h-9',
@@ -55,7 +59,7 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
     lg: 'w-36 h-36 sm:w-48 sm:h-48',
   }[size] || 'w-20 h-20';
 
-  if (imgError || !domain) {
+  if (imgError || (!domain && localFailed)) {
     // Fallback: avatar de iniciales
     return (
       <div
@@ -81,7 +85,13 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
         alt={sigla || nombre}
         className="w-full h-full object-contain"
         loading="lazy"
-        onError={() => setImgError(true)}
+        onError={() => {
+          if (!localFailed) {
+            setLocalFailed(true);
+          } else {
+            setImgError(true);
+          }
+        }}
       />
     </div>
   );
