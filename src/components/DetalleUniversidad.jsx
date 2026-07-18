@@ -71,7 +71,7 @@ function RelatedThumbnail({ u }) {
   );
 }
 
-export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, universidadesRelacionadas = [], onSelectRelated }) {
+export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, universidadesRelacionadas = [], onSelectRelated, onVerProceso }) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8 max-w-screen-2xl mx-auto w-full animate-in fade-in duration-300">
@@ -158,7 +158,15 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {onVerProceso && (
+                <button
+                  onClick={() => onVerProceso(uni.id)}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full text-sm transition-colors shadow-md"
+                >
+                  Guía de inscripción
+                </button>
+              )}
               <a
                 href={uni.web}
                 target="_blank"

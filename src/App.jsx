@@ -19,6 +19,7 @@ import ExplorarAreas from './components/ExplorarAreas.jsx';
 import Simulador from './components/Simulador.jsx';
 import Becas from './components/Becas.jsx';
 import TestVocacional from './components/TestVocacional.jsx';
+import ProcesoInscripcion from './components/ProcesoInscripcion.jsx';
 import LogoUniversidad from './components/LogoUniversidad.jsx';
 
 export default function App() {
@@ -59,6 +60,7 @@ export default function App() {
 
   // Interactions
   const [seleccion, setSeleccion] = useState(null);
+  const [procesoUni, setProcesoUni] = useState(null);
   const [favoritos, setFavoritos] = useState(() => {
     try {
       return new Set(JSON.parse(localStorage.getItem('buscadoru-favs-yt') || '[]'));
@@ -295,6 +297,14 @@ export default function App() {
               </svg>
               {sidebarAbierto && <span className="truncate">Explorar Áreas</span>}
             </button>
+            <button onClick={() => { setSeleccion(null); setProcesoUni(null); setPestana('proceso'); }} className={sidebarItemClass('proceso')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                <path d="M9 12l2 2 4-4"></path>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Proceso de Inscripción</span>}
+            </button>
             <button onClick={() => { setSeleccion(null); setPestana('test'); }} className={sidebarItemClass('test')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                 <path d="M9 11l3 3L22 4"></path>
@@ -447,6 +457,7 @@ export default function App() {
                 uni={seleccion.uni}
                 programasCoinciden={seleccion.programas}
                 onCerrar={() => setSeleccion(null)}
+                onVerProceso={(id) => { setSeleccion(null); setProcesoUni(id); setPestana('proceso'); }}
                 universidadesRelacionadas={resultados.filter(r => r.uni.id !== seleccion.uni.id).slice(0, 10)}
                 onSelectRelated={(item) => { window.scrollTo({ top: 0, behavior: 'smooth' }); setSeleccion(item); }}
               />
@@ -457,6 +468,14 @@ export default function App() {
             <ExplorarAreas
               onAreaClick={(area) => { setCarreraInput(area); setConsulta(area); setPestana('buscar'); }}
               onCarreraClick={(carrera) => { setCarreraInput(carrera); setConsulta(carrera); setPestana('buscar'); }}
+            />
+
+          ) : pestana === 'proceso' ? (
+            /* ── PROCESO DE INSCRIPCIÓN ── */
+            <ProcesoInscripcion
+              key={procesoUni || 'sin-seleccion'}
+              universidades={UNIVERSIDADES_CON_ESTADO}
+              uniInicial={procesoUni}
             />
 
           ) : pestana === 'test' ? (
