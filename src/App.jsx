@@ -7,6 +7,7 @@ import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
 
 import ESTADOS_ADMISION from './data/estados.json';
+import META_SINCRONIZACION from './data/meta.json';
 
 // Helper to dynamically inject real admission status to universities from estados.json
 const injectEstadoAdmision = (uni) => {
@@ -540,12 +541,24 @@ export default function App() {
                 ))}
               </div>
 
-              {/* Status */}
-              {consulta && (
-                <p className="text-sm text-slate-500 mb-4 px-2">
-                  Resultados para <span className="font-semibold text-slate-800">"{consulta}"</span> ({resultados.length})
-                </p>
-              )}
+              {/* Status & Sync Badge */}
+              <div className="flex items-center justify-between flex-wrap gap-2 mb-4 px-2">
+                {consulta ? (
+                  <p className="text-sm text-slate-500">
+                    Resultados para <span className="font-semibold text-slate-800">"{consulta}"</span> ({resultados.length})
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500 font-medium">
+                    Mostrando {resultados.length} universidades disponibles
+                  </p>
+                )}
+                {META_SINCRONIZACION?.fechaTexto && (
+                  <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-full px-3 py-1 shadow-xs">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Estados verificados vía IA: <strong>{META_SINCRONIZACION.fechaTexto}</strong></span>
+                  </div>
+                )}
+              </div>
 
 
 

@@ -149,6 +149,20 @@ async function ejecutarSincronizacion() {
 
   // Guardar los estados consolidados
   fs.writeFileSync(estadosPath, JSON.stringify(nuevosEstados, null, 2), 'utf-8');
+
+  // Guardar metadatos de sincronización
+  const metaPath = path.resolve('src/data/meta.json');
+  const now = new Date();
+  const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const fechaTexto = `${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+  fs.writeFileSync(metaPath, JSON.stringify({
+    ultimaActualizacion: now.toISOString().split('T')[0],
+    fechaTexto,
+    totalSincronizadas: allUnis.length,
+    exitosLotes: exitos,
+    totalLotes: batches.length
+  }, null, 2), 'utf-8');
+
   console.log(`\n🎉 Sincronización finalizada. Sincronizados con éxito ${exitos} de ${batches.length} lotes.`);
 }
 

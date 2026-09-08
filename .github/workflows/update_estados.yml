@@ -2,10 +2,14 @@ name: Auto Sincronizador de Admisiones (IA)
 
 on:
   schedule:
-    # Se ejecuta a las 00:00 UTC los días 1 y 15 de cada mes
-    - cron: '0 0 1,15 * *'
+    # Se ejecuta todos los lunes a las 05:00 UTC (00:00 hora Colombia)
+    - cron: '0 5 * * 1'
   workflow_dispatch:
     # Permite ejecutar manualmente desde la pestaña Actions en GitHub
+
+# Permisos explícitos para que el GITHUB_TOKEN pueda hacer push al repositorio
+permissions:
+  contents: write
 
 jobs:
   update-statuses:
@@ -13,14 +17,15 @@ jobs:
 
     steps:
       - name: Clonar Repositorio
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Instalar Dependencias
         run: |
@@ -33,14 +38,14 @@ jobs:
 
       - name: Subir Cambios a la Base de Datos
         run: |
-          git config --global user.name "UniScoop Bot"
-          git config --global user.email "bot@uniscoop.edu.co"
-          git add src/data/estados.json
-          # Solo hacer commit si hay cambios en el archivo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/estados.json src/data/meta.json
+          # Solo hacer commit si hay cambios en los archivos
           if ! git diff --cached --quiet; then
             git commit -m "chore: actualizacion automatica de estados de admision via IA [skip ci]"
             git push origin HEAD:${{ github.ref_name }}
             echo "✅ Cambios subidos e integrados."
           else
-            echo "无 No se detectaron cambios en los estados de admisiones."
+            echo "ℹ️ No se detectaron cambios en los estados de admisiones."
           fi
