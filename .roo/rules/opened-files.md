@@ -1,0 +1,59 @@
+# Opened Files
+## File Name
+scratch\test_batch.js
+## File Content
+import { UNIVERSIDADES } from '../src/data/universidades.js';
+
+const lote = UNIVERSIDADES.slice(0, 3);
+const listaTexto = lote.map(u => `- ${u.id}: ${u.nombre} (${u.ciudad ? u.ciudad + ', ' : ''}${u.pais || 'Colombia'}) - Portal de admisiones: ${u.admisiones}`).join('\n');
+
+const prompt = `Actúa como un experto en el sistema universitario latinoamericano. Tu tarea es investigar el estado real de admisiones (pregrado) hoy para las siguientes universidades. 
+Para cada universidad, debes buscar en internet cuál es su estado actual de inscripción.
+
+Responde ÚNICAMENTE con un objeto JSON plano estructurado dentro de un bloque de código markdown de tipo json (ej. \`\`\`json { ... } \`\`\`), donde las llaves sean el ID de la universidad y el valor sea uno de estos 4 estados:
+- "abiertas" (si hay inscripciones o convocatorias activas para registro de aspirantes en este momento).
+- "matriculas" (si el proceso de inscripción ya cerró pero se encuentra en periodo de matrículas financieras/académicas o inducciones del semestre).
+- "proximamente" (si las inscripciones del periodo actual están cerradas pero la página web oficial ya anuncia la fecha exacta de apertura del próximo periodo).
+- "cerradas" (si no hay procesos de inscripción ni matrículas activas, o si las clases ya iniciaron y no hay convocatorias vigentes).
+
+Lista de universidades a investigar:
+${listaTexto}
+
+Responde exclusivamente con el JSON dentro del bloque de código markdown:
+\`\`\`json
+{
+  "id_universidad": "estado"
+}
+\`\`\``;
+
+const apiKey = process.env.GEMINI_API_KEY;
+const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+const body = {
+  contents: [{
+    parts: [{ text: prompt }]
+  }],
+  tools: [{
+    googleSearch: {}
+  }]
+};
+
+async function test() {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  const data = await res.json();
+  console.log('Candidates count:', data.candidates?.length);
+  const parts = data.candidates?.[0]?.content?.parts || [];
+  console.log('Parts count:', parts.length);
+  parts.forEach((p, idx) => {
+    console.log(`--- PART ${idx} ---`);
+    console.log(p.text);
+  });
+}
+
+test();
+
