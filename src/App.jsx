@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   UNIVERSIDADES,
   ZONAS_COLOMBIA,
 } from './data/universidades.js';
 import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
+import { getCampusMedia } from './data/campusMedia.js';
 
 import ESTADOS_ADMISION from './data/estados.json';
 import META_SINCRONIZACION from './data/meta.json';
@@ -25,11 +26,34 @@ import LogoUniversidad from './components/LogoUniversidad.jsx';
 import LineaTiempo from './components/LineaTiempo.jsx';
 import ComparadorUniversidades from './components/ComparadorUniversidades.jsx';
 import CalculadoraGratuidad from './components/CalculadoraGratuidad.jsx';
+import ModalVideoCampus from './components/ModalVideoCampus.jsx';
 
 export default function App() {
   const [pestana, setPestana] = useState('buscar');
   const [sidebarAbierto, setSidebarAbierto] = useState(true);
   const [unisComparar, setUnisComparar] = useState(['unal', 'udea']);
+  const [videoActivo, setVideoActivo] = useState(null);
+
+  // Dark Mode
+  const [temaOscuro, setTemaOscuro] = useState(() => {
+    try {
+      const guardado = localStorage.getItem('uniscoop_theme');
+      if (guardado) return guardado === 'dark';
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    if (temaOscuro) {
+      document.documentElement.classList.add('dark');
+      try { localStorage.setItem('uniscoop_theme', 'dark'); } catch {}
+    } else {
+      document.documentElement.classList.remove('dark');
+      try { localStorage.setItem('uniscoop_theme', 'light'); } catch {}
+    }
+  }, [temaOscuro]);
 
   // Filters
   const [region, setRegion] = useState('colombia');
@@ -190,31 +214,27 @@ export default function App() {
   }
 
   const sidebarItemClass = (id) => `flex items-center gap-4 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-    pestana === id ? 'bg-slate-100 text-slate-900 font-semibold' : 'text-slate-700 hover:bg-slate-100'
+    pestana === id ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
   }`;
 
-  const getColors = (id) => {
-    const colors = [
-      'from-blue-100 to-indigo-100', 'from-emerald-100 to-teal-100',
-      'from-rose-100 to-pink-100', 'from-amber-100 to-orange-100',
-      'from-purple-100 to-fuchsia-100', 'from-cyan-100 to-blue-100',
-      'from-slate-100 to-gray-200'
-    ];
-    let sum = 0;
-    for (let i = 0; i < id.length; i++) sum += id.charCodeAt(i);
-    return colors[sum % colors.length];
-  };
-
   return (
-    <div className="flex h-screen flex-col bg-white font-sans antialiased text-slate-900 overflow-hidden">
+    <div className="flex h-screen flex-col bg-white dark:bg-slate-950 font-sans antialiased text-slate-900 dark:text-slate-100 overflow-hidden transition-colors">
+      {videoActivo && (
+        <ModalVideoCampus
+          videoId={videoActivo.videoId}
+          titulo={videoActivo.titulo}
+          uniNombre={videoActivo.uniNombre}
+          onCerrar={() => setVideoActivo(null)}
+        />
+      )}
 
       {/* ── HEADER ── */}
-      <header className="flex h-16 shrink-0 items-center justify-between px-4 w-full bg-white relative z-20 border-b border-slate-100">
+      <header className="flex h-16 shrink-0 items-center justify-between px-4 w-full bg-white dark:bg-slate-900 relative z-20 border-b border-slate-100 dark:border-slate-800 transition-colors">
 
         <div className="flex items-center gap-4 w-1/4">
           <button
             onClick={() => setSidebarAbierto(!sidebarAbierto)}
-            className="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition-colors"
+            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
             aria-label="Toggle Menu"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
@@ -228,17 +248,17 @@ export default function App() {
             className="flex items-center gap-1.5 cursor-pointer"
             onClick={() => { setPestana('buscar'); setConsulta(''); setCarreraInput(''); setSeleccion(null); }}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-blue-800">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-blue-600 dark:text-blue-400">
               <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
               <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
             </svg>
-            <span className="text-lg font-bold tracking-tight hidden sm:block">UniScoop</span>
+            <span className="text-lg font-bold tracking-tight hidden sm:block text-slate-900 dark:text-white">UniScoop</span>
           </div>
         </div>
 
         <div className="flex-1 flex justify-center max-w-2xl px-4">
           <form onSubmit={buscar} className="flex w-full">
-            <div className="flex w-full items-center rounded-l-full border border-slate-300 bg-white px-4 py-1.5 focus-within:border-blue-500 focus-within:shadow-inner ml-2">
+            <div className="flex w-full items-center rounded-l-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-1.5 focus-within:border-blue-500 focus-within:shadow-inner ml-2 transition-colors">
               <input
                 type="text"
                 placeholder="Buscar universidades o carreras..."
@@ -248,13 +268,13 @@ export default function App() {
                   setConsulta(e.target.value);
                   if (pestana !== 'buscar') setPestana('buscar');
                 }}
-                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500 text-slate-900 dark:text-slate-100"
               />
               {carreraInput && (
                 <button
                   type="button"
                   onClick={() => { setCarreraInput(''); setConsulta(''); }}
-                  className="text-slate-400 hover:text-slate-600 px-1"
+                  className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 px-1"
                 >
                   ✕
                 </button>
@@ -263,7 +283,7 @@ export default function App() {
             <button
               type="submit"
               onClick={(e) => e.preventDefault()}
-              className="rounded-r-full border border-l-0 border-slate-300 bg-slate-50 px-5 py-1.5 hover:bg-slate-100 text-slate-600 transition-colors"
+              className="rounded-r-full border border-l-0 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-5 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
               title="Buscar"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -275,6 +295,32 @@ export default function App() {
         </div>
 
         <div className="flex items-center justify-end gap-3 w-1/4">
+          {/* Botón Modo Oscuro */}
+          <button
+            onClick={() => setTemaOscuro(prev => !prev)}
+            className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            title={temaOscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            aria-label="Alternar tema claro y oscuro"
+          >
+            {temaOscuro ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-amber-400">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-slate-700">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            )}
+          </button>
+
           <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold shadow-sm">
             TÚ
           </div>
@@ -286,9 +332,9 @@ export default function App() {
 
         {/* ── SIDEBAR ── */}
         <aside
-          className={`flex-col justify-between bg-white transition-all duration-200 z-10 ${
+          className={`flex-col justify-between bg-white dark:bg-slate-900 transition-all duration-200 z-10 ${
             sidebarAbierto ? 'w-60 px-3' : 'w-0 sm:w-[72px] sm:px-1'
-          } hidden sm:flex shrink-0 border-r border-slate-100 overflow-hidden`}
+          } hidden sm:flex shrink-0 border-r border-slate-100 dark:border-slate-800 overflow-hidden`}
         >
           <div className="py-2 space-y-1">
             <button onClick={() => { setSeleccion(null); setPestana('buscar'); }} className={sidebarItemClass('buscar')}>
@@ -498,8 +544,8 @@ export default function App() {
                     }}
                     className={`whitespace-nowrap px-3.5 py-1.5 text-sm rounded-lg transition-colors font-medium ${
                       (chip === 'Todas' && chipsActivos.length === 0) || chipsActivos.includes(chip)
-                        ? 'bg-slate-900 text-white hover:bg-slate-800'
-                        : 'bg-slate-200/60 hover:bg-slate-200 text-slate-900'
+                        ? 'bg-slate-900 text-white dark:bg-blue-600 dark:text-white hover:bg-slate-800'
+                        : 'bg-slate-200/60 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-200'
                     }`}
                   >
                     {chip}
@@ -510,28 +556,27 @@ export default function App() {
               {/* Status & Sync Badge */}
               <div className="flex items-center justify-between flex-wrap gap-2 mb-4 px-2">
                 {consulta ? (
-                  <p className="text-sm text-slate-500">
-                    Resultados para <span className="font-semibold text-slate-800">"{consulta}"</span> ({resultados.length})
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Resultados para <span className="font-semibold text-slate-800 dark:text-slate-100">"{consulta}"</span> ({resultados.length})
                   </p>
                 ) : (
-                  <p className="text-xs text-slate-500 font-medium">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                     Mostrando {resultados.length} universidades disponibles
                   </p>
                 )}
                 {META_SINCRONIZACION?.fechaTexto && (
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-full px-3 py-1 shadow-xs">
+                  <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 rounded-full px-3 py-1 shadow-xs">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Estados verificados vía IA: <strong>{META_SINCRONIZACION.fechaTexto}</strong></span>
                   </div>
                 )}
               </div>
 
-
-
               {/* Grid de tarjetas */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
                 {resultados.map(({ uni, programas }) => {
                   const esFav = favoritos.has(uni.id);
+                  const media = getCampusMedia(uni.id);
                   const estadoConfig = {
                     abiertas: { bg: 'bg-emerald-500', text: 'Inscripciones Abiertas' },
                     matriculas: { bg: 'bg-blue-600', text: 'Matrículas Abiertas' },
@@ -545,45 +590,83 @@ export default function App() {
                       className="group cursor-pointer flex flex-col"
                       onClick={() => setSeleccion({ uni, programas })}
                     >
-                      {/* Thumbnail 16:9 */}
-                      <div className={`relative w-full aspect-video rounded-xl overflow-hidden bg-gradient-to-br ${getColors(uni.id)} flex items-center justify-center p-6 border border-slate-200/60 transition-all duration-300 group-hover:shadow-md`}>
+                      {/* Thumbnail 16:9 con Fotografía Real de Campus */}
+                      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-200/80 dark:border-slate-800 transition-all duration-300 group-hover:shadow-xl group-hover:border-blue-500/50">
+                        {/* Foto Real de Campus */}
+                        <img
+                          src={media.foto}
+                          alt={`Campus de ${uni.nombre}`}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.90] group-hover:brightness-100"
+                          loading="lazy"
+                        />
+
+                        {/* Overlay gradiente oscuro para legibilidad y elegancia cinematográfica */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-black/20 to-black/30 pointer-events-none"></div>
+
+                        {/* Logo oficial y sigla sobre el campus */}
+                        <div className="absolute bottom-2.5 left-2.5 flex items-center gap-2 z-10">
+                          <div className="w-10 h-10 rounded-xl bg-white/95 dark:bg-slate-900/95 p-1 shadow-md border border-white/40 dark:border-slate-700 overflow-hidden flex items-center justify-center shrink-0">
+                            <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
+                          </div>
+                          <div className="text-white drop-shadow-md pr-1">
+                            <span className="text-[12px] font-bold block leading-tight text-white">{uni.sigla}</span>
+                            <span className="text-[10px] text-slate-200 font-medium leading-tight">Región {uni.zona}</span>
+                          </div>
+                        </div>
+
                         {/* Estado Badge flotante en esquina superior izquierda */}
                         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
                           {uni.estadoAdmision === 'ambas' ? (
                             <>
-                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-sm bg-opacity-90 bg-emerald-500">
+                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-emerald-500/90">
                                 Inscripciones
                               </div>
-                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-sm bg-opacity-90 bg-blue-600">
+                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-blue-600/90">
                                 Matrículas
                               </div>
                             </>
                           ) : (
-                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-sm bg-opacity-90 ${estadoConfig.bg}`}>
+                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-md ${estadoConfig.bg}`}>
                               {estadoConfig.text}
                             </div>
                           )}
                         </div>
 
-                        <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">
-                          <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="md" />
-                        </div>
-                        {/* Acciones flotantes */}
+                        {/* Acciones flotantes en esquina superior derecha */}
                         <div className="absolute top-2 right-2 flex items-center gap-1.5 z-10">
+                          {media.youtubeId && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setVideoActivo({
+                                  videoId: media.youtubeId,
+                                  titulo: media.tituloVideo,
+                                  uniNombre: uni.nombre,
+                                });
+                              }}
+                              className="px-2 py-1 rounded bg-black/70 hover:bg-rose-600 text-white font-bold text-[10px] flex items-center gap-1 transition-all backdrop-blur-md shadow-sm"
+                              title="Ver Tour de Campus (YouTube)"
+                            >
+                              <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 text-rose-400">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                              <span>Tour</span>
+                            </button>
+                          )}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setUnisComparar(prev => [uni.id, ...prev.filter(x => x !== uni.id)].slice(0, 3));
                               setPestana('comparar');
                             }}
-                            className="p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 backdrop-blur-sm text-xs"
+                            className="p-1.5 rounded bg-black/70 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md text-xs shadow-sm"
                             title="Comparar lado a lado"
                           >
                             ⚖️
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); toggleFavorito(uni.id); }}
-                            className="p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 backdrop-blur-sm"
+                            className="p-1.5 rounded bg-black/70 text-white hover:bg-black/90 transition-colors backdrop-blur-md shadow-sm"
                             title="Guardar en favoritos"
                           >
                             <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-4 h-4 ${esFav ? 'text-amber-400' : ''}`}>
@@ -591,41 +674,34 @@ export default function App() {
                             </svg>
                           </button>
                         </div>
-                        {/* Tipo Badge */}
-                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/80 text-white text-[10px] font-medium backdrop-blur-sm">
+
+                        {/* Tipo Badge en esquina inferior derecha */}
+                        <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/75 text-white text-[10px] font-semibold backdrop-blur-md border border-white/10">
                           {uni.tipo === 'pública' ? 'Matrícula $0' : 'Privada'}
                         </div>
                       </div>
 
-                      <div className="flex gap-3 mt-3 pr-2">
-                        <div className="shrink-0">
-                          <div className="w-9 h-9 rounded-full bg-white border border-slate-200 overflow-hidden flex items-center justify-center">
-                            <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
-                          </div>
-                        </div>
-                        <div className="flex flex-col flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-slate-900 leading-tight line-clamp-2 group-hover:text-blue-700 transition-colors">
-                            {uni.nombre}
-                          </h3>
-                          <div className="text-xs text-slate-500 mt-1 flex flex-col gap-0.5">
-                            <span className="truncate">{uni.sigla} • Región {uni.zona}</span>
-                            <span className="truncate flex items-center gap-1">
-                              {uni.ranking ? (
-                                <>
-                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-amber-500">
-                                    <circle cx="12" cy="8" r="7"></circle>
-                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                  </svg>
-                                  <span>Rank #{uni.ranking}</span>
-                                </>
-                              ) : <span>Sin Rank</span>} • {uni.tipoAdmision}
+                      <div className="flex flex-col mt-2.5 pr-1">
+                        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-tight line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                          {uni.nombre}
+                        </h3>
+                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex flex-col gap-0.5">
+                          <span className="truncate flex items-center gap-1 font-medium">
+                            {uni.ranking ? (
+                              <>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-amber-500 shrink-0">
+                                  <circle cx="12" cy="8" r="7"></circle>
+                                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                </svg>
+                                <span className="text-slate-700 dark:text-slate-200 font-semibold">Rank #{uni.ranking}</span>
+                              </>
+                            ) : <span>Sin Rank</span>} • <span className="capitalize">{uni.tipoAdmision}</span>
+                          </span>
+                          {programas.length > 0 && (
+                            <span className="text-blue-600 dark:text-blue-400 truncate mt-0.5 font-medium">
+                              ✓ {programas.join(', ')}
                             </span>
-                            {programas.length > 0 && (
-                              <span className="text-blue-600 truncate mt-0.5">
-                                ✓ {programas.join(', ')}
-                              </span>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -657,11 +733,11 @@ export default function App() {
       </div>
 
       {/* ── MOBILE BOTTOM NAVIGATION BAR ── */}
-      <nav className="sm:hidden shrink-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-1.5 flex items-center justify-around shadow-lg z-30">
+      <nav className="sm:hidden shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-2 py-1.5 flex items-center justify-around shadow-lg z-30 transition-colors">
         <button
           onClick={() => { setSeleccion(null); setPestana('buscar'); }}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
-            pestana === 'buscar' ? 'text-blue-600 font-bold' : 'text-slate-500'
+            pestana === 'buscar' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -674,7 +750,7 @@ export default function App() {
         <button
           onClick={() => { setSeleccion(null); setPestana('lineatiempo'); }}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
-            pestana === 'lineatiempo' ? 'text-blue-600 font-bold' : 'text-slate-500'
+            pestana === 'lineatiempo' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -687,7 +763,7 @@ export default function App() {
         <button
           onClick={() => { setSeleccion(null); setPestana('comparar'); }}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
-            pestana === 'comparar' ? 'text-indigo-600 font-bold' : 'text-slate-500'
+            pestana === 'comparar' ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -699,7 +775,7 @@ export default function App() {
         <button
           onClick={() => { setSeleccion(null); setPestana('simulador'); }}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
-            pestana === 'simulador' ? 'text-blue-600 font-bold' : 'text-slate-500'
+            pestana === 'simulador' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -713,10 +789,10 @@ export default function App() {
         <button
           onClick={() => { setSeleccion(null); setPestana('gratuidad'); }}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
-            pestana === 'gratuidad' ? 'text-emerald-700 font-bold' : 'text-slate-500'
+            pestana === 'gratuidad' ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
-          <span className="text-base leading-none">🏛️</span>
+          <span className="text-sm leading-none">🏛️</span>
           <span>Gratuidad</span>
         </button>
       </nav>

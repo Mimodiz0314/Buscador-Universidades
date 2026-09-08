@@ -1,71 +1,73 @@
+import { useState } from 'react';
 import { META_DATOS } from '../data/universidades.js';
 import LogoUniversidad from './LogoUniversidad.jsx';
 import { generarUrlGoogleCalendar } from '../utils/calendar.js';
+import { getCampusMedia } from '../data/campusMedia.js';
+import ModalVideoCampus from './ModalVideoCampus.jsx';
 
 function ChipVerificado({ verificado }) {
   if (verificado) {
     return (
-      <span className="inline-flex items-center rounded-full bg-emerald-100/50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800">
+      <span className="inline-flex items-center rounded-full bg-emerald-100/50 dark:bg-emerald-950/50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800 dark:text-emerald-300">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 mr-1"><polyline points="20 6 9 17 4 12"></polyline></svg>
         Verificado: {verificado}
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center rounded-full bg-amber-100/50 px-2.5 py-0.5 text-[11px] font-medium text-amber-800">
+    <span className="inline-flex items-center rounded-full bg-amber-100/50 dark:bg-amber-950/50 px-2.5 py-0.5 text-[11px] font-medium text-amber-800 dark:text-amber-300">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 mr-1"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
       Confirmar oficial
     </span>
   );
 }
 
-// Banner de universidad: fondo de gradiente oscuro + logo real centrado
-function UniversityBanner({ uni }) {
-  const PALETAS = [
-    { from: '#1e3a5f', to: '#0c4a6e' },
-    { from: '#14532d', to: '#064e3b' },
-    { from: '#7c2d12', to: '#9a3412' },
-    { from: '#3b0764', to: '#4c1d95' },
-    { from: '#0c4a6e', to: '#1e40af' },
-    { from: '#1c1917', to: '#292524' },
-    { from: '#0f172a', to: '#1e293b' },
-  ];
-  const sum = (uni.id || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-  const p = PALETAS[sum % PALETAS.length];
+// Banner de universidad: fotografía HD de campus + botón Tour Virtual + logo oficial
+function UniversityBanner({ uni, onVerVideo }) {
+  const media = getCampusMedia(uni.id);
 
   return (
-    <div
-      className="w-full h-full flex items-center justify-center"
-      style={{ background: `linear-gradient(135deg, ${p.from} 0%, ${p.to} 100%)` }}
-    >
-      <div className="w-40 h-40 sm:w-56 sm:h-56 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center p-6 shadow-2xl ring-1 ring-white/20">
-        <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="lg" />
+    <div className="relative w-full h-full overflow-hidden bg-slate-950 flex items-center justify-center">
+      <img
+        src={media.foto}
+        alt={`Campus de ${uni.nombre}`}
+        className="w-full h-full object-cover brightness-[0.88] contrast-[1.05]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/30"></div>
+
+      {media.youtubeId && (
+        <button
+          onClick={onVerVideo}
+          className="absolute z-20 flex items-center gap-2 px-4 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow-2xl backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <span>Ver Tour Virtual de Campus (YouTube)</span>
+        </button>
+      )}
+
+      <div className="absolute top-4 right-4 z-10 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-1.5 shadow-xl border border-white/40 dark:border-slate-700 flex items-center justify-center">
+        <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
       </div>
     </div>
   );
 }
 
-
 // Miniatura pequeña para la columna de universidades relacionadas
 function RelatedThumbnail({ u }) {
-  const PALETAS = [
-    { from: '#1e3a5f', to: '#0c4a6e' },
-    { from: '#14532d', to: '#064e3b' },
-    { from: '#7c2d12', to: '#9a3412' },
-    { from: '#3b0764', to: '#4c1d95' },
-    { from: '#0c4a6e', to: '#1e40af' },
-    { from: '#1c1917', to: '#292524' },
-    { from: '#0f172a', to: '#1e293b' },
-  ];
-  const sum = (u.id || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-  const p = PALETAS[sum % PALETAS.length];
+  const media = getCampusMedia(u.id);
 
   return (
-    <div 
-      className="w-full h-full flex items-center justify-center"
-      style={{ background: `linear-gradient(135deg, ${p.from} 0%, ${p.to} 100%)` }}
-    >
-      <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center p-1 shadow">
+    <div className="w-full h-full relative overflow-hidden bg-slate-900">
+      <img
+        src={media.foto}
+        alt={u.nombre}
+        className="w-full h-full object-cover"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-white/90 dark:bg-slate-900/90 p-0.5 shadow-sm overflow-hidden flex items-center justify-center">
         <LogoUniversidad url={u.web} sigla={u.sigla} nombre={u.nombre} uniId={u.id} size="sm" />
       </div>
     </div>
@@ -73,17 +75,27 @@ function RelatedThumbnail({ u }) {
 }
 
 export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, universidadesRelacionadas = [], onSelectRelated, onVerProceso, onComparar }) {
+  const [modalVideo, setModalVideo] = useState(false);
+  const media = getCampusMedia(uni.id);
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8 max-w-screen-2xl mx-auto w-full animate-in fade-in duration-300">
+      {modalVideo && (
+        <ModalVideoCampus
+          videoId={media.youtubeId}
+          titulo={media.tituloVideo}
+          uniNombre={uni.nombre}
+          onCerrar={() => setModalVideo(false)}
+        />
+      )}
       
       {/* LEFT COLUMN: Main "Video" Area */}
-      <div className="flex-1 min-w-0 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="flex-1 min-w-0 flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
         
         {/* Video Player Header */}
         <div className="relative w-full aspect-video sm:aspect-[21/9] bg-slate-900 overflow-hidden shrink-0 group">
           
-          <UniversityBanner uni={uni} />
+          <UniversityBanner uni={uni} onVerVideo={() => setModalVideo(true)} />
           
           {/* Top-left back button (simulate Youtube back or close) */}
           <button
@@ -98,7 +110,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
           </button>
 
           {/* Overlay gradient & Title */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
           
           <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between pointer-events-none">
             <div className="text-white">
@@ -143,27 +155,39 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
         </div>
 
         {/* Video Details Area */}
-        <div className="p-4 sm:p-6 lg:px-8 bg-white flex-1">
+        <div className="p-4 sm:p-6 lg:px-8 bg-white dark:bg-slate-900 flex-1">
           
           {/* Channel Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                 <LogoUniversidad sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 text-lg leading-tight">{uni.sigla || 'Universidad'}</h3>
-                <p className="text-sm text-slate-500">
+                <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight">{uni.sigla || 'Universidad'}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   {uni.ciudad} • {uni.ranking ? `Ranking #${uni.ranking}` : 'Sin Ranking'}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
+              {media.youtubeId && (
+                <button
+                  onClick={() => setModalVideo(true)}
+                  className="px-4 py-2 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold rounded-full text-sm transition-colors border border-rose-200 dark:border-rose-800 flex items-center gap-1.5"
+                  title="Ver tour en video"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-rose-600">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  Tour Virtual
+                </button>
+              )}
               {onComparar && (
                 <button
                   onClick={() => onComparar(uni.id)}
-                  className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-full text-sm transition-colors border border-indigo-200 flex items-center gap-1.5"
+                  className="px-4 py-2 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-bold rounded-full text-sm transition-colors border border-indigo-200 dark:border-indigo-800 flex items-center gap-1.5"
                   title="Comparar con otras universidades"
                 >
                   ⚖️ Comparar
@@ -186,7 +210,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                 })}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 font-semibold rounded-full text-sm transition-colors border border-blue-200 flex items-center gap-1.5"
+                className="px-3.5 py-2 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-800 dark:text-blue-300 font-semibold rounded-full text-sm transition-colors border border-blue-200 dark:border-blue-800 flex items-center gap-1.5"
                 title="Agendar en Google Calendar"
               >
                 📅 Agendar
@@ -195,7 +219,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                 href={uni.web}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 font-semibold rounded-full text-sm transition-colors"
+                className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 font-semibold rounded-full text-sm transition-colors"
               >
                 Sitio Web
               </a>
@@ -203,7 +227,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                 href={uni.admisiones}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-full text-sm transition-colors shadow-md"
+                className="px-4 py-2 bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-500 text-white font-semibold rounded-full text-sm transition-colors shadow-md"
               >
                 Admisiones
               </a>
@@ -211,7 +235,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
           </div>
 
           {/* Aviso legal en el detalle */}
-          <div className="mt-3 bg-amber-50 text-[11px] text-amber-800 border border-amber-200/60 rounded-lg p-2.5">
+          <div className="mt-3 bg-amber-50 dark:bg-amber-950/40 text-[11px] text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60 rounded-lg p-2.5">
             ⚠️ <span className="font-bold">Aviso importante:</span> Los calendarios y estados son orientativos. El estudiante tiene la responsabilidad de validar los plazos oficiales ingresando al enlace de **Admisiones** arriba provisto antes de iniciar trámites.
           </div>
 
