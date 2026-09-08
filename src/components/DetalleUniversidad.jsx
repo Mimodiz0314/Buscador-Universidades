@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import { META_DATOS } from '../data/universidades.js';
 import LogoUniversidad from './LogoUniversidad.jsx';
 import { generarUrlGoogleCalendar } from '../utils/calendar.js';
-import { getCampusMedia } from '../data/campusMedia.js';
-import ModalVideoCampus from './ModalVideoCampus.jsx';
 
 function ChipVerificado({ verificado }) {
   if (verificado) {
@@ -22,88 +19,80 @@ function ChipVerificado({ verificado }) {
   );
 }
 
-// Banner de universidad: fotografía HD de campus + botón Tour Virtual + logo oficial
-function UniversityBanner({ uni, onVerVideo }) {
-  const media = getCampusMedia(uni.id);
-
+// Banner académico ejecutivo: Escudo oficial destacado + atmósfera institucional de alto nivel
+function UniversityBanner({ uni }) {
   return (
-    <div className="relative w-full h-full overflow-hidden bg-slate-950 flex items-center justify-center">
-      <img
-        src={media.foto}
-        alt={`Campus de ${uni.nombre}`}
-        className="w-full h-full object-cover brightness-[0.88] contrast-[1.05]"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/30"></div>
+    <div className="relative w-full h-full overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 flex items-center justify-center p-6 sm:p-10">
+      {/* Patrón de fondo geométrico sutil */}
+      <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
+      <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-blue-500/20 blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none"></div>
 
-      {media.youtubeId && (
-        <button
-          onClick={onVerVideo}
-          className="absolute z-20 flex items-center gap-2 px-4 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow-2xl backdrop-blur-md transition-all hover:scale-105 active:scale-95 border border-white/20"
-        >
-          <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-          <span>Ver Tour Virtual de Campus (YouTube)</span>
-        </button>
-      )}
+      {/* Escudo Oficial Prominente en marco blanco con relieve */}
+      <div className="relative z-10 transition-transform duration-500 hover:scale-105">
+        <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-white p-3.5 sm:p-4 shadow-2xl border-2 border-white/80 dark:border-slate-700/80 flex items-center justify-center">
+          <LogoUniversidad
+            url={uni.web}
+            sigla={uni.sigla}
+            nombre={uni.nombre}
+            uniId={uni.id}
+            size="lg"
+            className="w-full h-full"
+          />
+        </div>
+      </div>
 
-      <div className="absolute top-4 right-4 z-10 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-1.5 shadow-xl border border-white/40 dark:border-slate-700 flex items-center justify-center">
-        <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
+      {/* Badges superiores */}
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <span className="px-3 py-1 rounded-full bg-black/50 backdrop-blur-md text-white font-bold text-xs border border-white/20">
+          📍 {uni.zona}
+        </span>
+        {uni.ranking && (
+          <span className="px-3 py-1 rounded-full bg-amber-500/90 backdrop-blur-md text-slate-950 font-black text-xs shadow-md">
+            Rank #{uni.ranking}
+          </span>
+        )}
       </div>
     </div>
   );
 }
 
-// Miniatura pequeña para la columna de universidades relacionadas
+// Miniatura para la columna de universidades relacionadas
 function RelatedThumbnail({ u }) {
-  const media = getCampusMedia(u.id);
-
   return (
-    <div className="w-full h-full relative overflow-hidden bg-slate-900">
-      <img
-        src={media.foto}
-        alt={u.nombre}
-        className="w-full h-full object-cover"
-        loading="lazy"
-      />
-      <div className="absolute inset-0 bg-black/40"></div>
-      <div className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-white/90 dark:bg-slate-900/90 p-0.5 shadow-sm overflow-hidden flex items-center justify-center">
-        <LogoUniversidad url={u.web} sigla={u.sigla} nombre={u.nombre} uniId={u.id} size="sm" />
+    <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-slate-900 to-blue-950 flex items-center justify-center p-2">
+      <div className="w-11 h-11 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center">
+        <LogoUniversidad
+          url={u.web}
+          sigla={u.sigla}
+          nombre={u.nombre}
+          uniId={u.id}
+          size="sm"
+          className="w-full h-full"
+        />
       </div>
     </div>
   );
 }
 
 export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, universidadesRelacionadas = [], onSelectRelated, onVerProceso, onComparar }) {
-  const [modalVideo, setModalVideo] = useState(false);
-  const media = getCampusMedia(uni.id);
-
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8 max-w-screen-2xl mx-auto w-full animate-in fade-in duration-300">
-      {modalVideo && (
-        <ModalVideoCampus
-          videoId={media.youtubeId}
-          titulo={media.tituloVideo}
-          uniNombre={uni.nombre}
-          onCerrar={() => setModalVideo(false)}
-        />
-      )}
-      
-      {/* LEFT COLUMN: Main "Video" Area */}
+      {/* LEFT COLUMN: Main Area */}
       <div className="flex-1 min-w-0 flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
         
-        {/* Video Player Header */}
+        {/* Banner Header */}
         <div className="relative w-full aspect-video sm:aspect-[21/9] bg-slate-900 overflow-hidden shrink-0 group">
           
-          <UniversityBanner uni={uni} onVerVideo={() => setModalVideo(true)} />
+          <UniversityBanner uni={uni} />
           
-          {/* Top-left back button (simulate Youtube back or close) */}
+          {/* Top-left back button */}
           <button
             onClick={onCerrar}
-            className="absolute top-4 left-4 text-white bg-black/50 hover:bg-black/70 rounded-full p-2 backdrop-blur-md transition-colors z-10"
+            className="absolute top-4 left-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2.5 backdrop-blur-md transition-colors z-20 shadow-md"
             title="Volver a búsqueda"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5">
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
@@ -115,20 +104,20 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
           <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between pointer-events-none">
             <div className="text-white">
               <div className="flex gap-2 mb-2">
-                <span className={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${uni.tipo === 'pública' ? 'bg-emerald-600' : 'bg-indigo-600'}`}>
-                  {uni.tipo}
+                <span className={`inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md shadow-sm ${uni.tipo === 'pública' ? 'bg-emerald-600' : 'bg-indigo-600'}`}>
+                  {uni.tipo === 'pública' ? 'Pública (Matrícula $0)' : 'Privada'}
                 </span>
                 {uni.estadoAdmision === 'ambas' ? (
                   <>
-                    <span className="inline-block px-2 py-0.5 text-xs font-bold uppercase rounded bg-emerald-500">
+                    <span className="inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md bg-emerald-500 shadow-sm">
                       Inscripciones
                     </span>
-                    <span className="inline-block px-2 py-0.5 text-xs font-bold uppercase rounded bg-blue-600">
+                    <span className="inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md bg-blue-600 shadow-sm">
                       Matrículas
                     </span>
                   </>
                 ) : (
-                  <span className={`inline-block px-2 py-0.5 text-xs font-bold uppercase rounded ${
+                  <span className={`inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md shadow-sm ${
                     {
                       abiertas: 'bg-emerald-500',
                       matriculas: 'bg-blue-600',
@@ -147,43 +136,31 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                   </span>
                 )}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold leading-tight drop-shadow-md">
+              <h2 className="text-2xl sm:text-3xl font-black leading-tight drop-shadow-md">
                 {uni.nombre}
               </h2>
             </div>
           </div>
         </div>
 
-        {/* Video Details Area */}
+        {/* Video / University Details Area */}
         <div className="p-4 sm:p-6 lg:px-8 bg-white dark:bg-slate-900 flex-1">
           
-          {/* Channel Header */}
+          {/* Institutional Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                <LogoUniversidad sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
+              <div className="w-12 h-12 rounded-2xl overflow-hidden flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs p-1.5">
+                <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" className="w-full h-full" />
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight">{uni.sigla || 'Universidad'}</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  {uni.ciudad} • {uni.ranking ? `Ranking #${uni.ranking}` : 'Sin Ranking'}
+                  {uni.ciudad} • {uni.ranking ? `Ranking #${uni.ranking}` : 'Acreditada de Alta Calidad'}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              {media.youtubeId && (
-                <button
-                  onClick={() => setModalVideo(true)}
-                  className="px-4 py-2 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold rounded-full text-sm transition-colors border border-rose-200 dark:border-rose-800 flex items-center gap-1.5"
-                  title="Ver tour en video"
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-rose-600">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                  Tour Virtual
-                </button>
-              )}
               {onComparar && (
                 <button
                   onClick={() => onComparar(uni.id)}
@@ -266,7 +243,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                   Costos Estimados <ChipVerificado verificado={uni.costoInscripcion.verificado} />
                 </h4>
                 <p className="opacity-90">
-                  {uni.costoInscripcion.valor && <strong className="text-slate-900">PIN / Inscripción: ${uni.costoInscripcion.valor.toLocaleString('es-CO')}. </strong>}
+                  {uni.costoInscripcion.valor && <strong className="text-slate-900 dark:text-white">PIN / Inscripción: ${uni.costoInscripcion.valor.toLocaleString('es-CO')}. </strong>}
                   {uni.costoInscripcion.nota}
                 </p>
               </div>
@@ -276,8 +253,8 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
           {/* Steps & Sample Programs */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h4 className="font-bold text-slate-900 mb-3 border-b border-slate-100 pb-2">Pasos para Inscripción</h4>
-              <ol className="list-decimal pl-5 space-y-2 text-sm text-slate-600">
+              <h4 className="font-bold text-slate-900 dark:text-white mb-3 border-b border-slate-100 dark:border-slate-800 pb-2">Pasos para Inscripción</h4>
+              <ol className="list-decimal pl-5 space-y-2 text-sm text-slate-600 dark:text-slate-300">
                 {uni.pasos.map((p, i) => (
                   <li key={i}>{p}</li>
                 ))}
@@ -285,13 +262,13 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
             </div>
 
             <div>
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                <h4 className="font-bold text-slate-900">Muestra de Programas</h4>
-                <a href={META_DATOS.linkHecaa} target="_blank" rel="noopener noreferrer" className="text-[11px] font-semibold text-blue-600 hover:underline">Ver catálogo oficial</a>
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 mb-3">
+                <h4 className="font-bold text-slate-900 dark:text-white">Muestra de Programas</h4>
+                <a href={META_DATOS.linkHecaa} target="_blank" rel="noopener noreferrer" className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline">Ver catálogo oficial</a>
               </div>
               <div className="flex flex-wrap gap-1.5 max-h-56 overflow-y-auto pr-2 custom-scrollbar">
                 {uni.programas.map((p) => (
-                  <span key={p} className="bg-slate-100 border border-slate-200 text-slate-700 px-2 py-1 rounded-md text-[11px] font-medium">
+                  <span key={p} className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded-md text-[11px] font-medium">
                     {p}
                   </span>
                 ))}
@@ -302,14 +279,12 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
         </div>
       </div>
 
-      {/* RIGHT COLUMN: Related "Videos" (Universities) */}
+      {/* RIGHT COLUMN: Related Universities */}
       <div className="w-full lg:w-[360px] shrink-0 flex flex-col gap-3">
-        <h3 className="font-bold text-slate-900 text-lg mb-1 px-1">Relacionadas</h3>
+        <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-1 px-1">Relacionadas</h3>
         
         {universidadesRelacionadas.map((item) => {
           const u = item.uni;
-          // Simple thumbnail for the right column
-          const thumb = `https://image.thum.io/get/width/240/crop/180/${u.web}`;
           
           return (
             <div 
@@ -318,28 +293,31 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 onSelectRelated(item);
               }}
-              className="group flex gap-3 cursor-pointer hover:bg-slate-100 p-2 rounded-lg transition-colors"
+              className="group flex gap-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/70 p-2 rounded-xl transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700/60"
             >
-              <div className="relative w-40 aspect-video rounded-lg overflow-hidden bg-slate-200 shrink-0">
+              <div className="relative w-36 sm:w-40 aspect-video rounded-xl overflow-hidden bg-slate-900 shrink-0 shadow-xs">
                 <RelatedThumbnail u={u} />
-                <div className="absolute bottom-1 right-1 bg-black/80 text-white text-[9px] font-bold px-1 rounded">
+                <div className="absolute bottom-1 right-1 bg-black/80 text-white text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm">
                   {u.zona}
                 </div>
               </div>
               
-              <div className="flex flex-col min-w-0 py-0.5">
-                <h4 className="text-sm font-semibold text-slate-900 leading-snug line-clamp-2 group-hover:text-blue-700">
+              <div className="flex flex-col min-w-0 py-0.5 justify-center">
+                <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {u.nombre}
                 </h4>
-                <span className="text-xs text-slate-500 mt-1 truncate">{u.sigla || 'Uni'}</span>
-                <span className="text-xs text-slate-500 truncate">{u.tipo}</span>
+                <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  <span className="font-bold text-blue-600 dark:text-blue-400">{u.sigla || 'Uni'}</span>
+                  <span>•</span>
+                  <span className="capitalize">{u.tipo}</span>
+                </div>
               </div>
             </div>
           );
         })}
 
         {universidadesRelacionadas.length === 0 && (
-          <p className="text-sm text-slate-500 italic px-2">No hay recomendaciones adicionales bajo estos filtros.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 italic px-2">No hay recomendaciones adicionales bajo estos filtros.</p>
         )}
       </div>
 

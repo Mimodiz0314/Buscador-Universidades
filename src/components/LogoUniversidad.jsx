@@ -59,11 +59,14 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
     lg: 'w-36 h-36 sm:w-48 sm:h-48',
   }[size] || 'w-20 h-20';
 
+  const isCustomRounded = className && className.includes('rounded-');
+  const roundedStyle = isCustomRounded ? '' : 'rounded-full';
+
   if (imgError || (!domain && localFailed)) {
     // Fallback: avatar de iniciales
     return (
       <div
-        className={`${containerClass} rounded-full flex items-center justify-center shrink-0 select-none ${className || ''}`}
+        className={`${containerClass} ${roundedStyle} flex items-center justify-center shrink-0 select-none ${className || ''}`}
         style={{ backgroundColor: paleta.bg }}
         title={nombre || sigla}
       >
@@ -76,14 +79,14 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
 
   return (
     <div
-      className={`${containerClass} rounded-full bg-white flex items-center justify-center shrink-0 overflow-hidden ${className || ''}`}
+      className={`${containerClass} ${roundedStyle} bg-white flex items-center justify-center shrink-0 overflow-hidden ${className || ''}`}
       style={{ padding: size === 'lg' ? '12px' : size === 'md' ? '8px' : '4px' }}
       title={nombre || sigla}
     >
       <img
         src={logoSrc}
         alt={sigla || nombre}
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain filter drop-shadow-xs"
         loading="lazy"
         onError={() => {
           if (!localFailed) {

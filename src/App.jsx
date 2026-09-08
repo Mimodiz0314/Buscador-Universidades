@@ -5,8 +5,6 @@ import {
 } from './data/universidades.js';
 import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
-import { getCampusMedia } from './data/campusMedia.js';
-
 import ESTADOS_ADMISION from './data/estados.json';
 import META_SINCRONIZACION from './data/meta.json';
 
@@ -26,13 +24,11 @@ import LogoUniversidad from './components/LogoUniversidad.jsx';
 import LineaTiempo from './components/LineaTiempo.jsx';
 import ComparadorUniversidades from './components/ComparadorUniversidades.jsx';
 import CalculadoraGratuidad from './components/CalculadoraGratuidad.jsx';
-import ModalVideoCampus from './components/ModalVideoCampus.jsx';
 
 export default function App() {
   const [pestana, setPestana] = useState('buscar');
   const [sidebarAbierto, setSidebarAbierto] = useState(true);
   const [unisComparar, setUnisComparar] = useState(['unal', 'udea']);
-  const [videoActivo, setVideoActivo] = useState(null);
 
   // Dark Mode
   const [temaOscuro, setTemaOscuro] = useState(() => {
@@ -219,14 +215,6 @@ export default function App() {
 
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-slate-950 font-sans antialiased text-slate-900 dark:text-slate-100 overflow-hidden transition-colors">
-      {videoActivo && (
-        <ModalVideoCampus
-          videoId={videoActivo.videoId}
-          titulo={videoActivo.titulo}
-          uniNombre={videoActivo.uniNombre}
-          onCerrar={() => setVideoActivo(null)}
-        />
-      )}
 
       {/* ── HEADER ── */}
       <header className="flex h-16 shrink-0 items-center justify-between px-4 w-full bg-white dark:bg-slate-900 relative z-20 border-b border-slate-100 dark:border-slate-800 transition-colors">
@@ -573,10 +561,9 @@ export default function App() {
               </div>
 
               {/* Grid de tarjetas */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5">
                 {resultados.map(({ uni, programas }) => {
                   const esFav = favoritos.has(uni.id);
-                  const media = getCampusMedia(uni.id);
                   const estadoConfig = {
                     abiertas: { bg: 'bg-emerald-500', text: 'Inscripciones Abiertas' },
                     matriculas: { bg: 'bg-blue-600', text: 'Matrículas Abiertas' },
@@ -587,121 +574,129 @@ export default function App() {
                   return (
                     <div
                       key={uni.id}
-                      className="group cursor-pointer flex flex-col"
+                      className="group cursor-pointer flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-blue-500/50 dark:hover:border-blue-500/50 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden"
                       onClick={() => setSeleccion({ uni, programas })}
                     >
-                      {/* Thumbnail 16:9 con Fotografía Real de Campus */}
-                      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-200/80 dark:border-slate-800 transition-all duration-300 group-hover:shadow-xl group-hover:border-blue-500/50">
-                        {/* Foto Real de Campus */}
-                        <img
-                          src={media.foto}
-                          alt={`Campus de ${uni.nombre}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.90] group-hover:brightness-100"
-                          loading="lazy"
-                        />
+                      {/* Cabecera Académica con Escudo Oficial Centrado */}
+                      <div className="relative w-full h-36 sm:h-40 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 flex items-center justify-center overflow-hidden">
+                        {/* Patrón sutil de fondo geométrico */}
+                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+                        <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-blue-500/20 blur-xl pointer-events-none"></div>
+                        <div className="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-indigo-500/20 blur-xl pointer-events-none"></div>
 
-                        {/* Overlay gradiente oscuro para legibilidad y elegancia cinematográfica */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-black/20 to-black/30 pointer-events-none"></div>
-
-                        {/* Logo oficial y sigla sobre el campus */}
-                        <div className="absolute bottom-2.5 left-2.5 flex items-center gap-2 z-10">
-                          <div className="w-10 h-10 rounded-xl bg-white/95 dark:bg-slate-900/95 p-1 shadow-md border border-white/40 dark:border-slate-700 overflow-hidden flex items-center justify-center shrink-0">
-                            <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="sm" />
-                          </div>
-                          <div className="text-white drop-shadow-md pr-1">
-                            <span className="text-[12px] font-bold block leading-tight text-white">{uni.sigla}</span>
-                            <span className="text-[10px] text-slate-200 font-medium leading-tight">Región {uni.zona}</span>
+                        {/* Escudo / Logo Oficial Grande y Centrado */}
+                        <div className="relative z-10 transition-transform duration-300 group-hover:scale-105">
+                          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-white p-2.5 shadow-lg border border-white/60 dark:border-slate-700/60 flex items-center justify-center">
+                            <LogoUniversidad
+                              url={uni.web}
+                              sigla={uni.sigla}
+                              nombre={uni.nombre}
+                              uniId={uni.id}
+                              size="md"
+                              className="w-full h-full"
+                            />
                           </div>
                         </div>
 
-                        {/* Estado Badge flotante en esquina superior izquierda */}
+                        {/* Badge de Estado en esquina superior izquierda */}
                         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
                           {uni.estadoAdmision === 'ambas' ? (
                             <>
-                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-emerald-500/90">
+                              <div className="px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-emerald-500/90">
                                 Inscripciones
                               </div>
-                              <div className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-blue-600/90">
+                              <div className="px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-blue-600/90">
                                 Matrículas
                               </div>
                             </>
                           ) : (
-                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm backdrop-blur-md ${estadoConfig.bg}`}>
+                            <div className={`px-2.5 py-0.5 rounded-md text-[10px] font-bold text-white shadow-sm backdrop-blur-md ${estadoConfig.bg}`}>
                               {estadoConfig.text}
                             </div>
                           )}
                         </div>
 
-                        {/* Acciones flotantes en esquina superior derecha */}
-                        <div className="absolute top-2 right-2 flex items-center gap-1.5 z-10">
-                          {media.youtubeId && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setVideoActivo({
-                                  videoId: media.youtubeId,
-                                  titulo: media.tituloVideo,
-                                  uniNombre: uni.nombre,
-                                });
-                              }}
-                              className="px-2 py-1 rounded bg-black/70 hover:bg-rose-600 text-white font-bold text-[10px] flex items-center gap-1 transition-all backdrop-blur-md shadow-sm"
-                              title="Ver Tour de Campus (YouTube)"
-                            >
-                              <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 text-rose-400">
-                                <path d="M8 5v14l11-7z"/>
-                              </svg>
-                              <span>Tour</span>
-                            </button>
-                          )}
+                        {/* Botones de acción en esquina superior derecha */}
+                        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setUnisComparar(prev => [uni.id, ...prev.filter(x => x !== uni.id)].slice(0, 3));
                               setPestana('comparar');
                             }}
-                            className="p-1.5 rounded bg-black/70 text-white hover:bg-indigo-600 transition-colors backdrop-blur-md text-xs shadow-sm"
+                            className="p-1.5 rounded-lg bg-black/50 hover:bg-indigo-600 text-white transition-colors backdrop-blur-md text-xs shadow-sm"
                             title="Comparar lado a lado"
                           >
                             ⚖️
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); toggleFavorito(uni.id); }}
-                            className="p-1.5 rounded bg-black/70 text-white hover:bg-black/90 transition-colors backdrop-blur-md shadow-sm"
+                            className="p-1.5 rounded-lg bg-black/50 hover:bg-black/80 text-white transition-colors backdrop-blur-md shadow-sm"
                             title="Guardar en favoritos"
                           >
-                            <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-4 h-4 ${esFav ? 'text-amber-400' : ''}`}>
+                            <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-3.5 h-3.5 ${esFav ? 'text-amber-400' : 'text-white'}`}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                             </svg>
                           </button>
                         </div>
 
-                        {/* Tipo Badge en esquina inferior derecha */}
-                        <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/75 text-white text-[10px] font-semibold backdrop-blur-md border border-white/10">
-                          {uni.tipo === 'pública' ? 'Matrícula $0' : 'Privada'}
+                        {/* Badges en la parte inferior del banner */}
+                        <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[10px] font-semibold text-white/90 z-10 pointer-events-none">
+                          <span className="px-2 py-0.5 rounded-md bg-black/45 backdrop-blur-sm">
+                            📍 {uni.zona}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-black/45 backdrop-blur-sm">
+                            {uni.tipo === 'pública' ? 'Matrícula $0' : 'Privada'}
+                          </span>
                         </div>
                       </div>
 
-                      <div className="flex flex-col mt-2.5 pr-1">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-tight line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                          {uni.nombre}
-                        </h3>
-                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex flex-col gap-0.5">
-                          <span className="truncate flex items-center gap-1 font-medium">
-                            {uni.ranking ? (
-                              <>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-amber-500 shrink-0">
-                                  <circle cx="12" cy="8" r="7"></circle>
-                                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                </svg>
-                                <span className="text-slate-700 dark:text-slate-200 font-semibold">Rank #{uni.ranking}</span>
-                              </>
-                            ) : <span>Sin Rank</span>} • <span className="capitalize">{uni.tipoAdmision}</span>
-                          </span>
-                          {programas.length > 0 && (
-                            <span className="text-blue-600 dark:text-blue-400 truncate mt-0.5 font-medium">
-                              ✓ {programas.join(', ')}
+                      {/* Cuerpo de la tarjeta */}
+                      <div className="p-4 flex flex-col flex-1 justify-between gap-3">
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <span className="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                              {uni.sigla}
                             </span>
-                          )}
+                            {uni.ranking && (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 px-1.5 py-0.5 rounded border border-amber-200/60 dark:border-amber-800/60">
+                                Rank #{uni.ranking}
+                              </span>
+                            )}
+                          </div>
+
+                          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                            {uni.nombre}
+                          </h3>
+
+                          <div className="text-xs text-slate-500 dark:text-slate-400 mt-2.5 flex flex-col gap-1">
+                            <span className="flex items-center gap-1.5">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 shrink-0">
+                                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                              </svg>
+                              <span className="truncate">{uni.ciudad.split('(')[0].trim()}</span>
+                            </span>
+
+                            <span className="flex items-center gap-1.5">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 shrink-0">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                              </svg>
+                              <span className="truncate capitalize">{uni.tipoAdmision === 'propio' ? 'Examen propio' : 'Saber 11 (ICFES)'}</span>
+                            </span>
+
+                            {programas.length > 0 && (
+                              <span className="text-blue-600 dark:text-blue-400 truncate mt-1 font-medium text-[11px]">
+                                ✓ {programas.join(', ')}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
+                          <span>Ver requisitos y carreras</span>
+                          <span>→</span>
                         </div>
                       </div>
                     </div>
