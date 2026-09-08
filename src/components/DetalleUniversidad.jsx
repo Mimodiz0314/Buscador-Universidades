@@ -28,15 +28,15 @@ function UniversityBanner({ uni }) {
       <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-blue-500/20 blur-3xl pointer-events-none"></div>
       <div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none"></div>
 
-      {/* Escudo Oficial Prominente en marco blanco con relieve */}
+      {/* Escudo Oficial en tamaño óptico de alta nitidez */}
       <div className="relative z-10 transition-transform duration-500 hover:scale-105">
-        <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-white p-3.5 sm:p-4 shadow-2xl border-2 border-white/80 dark:border-slate-700/80 flex items-center justify-center">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white p-2.5 sm:p-3 shadow-xl border-2 border-white/80 dark:border-slate-700/80 flex items-center justify-center">
           <LogoUniversidad
             url={uni.web}
             sigla={uni.sigla}
             nombre={uni.nombre}
             uniId={uni.id}
-            size="lg"
+            size="md"
             className="w-full h-full"
           />
         </div>

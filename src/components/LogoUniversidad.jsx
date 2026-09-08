@@ -54,19 +54,22 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
   const logoSrc = localFailed ? s2Src : localSrc;
 
   const containerClass = {
-    sm: 'w-9 h-9',
-    md: 'w-20 h-20',
-    lg: 'w-36 h-36 sm:w-48 sm:h-48',
-  }[size] || 'w-20 h-20';
+    xs: 'w-7 h-7',
+    sm: 'w-10 h-10',
+    md: 'w-16 h-16',
+    lg: 'w-24 h-24 sm:w-28 sm:h-28',
+  }[size] || 'w-12 h-12';
 
+  const hasCustomSize = className && (className.includes('w-') || className.includes('h-'));
+  const sizeClass = hasCustomSize ? '' : containerClass;
   const isCustomRounded = className && className.includes('rounded-');
-  const roundedStyle = isCustomRounded ? '' : 'rounded-full';
+  const roundedStyle = isCustomRounded ? '' : 'rounded-xl';
 
   if (imgError || (!domain && localFailed)) {
     // Fallback: avatar de iniciales
     return (
       <div
-        className={`${containerClass} ${roundedStyle} flex items-center justify-center shrink-0 select-none ${className || ''}`}
+        className={`${sizeClass} ${roundedStyle} flex items-center justify-center shrink-0 select-none ${className || ''}`}
         style={{ backgroundColor: paleta.bg }}
         title={nombre || sigla}
       >
@@ -79,7 +82,7 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
 
   return (
     <div
-      className={`${containerClass} ${roundedStyle} bg-white flex items-center justify-center shrink-0 overflow-hidden ${className || ''}`}
+      className={`${sizeClass} ${roundedStyle} bg-white flex items-center justify-center shrink-0 overflow-hidden ${className || ''}`}
       style={{ padding: size === 'lg' ? '12px' : size === 'md' ? '8px' : '4px' }}
       title={nombre || sigla}
     >

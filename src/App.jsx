@@ -565,138 +565,138 @@ export default function App() {
                 {resultados.map(({ uni, programas }) => {
                   const esFav = favoritos.has(uni.id);
                   const estadoConfig = {
-                    abiertas: { bg: 'bg-emerald-500', text: 'Inscripciones Abiertas' },
-                    matriculas: { bg: 'bg-blue-600', text: 'Matrículas Abiertas' },
-                    proximamente: { bg: 'bg-amber-500', text: 'Próximamente' },
-                    cerradas: { bg: 'bg-slate-500', text: 'Cerrado' },
-                  }[uni.estadoAdmision] || { bg: 'bg-slate-500', text: 'Cerrado' };
+                    abiertas: {
+                      pill: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800/60',
+                      dot: 'bg-emerald-500',
+                      text: 'Inscripciones Abiertas',
+                    },
+                    matriculas: {
+                      pill: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800/60',
+                      dot: 'bg-blue-500',
+                      text: 'Matrículas Abiertas',
+                    },
+                    proximamente: {
+                      pill: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800/60',
+                      dot: 'bg-amber-500',
+                      text: 'Próximamente',
+                    },
+                    cerradas: {
+                      pill: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
+                      dot: 'bg-slate-400',
+                      text: 'Convocatoria Cerrada',
+                    },
+                  }[uni.estadoAdmision] || {
+                    pill: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
+                    dot: 'bg-slate-400',
+                    text: 'Cerrado',
+                  };
 
                   return (
                     <div
                       key={uni.id}
-                      className="group cursor-pointer flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-blue-500/50 dark:hover:border-blue-500/50 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden"
+                      className="group cursor-pointer flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/60 shadow-xs hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden relative"
                       onClick={() => setSeleccion({ uni, programas })}
                     >
-                      {/* Cabecera Académica con Escudo Oficial Centrado */}
-                      <div className="relative w-full h-36 sm:h-40 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950 flex items-center justify-center overflow-hidden">
-                        {/* Patrón sutil de fondo geométrico */}
-                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
-                        <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-blue-500/20 blur-xl pointer-events-none"></div>
-                        <div className="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-indigo-500/20 blur-xl pointer-events-none"></div>
+                      {/* Línea sutil de acento de marca institucional en la parte superior */}
+                      <div className={`h-1.5 w-full ${uni.tipo === 'pública' ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500' : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600'}`}></div>
 
-                        {/* Escudo / Logo Oficial Grande y Centrado */}
-                        <div className="relative z-10 transition-transform duration-300 group-hover:scale-105">
-                          <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-white p-2.5 shadow-lg border border-white/60 dark:border-slate-700/60 flex items-center justify-center">
+                      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4">
+                        {/* Fila Superior: Badge de Estado + Acciones (Comparar, Favorito) */}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${estadoConfig.pill}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${estadoConfig.dot} ${uni.estadoAdmision === 'abiertas' ? 'animate-pulse' : ''}`}></span>
+                            <span>{estadoConfig.text}</span>
+                          </span>
+
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setUnisComparar(prev => [uni.id, ...prev.filter(x => x !== uni.id)].slice(0, 3));
+                                setPestana('comparar');
+                              }}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors text-xs"
+                              title="Comparar lado a lado"
+                            >
+                              ⚖️
+                            </button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); toggleFavorito(uni.id); }}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/50 transition-colors"
+                              title="Guardar en favoritos"
+                            >
+                              <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-4 h-4 ${esFav ? 'text-amber-500' : ''}`}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Bloque de Identidad Institucional: Logo Óptico 48px + Sigla + Ranking + Nombre */}
+                        <div className="flex items-start gap-3">
+                          <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 shadow-xs flex items-center justify-center shrink-0 p-1.5 overflow-hidden group-hover:border-blue-400/60 transition-colors">
                             <LogoUniversidad
                               url={uni.web}
                               sigla={uni.sigla}
                               nombre={uni.nombre}
                               uniId={uni.id}
-                              size="md"
+                              size="sm"
                               className="w-full h-full"
                             />
                           </div>
-                        </div>
 
-                        {/* Badge de Estado en esquina superior izquierda */}
-                        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
-                          {uni.estadoAdmision === 'ambas' ? (
-                            <>
-                              <div className="px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-emerald-500/90">
-                                Inscripciones
-                              </div>
-                              <div className="px-2 py-0.5 rounded-md text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-blue-600/90">
-                                Matrículas
-                              </div>
-                            </>
-                          ) : (
-                            <div className={`px-2.5 py-0.5 rounded-md text-[10px] font-bold text-white shadow-sm backdrop-blur-md ${estadoConfig.bg}`}>
-                              {estadoConfig.text}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <span className="text-xs font-black tracking-wider text-blue-600 dark:text-blue-400 uppercase">
+                                {uni.sigla}
+                              </span>
+                              {uni.ranking && (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-200/70 dark:border-amber-800/70">
+                                  Rank #{uni.ranking}
+                                </span>
+                              )}
                             </div>
-                          )}
+
+                            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              {uni.nombre}
+                            </h3>
+                          </div>
                         </div>
 
-                        {/* Botones de acción en esquina superior derecha */}
-                        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setUnisComparar(prev => [uni.id, ...prev.filter(x => x !== uni.id)].slice(0, 3));
-                              setPestana('comparar');
-                            }}
-                            className="p-1.5 rounded-lg bg-black/50 hover:bg-indigo-600 text-white transition-colors backdrop-blur-md text-xs shadow-sm"
-                            title="Comparar lado a lado"
-                          >
-                            ⚖️
-                          </button>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); toggleFavorito(uni.id); }}
-                            className="p-1.5 rounded-lg bg-black/50 hover:bg-black/80 text-white transition-colors backdrop-blur-md shadow-sm"
-                            title="Guardar en favoritos"
-                          >
-                            <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-3.5 h-3.5 ${esFav ? 'text-amber-400' : 'text-white'}`}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-                            </svg>
-                          </button>
-                        </div>
-
-                        {/* Badges en la parte inferior del banner */}
-                        <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[10px] font-semibold text-white/90 z-10 pointer-events-none">
-                          <span className="px-2 py-0.5 rounded-md bg-black/45 backdrop-blur-sm">
+                        {/* Fila de Insignias y Filtros (Pública, Zona, Tipo de Examen) */}
+                        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-lg">
+                            {uni.tipo === 'pública' ? '🏛️ Matrícula $0' : '🎓 Privada'}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-lg">
                             📍 {uni.zona}
                           </span>
-                          <span className="px-2 py-0.5 rounded-md bg-black/45 backdrop-blur-sm">
-                            {uni.tipo === 'pública' ? 'Matrícula $0' : 'Privada'}
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-lg">
+                            {uni.tipoAdmision === 'propio' ? '📝 Examen Propio' : '📊 Saber 11'}
                           </span>
                         </div>
-                      </div>
 
-                      {/* Cuerpo de la tarjeta */}
-                      <div className="p-4 flex flex-col flex-1 justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-1.5 mb-1.5">
-                            <span className="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                              {uni.sigla}
-                            </span>
-                            {uni.ranking && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 px-1.5 py-0.5 rounded border border-amber-200/60 dark:border-amber-800/60">
-                                Rank #{uni.ranking}
-                              </span>
-                            )}
+                        {/* Carreras coincidentes si existen */}
+                        {programas.length > 0 && (
+                          <div className="text-[11px] font-medium text-blue-700 dark:text-blue-300 bg-blue-50/80 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/50 rounded-lg px-2.5 py-1.5 truncate">
+                            ✓ {programas.join(', ')}
                           </div>
+                        )}
 
-                          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                            {uni.nombre}
-                          </h3>
+                        {/* Pie de tarjeta: Ciudad y Acción */}
+                        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                          <span className="truncate flex items-center gap-1 max-w-[60%]">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 shrink-0">
+                              <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                              <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span className="truncate">{uni.ciudad.split('(')[0].trim()}</span>
+                          </span>
 
-                          <div className="text-xs text-slate-500 dark:text-slate-400 mt-2.5 flex flex-col gap-1">
-                            <span className="flex items-center gap-1.5">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 shrink-0">
-                                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                              </svg>
-                              <span className="truncate">{uni.ciudad.split('(')[0].trim()}</span>
-                            </span>
-
-                            <span className="flex items-center gap-1.5">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-400 shrink-0">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                              </svg>
-                              <span className="truncate capitalize">{uni.tipoAdmision === 'propio' ? 'Examen propio' : 'Saber 11 (ICFES)'}</span>
-                            </span>
-
-                            {programas.length > 0 && (
-                              <span className="text-blue-600 dark:text-blue-400 truncate mt-1 font-medium text-[11px]">
-                                ✓ {programas.join(', ')}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
-                          <span>Ver requisitos y carreras</span>
-                          <span>→</span>
+                          <span className="font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1 shrink-0">
+                            <span>Requisitos</span>
+                            <span>→</span>
+                          </span>
                         </div>
                       </div>
                     </div>
