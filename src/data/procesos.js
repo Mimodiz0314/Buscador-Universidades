@@ -249,8 +249,119 @@ export const PROCESOS_DETALLADOS = {
       { titulo: 'Paga la matrícula', detalle: 'Recibirás volantes de pago: matrícula del pregrado, idiomas (según programa) y exámenes médicos de ingreso.' },
       { titulo: 'Clasificación de inglés y diploma', detalle: 'Presenta el examen de clasificación de inglés (sin costo antes del primer semestre) y carga tu diploma de bachiller en el sistema (Aurora).' },
     ],
+  },
+
+  utp: {
+    verificado: '2026-09-08',
+    fuente: 'https://app4.utp.edu.co/inscripciones/',
+    nombreFuente: 'Dirección de Admisiones, Registro y Control — UTP',
+    resumen:
+      'La UTP admite por el puntaje del examen Saber 11 (ICFES), ponderado por áreas según la facultad. Cuenta con amplia oferta de ingenierías, tecnologías y licenciaturas.',
+    convocatoria:
+      'Convocatoria 2027-1 ABIERTA: venta de pines e inscripciones en línea disponibles a través del portal de admisiones UTP. La matrícula de pregrado está cubierta 100% por la Política de Gratuidad para la mayoría de aspirantes.',
+    costoPin: {
+      valor: 85000,
+      nota: 'Valor aproximado del PIN de inscripción pregrado. La matrícula está 100% cubierta para estudiantes focalizados por la Ley de Gratuidad.',
+    },
+    requisitos: [
+      'Ser bachiller o estar cursando grado 11.',
+      'Resultados de la prueba Saber 11 (ICFES).',
+      'Documento de identidad vigente.',
+    ],
+    etapas: [
+      { titulo: 'Genera el recibo de inscripción', detalle: 'Ingresa a app4.utp.edu.co/inscripciones y genera el recibo de derechos de inscripción.' },
+      { titulo: 'Paga los derechos de inscripción', detalle: 'En línea por PSE o en los bancos autorizados en el recibo.' },
+      { titulo: 'Diligencia el formulario de inscripción', detalle: 'Con el número de PIN activo, completa tus datos y selecciona tu programa académico.' },
+      { titulo: 'Consulta listas de admitidos', detalle: 'La UTP publica la asignación de cupos por estricto orden descendente de puntaje ponderado.' },
+      { titulo: 'Acreditación de Gratuidad y matrícula', detalle: 'Carga certificados de Sisbén o estrato para la exención del 100% de matrícula ordinaria.' },
+    ],
     notas: [
-      'Medicina cierra inscripciones antes que el resto de programas — revisa el calendario con anticipación.',
+      'Medicina y algunos programas de salud tienen puntajes de corte muy exigentes.',
+    ],
+  },
+
+  udistrital: {
+    verificado: '2026-09-08',
+    fuente: 'https://www.udistrital.edu.co/admisiones-pregrado',
+    nombreFuente: 'Oficina de Admisiones — Universidad Distrital',
+    resumen:
+      'La Universidad Distrital admite por puntaje de la prueba Saber 11 (ICFES), ponderado de acuerdo con la carrera elegida. Ofrece programas tecnológicos e ingenierías de alto prestigio.',
+    convocatoria:
+      'Convocatoria 2027-1: apertura prevista para octubre - noviembre de 2026 en admisiones.udistrital.edu.co. El pago del PIN se realiza a través de Banco de Occidente o PSE.',
+    costoPin: {
+      valor: 130000,
+      nota: 'Costo oficial del PIN equivalente a un porcentaje del SMMLV (~$130.000 COP). Matrícula de pregrado con 100% de gratuidad para estratos 1 a 3.',
+    },
+    requisitos: [
+      'Título de bachiller o certificado de estar en grado 11.',
+      'Prueba Saber 11 presentada (con vigencia no mayor a 5 años).',
+      'Certificado de estrato socioeconómico de la residencia.',
+    ],
+    etapas: [
+      { titulo: 'Preinscripción y pago de PIN', detalle: 'Diligencia el preconteo en el portal de la Distrital y realiza el pago del PIN.' },
+      { titulo: 'Formalización de inscripción', detalle: '48 horas hábiles tras el pago, ingresa para registrar tus datos definitivos y puntajes ICFES.' },
+      { titulo: 'Pruebas específicas (si aplica)', detalle: 'Carreras como Artes Plásticas, Danza o Música en la Facultad de Artes ASAB requieren audición o prueba de aptitud.' },
+      { titulo: 'Publicación de admitidos', detalle: 'Consulta en línea los resultados de selección por programa.' },
+      { titulo: 'Matrícula con gratuidad', detalle: 'Entrega de documentos y legalización con beneficio de matrícula cero para estratos 1, 2 y 3.' },
+    ],
+    notas: [
+      'La Facultad de Artes ASAB tiene su propio calendario de audiciones presenciales.',
+    ],
+  },
+
+  upn: {
+    verificado: '2026-09-08',
+    fuente: 'https://admisiones.pedagogica.edu.co/',
+    nombreFuente: 'Subdirección de Admisiones y Registro — Universidad Pedagógica Nacional',
+    resumen:
+      'La UPN es la institución líder en formación de educadores y docentes del país. Admite mediante una combinación de puntaje Saber 11 y prueba de vocación pedagógica / entrevista.',
+    convocatoria:
+      'Convocatoria 2027-1 PRÓXIMAMENTE: apertura de inscripciones estimada para octubre de 2026 en admisiones.pedagogica.edu.co.',
+    costoPin: {
+      valor: 104000,
+      nota: 'Valor de derechos de inscripción para licenciaturas. La matrícula semestral está cubierta por la Política de Gratuidad "Puedo Estudiar".',
+    },
+    requisitos: [
+      'Ser bachiller o graduando de grado 11.',
+      'Examen Saber 11 presentado.',
+      'Presentar la prueba vocacional o entrevista propia del programa pedagógico.',
+    ],
+    etapas: [
+      { titulo: 'Compra de PIN en línea', detalle: 'Pago electrónico por PSE en el portal de admisiones de la UPN.' },
+      { titulo: 'Diligenciamiento del formulario', detalle: 'Registro de datos personales y selección de la licenciatura de interés.' },
+      { titulo: 'Presentación de prueba específica/entrevista', detalle: 'Citación para evaluación de aptitudes y vocación pedagógica.' },
+      { titulo: 'Resultados y matrícula', detalle: 'Publicación de listas de admitidos y proceso de liquidación de matrícula con gratuidad.' },
+    ],
+    notas: [
+      'Licenciaturas en Educación Física, Música y Artes Escénicas exigen pruebas prácticas adicionales de aptitud.',
+    ],
+  },
+
+  unad: {
+    verificado: '2026-09-08',
+    fuente: 'https://estudios.unad.edu.co/',
+    nombreFuente: 'Registro y Control Académico — UNAD Colombia',
+    resumen:
+      'La UNAD es la universidad pública virtual más grande del país. Su modelo es 100% a distancia/virtual y cuenta con matrícula continua en diferentes periodos del año sin examen de filtro.',
+    convocatoria:
+      'Inscripciones ABIERTAS de forma permanente para sus diferentes periodos académicos del año en estudios.unad.edu.co. La Política de Gratuidad aplica para estudiantes elegibles en programas de pregrado virtual.',
+    costoPin: {
+      valor: 0,
+      nota: 'La preinscripción en línea es gratuita. El valor de matrícula por crédito académico está cubierto al 100% por la Política de Gratuidad para bachilleres de estratos 1, 2 y 3 o Sisbén A-C.',
+    },
+    requisitos: [
+      'Ser bachiller graduado.',
+      'Haber presentado el examen Saber 11 (sin puntaje mínimo eliminatorio).',
+      'Documento de identidad y acta de grado de bachiller.',
+    ],
+    etapas: [
+      { titulo: 'Inscripción en línea', detalle: 'Ingresa a estudios.unad.edu.co y diligencia el formulario para aspirantes nuevos.' },
+      { titulo: 'Carga de documentos digitales', detalle: 'Sube documento de identidad, diploma de bachiller y certificado de ICFES.' },
+      { titulo: 'Postulación a Gratuidad', detalle: 'Si cumples con Sisbén A-C o estrato 1-3, se aplica el beneficio del 100% en los créditos semestrales.' },
+      { titulo: 'Inducción de Campus Virtual', detalle: 'Acceso a la plataforma virtual de aprendizaje e inicio del periodo académico.' },
+    ],
+    notas: [
+      'Ideal para quienes trabajan o viven en zonas rurales sin sede universitaria presencial.',
     ],
   },
 };

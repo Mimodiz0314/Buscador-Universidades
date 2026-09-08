@@ -1,5 +1,6 @@
 import { META_DATOS } from '../data/universidades.js';
 import LogoUniversidad from './LogoUniversidad.jsx';
+import { generarUrlGoogleCalendar } from '../utils/calendar.js';
 
 function ChipVerificado({ verificado }) {
   if (verificado) {
@@ -71,7 +72,7 @@ function RelatedThumbnail({ u }) {
   );
 }
 
-export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, universidadesRelacionadas = [], onSelectRelated, onVerProceso }) {
+export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, universidadesRelacionadas = [], onSelectRelated, onVerProceso, onComparar }) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-4 sm:p-6 lg:p-8 max-w-screen-2xl mx-auto w-full animate-in fade-in duration-300">
@@ -159,6 +160,15 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
+              {onComparar && (
+                <button
+                  onClick={() => onComparar(uni.id)}
+                  className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-full text-sm transition-colors border border-indigo-200 flex items-center gap-1.5"
+                  title="Comparar con otras universidades"
+                >
+                  ⚖️ Comparar
+                </button>
+              )}
               {onVerProceso && (
                 <button
                   onClick={() => onVerProceso(uni.id)}
@@ -167,6 +177,20 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                   Guía de inscripción
                 </button>
               )}
+              <a
+                href={generarUrlGoogleCalendar({
+                  titulo: `Admisión ${uni.sigla || uni.nombre}`,
+                  descripcion: `Información de admisiones ${uni.nombre}.\nPortal oficial: ${uni.admisiones}`,
+                  ubicacion: uni.nombre,
+                  fechaInicio: '2026-09-08'
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 font-semibold rounded-full text-sm transition-colors border border-blue-200 flex items-center gap-1.5"
+                title="Agendar en Google Calendar"
+              >
+                📅 Agendar
+              </a>
               <a
                 href={uni.web}
                 target="_blank"

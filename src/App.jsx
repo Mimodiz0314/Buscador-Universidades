@@ -22,10 +22,14 @@ import Becas from './components/Becas.jsx';
 import TestVocacional from './components/TestVocacional.jsx';
 import ProcesoInscripcion from './components/ProcesoInscripcion.jsx';
 import LogoUniversidad from './components/LogoUniversidad.jsx';
+import LineaTiempo from './components/LineaTiempo.jsx';
+import ComparadorUniversidades from './components/ComparadorUniversidades.jsx';
+import CalculadoraGratuidad from './components/CalculadoraGratuidad.jsx';
 
 export default function App() {
   const [pestana, setPestana] = useState('buscar');
   const [sidebarAbierto, setSidebarAbierto] = useState(true);
+  const [unisComparar, setUnisComparar] = useState(['unal', 'udea']);
 
   // Filters
   const [region, setRegion] = useState('colombia');
@@ -291,12 +295,22 @@ export default function App() {
               </svg>
               {sidebarAbierto && <span className="truncate">Inicio</span>}
             </button>
-            <button onClick={() => { setSeleccion(null); setPestana('explorar'); }} className={sidebarItemClass('explorar')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+            <button onClick={() => { setSeleccion(null); setPestana('lineatiempo'); }} className={sidebarItemClass('lineatiempo')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-blue-600">
                 <circle cx="12" cy="12" r="10"></circle>
-                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                <polyline points="12 6 12 12 16 14"></polyline>
               </svg>
-              {sidebarAbierto && <span className="truncate">Explorar Áreas</span>}
+              {sidebarAbierto && <span className="truncate">Línea de Tiempo</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('comparar'); }} className={sidebarItemClass('comparar')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-indigo-600">
+                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Comparar</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('gratuidad'); }} className={sidebarItemClass('gratuidad')}>
+              <span className="text-lg leading-none">🏛️</span>
+              {sidebarAbierto && <span className="truncate font-semibold text-emerald-800">Gratuidad 100%</span>}
             </button>
             <button onClick={() => { setSeleccion(null); setProcesoUni(null); setPestana('proceso'); }} className={sidebarItemClass('proceso')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -304,14 +318,7 @@ export default function App() {
                 <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 <path d="M9 12l2 2 4-4"></path>
               </svg>
-              {sidebarAbierto && <span className="truncate">Proceso de Inscripción</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('test'); }} className={sidebarItemClass('test')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M9 11l3 3L22 4"></path>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-              </svg>
-              {sidebarAbierto && <span className="truncate">Test Vocacional</span>}
+              {sidebarAbierto && <span className="truncate">Procesos de Admisión</span>}
             </button>
             <button onClick={() => { setSeleccion(null); setPestana('simulador'); }} className={sidebarItemClass('simulador')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -319,7 +326,21 @@ export default function App() {
                 <line x1="12" y1="20" x2="12" y2="4"></line>
                 <line x1="6" y1="20" x2="6" y2="14"></line>
               </svg>
-              {sidebarAbierto && <span className="truncate">Simulador</span>}
+              {sidebarAbierto && <span className="truncate">Simulador ICFES</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('explorar'); }} className={sidebarItemClass('explorar')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Explorar Áreas</span>}
+            </button>
+            <button onClick={() => { setSeleccion(null); setPestana('test'); }} className={sidebarItemClass('test')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+              {sidebarAbierto && <span className="truncate">Test Vocacional</span>}
             </button>
             <button onClick={() => { setSeleccion(null); setPestana('becas'); }} className={sidebarItemClass('becas')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -459,10 +480,40 @@ export default function App() {
                 programasCoinciden={seleccion.programas}
                 onCerrar={() => setSeleccion(null)}
                 onVerProceso={(id) => { setSeleccion(null); setProcesoUni(id); setPestana('proceso'); }}
+                onComparar={(id) => {
+                  setUnisComparar(prev => [id, ...prev.filter(x => x !== id)].slice(0, 3));
+                  setSeleccion(null);
+                  setPestana('comparar');
+                }}
                 universidadesRelacionadas={resultados.filter(r => r.uni.id !== seleccion.uni.id).slice(0, 10)}
                 onSelectRelated={(item) => { window.scrollTo({ top: 0, behavior: 'smooth' }); setSeleccion(item); }}
               />
             </div>
+
+          ) : pestana === 'lineatiempo' ? (
+            /* ── LÍNEA DE TIEMPO / CRONOGRAMA ── */
+            <LineaTiempo
+              onVerProceso={(id) => { setSeleccion(null); setProcesoUni(id); setPestana('proceso'); }}
+            />
+
+          ) : pestana === 'comparar' ? (
+            /* ── COMPARADOR LADO A LADO ── */
+            <ComparadorUniversidades
+              universidades={UNIVERSIDADES_CON_ESTADO}
+              seleccionadasIniciales={unisComparar}
+              onVerDetalle={(uni) => setSeleccion({ uni, programas: [] })}
+              onVerProceso={(id) => { setSeleccion(null); setProcesoUni(id); setPestana('proceso'); }}
+            />
+
+          ) : pestana === 'gratuidad' ? (
+            /* ── CALCULADORA POLÍTICA DE GRATUIDAD ── */
+            <CalculadoraGratuidad
+              onExplorarPublicas={() => {
+                setChipsActivos(['Públicas']);
+                setSeleccion(null);
+                setPestana('buscar');
+              }}
+            />
 
           ) : pestana === 'explorar' ? (
             /* ── EXPLORAR ÁREAS ── */
@@ -676,6 +727,71 @@ export default function App() {
 
         </main>
       </div>
+
+      {/* ── MOBILE BOTTOM NAVIGATION BAR ── */}
+      <nav className="sm:hidden shrink-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-1.5 flex items-center justify-around shadow-lg z-30">
+        <button
+          onClick={() => { setSeleccion(null); setPestana('buscar'); }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
+            pestana === 'buscar' ? 'text-blue-600 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span>Buscar</span>
+        </button>
+
+        <button
+          onClick={() => { setSeleccion(null); setPestana('lineatiempo'); }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
+            pestana === 'lineatiempo' ? 'text-blue-600 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Fechas</span>
+        </button>
+
+        <button
+          onClick={() => { setSeleccion(null); setPestana('comparar'); }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
+            pestana === 'comparar' ? 'text-indigo-600 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path>
+          </svg>
+          <span>Comparar</span>
+        </button>
+
+        <button
+          onClick={() => { setSeleccion(null); setPestana('simulador'); }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
+            pestana === 'simulador' ? 'text-blue-600 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Simulador</span>
+        </button>
+
+        <button
+          onClick={() => { setSeleccion(null); setPestana('gratuidad'); }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
+            pestana === 'gratuidad' ? 'text-emerald-700 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <span className="text-base leading-none">🏛️</span>
+          <span>Gratuidad</span>
+        </button>
+      </nav>
     </div>
   );
 }

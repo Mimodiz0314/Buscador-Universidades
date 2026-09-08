@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { PROCESOS_DETALLADOS } from '../data/procesos.js';
 import { estadoVerificacion, MESES_VIGENCIA } from '../utils/verificacion.js';
 import LogoUniversidad from './LogoUniversidad.jsx';
+import { generarUrlGoogleCalendar } from '../utils/calendar.js';
 
 // Banner grande de confianza: le dice al estudiante, sin rodeos, qué tan
 // confiable es la información que está viendo y siempre lo lleva a la fuente.
@@ -216,7 +217,21 @@ export default function ProcesoInscripcion({ universidades = [], uniInicial = nu
                 </p>
               </div>
             </div>
-            <div className="flex gap-2 shrink-0">
+            <div className="flex flex-wrap gap-2 shrink-0">
+              <a
+                href={generarUrlGoogleCalendar({
+                  titulo: `Admisión ${uni.sigla || uni.nombre}: Fechas Clave`,
+                  descripcion: `Guía de admisión ${uni.nombre}.\n${proceso?.convocatoria || ''}\nEnlace oficial: ${uni.admisiones}`,
+                  ubicacion: uni.nombre,
+                  fechaInicio: proceso?.verificado || '2026-09-08'
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold rounded-full text-xs transition-colors border border-blue-200 flex items-center gap-1.5"
+                title="Agendar en Google Calendar"
+              >
+                📅 Agendar en Calendar
+              </a>
               <a href={uni.admisiones} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-full text-sm transition-colors">
                 Admisiones oficial
               </a>
