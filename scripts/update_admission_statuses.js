@@ -61,34 +61,69 @@ Responde exclusivamente con el JSON dentro del bloque de código markdown:
     }]
   };
 
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+  for (let intento = 1; intento <= 2; intento++) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
 
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`HTTP ${res.status}: ${errText}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`HTTP ${res.status}: ${errText}`);
+      }
+
+      const data = await res.json();
+      const parts = data.candidates?.[0]?.content?.parts || [];
+      const replyText = parts.map(p => p.text || '').join('\n');
+      
+      if (!replyText.trim()) {
+        throw new Error('Respuesta vacía de Gemini');
+      }
+
+      // Extraer JSON del bloque de código markdown o del objeto
+      let cleanJson = replyText;
+      const jsonMatch = replyText.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+      if (jsonMatch) {
+        cleanJson = jsonMatch[1];
+      } else {
+        const braceMatch = replyText.match(/\{[\s\S]*\}/);
+        if (braceMatch) cleanJson = braceMatch[0];
+      }
+
+      // Limpiar posibles comas colgantes antes de llaves de cierre
+      cleanJson = cleanJson.replace(/,\s*([}\]])/g, '$1');
+
+      const parsed = JSON.parse(cleanJson.trim());
+      
+      // Normalizar claves y valores
+      const normalizado = {};
+      const ESTADOS_VALIDOS = ['abiertas', 'matriculas', 'proximamente', 'cerradas'];
+      for (const [key, rawVal] of Object.entries(parsed)) {
+        let val = String(rawVal).toLowerCase().trim();
+        if (val.includes('abiert')) val = 'abiertas';
+        else if (val.includes('matricul')) val = 'matriculas';
+        else if (val.includes('proxim')) val = 'proximamente';
+        else if (val.includes('cerrad')) val = 'cerradas';
+
+        if (ESTADOS_VALIDOS.includes(val)) {
+          normalizado[key] = val;
+        }
+      }
+
+      return normalizado;
+    } catch (error) {
+      console.error(`  Intento ${intento} falló:`, error.message);
+      if (intento < 2) {
+        console.log('  Reintentando en 3 segundos...');
+        await new Promise(r => setTimeout(r, 3000));
+      } else {
+        return null;
+      }
     }
-
-    const data = await res.json();
-    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    
-    if (!replyText) {
-      throw new Error('Respuesta vacía de Gemini');
-    }
-
-    // Extraer JSON del bloque de código markdown
-    const jsonMatch = replyText.match(/```json\s*([\s\S]*?)\s*```/) || replyText.match(/```\s*([\s\S]*?)\s*```/);
-    const cleanJson = jsonMatch ? jsonMatch[1] : replyText;
-
-    return JSON.parse(cleanJson.trim());
-  } catch (error) {
-    console.error(`Error procesando lote:`, error.message);
-    return null;
   }
+  return null;
 }
 
 async function ejecutarSincronizacion() {

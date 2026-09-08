@@ -20,13 +20,13 @@
 export const PROCESOS_DETALLADOS = {
   // ─────────────────────────────────────────────────────────── PÚBLICAS ──
   unal: {
-    verificado: '2026-07-18',
+    verificado: '2026-09-08',
     fuente: 'https://admisiones.unal.edu.co/pregrado/guia-paso-a-paso-pregrado/',
     nombreFuente: 'Dirección Nacional de Admisiones — UNAL',
     resumen:
       'La UNAL admite por su PROPIO examen (no usa el puntaje del ICFES). El puntaje que obtengas en la prueba define a qué programa puedes aspirar. Hay admisión regular y programas especiales (PAES, PEAMA, PAET).',
     convocatoria:
-      'Convocatoria 2027-1 ABIERTA al verificar: pago de derechos e inscripción del 6 de julio al 19 de agosto de 2026. Examen de admisión: domingo 20 de septiembre de 2026. Consulta de puntajes desde el 1 de octubre; inscripción del programa curricular del 1 al 6 de octubre; resultados de admisión desde el 9 de octubre; envío de documentos del 15 al 20 de octubre de 2026.',
+      'Convocatoria 2027-1 EN CURSO (Inscripciones cerradas el 19 de agosto de 2026). Próximas fechas: Examen de admisión presencial el domingo 20 de septiembre de 2026. Consulta de puntajes e inscripción de programa curricular del 1 al 6 de octubre de 2026; publicación de resultados de admisión el 9 de octubre de 2026. La próxima convocatoria (2027-2) abrirá en febrero/marzo de 2027.',
     costoPin: {
       valor: 175000,
       nota: 'Derechos de inscripción de la convocatoria 2027-1 ($175.000 COP; US$87,5 si pagas desde el exterior). La UNAL NO solicita pagos por adjudicación de cupos: cualquier cobro distinto al PIN oficial es fraude.',
@@ -51,16 +51,16 @@ export const PROCESOS_DETALLADOS = {
   },
 
   udea: {
-    verificado: '2026-07-18',
+    verificado: '2026-09-08',
     fuente: 'https://www.udea.edu.co/wps/portal/udea/web/inicio/estudiar-udea/quiero-estudiar-udea/pregrado',
     nombreFuente: 'Portal Estudiar en la UdeA — Admisiones pregrado',
     resumen:
       'La UdeA admite por su PROPIO examen: prueba de razonamiento lógico y competencia lectora (no usa el puntaje del ICFES para pregrado). Al inscribirte eliges dos opciones de programa.',
     convocatoria:
-      'Al verificar, la convocatoria 2026-2 ya cerró (inscripciones del 19 de febrero al 18 de marzo de 2026; examen el 25 de mayo de 2026). El calendario de la convocatoria 2027-1 aún no estaba publicado; la admisión especial 2027-1 (comunidades indígenas, afro, víctimas, sordoseñantes, exentas de pago) tenía registro hasta el 17 de julio de 2026.',
+      'Convocatoria 2027-1 ABIERTA: pago de derechos de inscripción e inscripciones en línea del 14 de agosto al 14 de septiembre de 2026. Descarga de credenciales del 14 al 22 de octubre. Examen de admisión presencial y virtual el 26 y 27 de octubre de 2026. Publicación de resultados de admitidos el 11 de noviembre de 2026.',
     costoPin: {
       valor: null,
-      nota: 'El valor oficial se publica con cada calendario. Referencia de la última convocatoria: ~$90.800 COP por la inscripción con dos opciones de programa (y un valor menor, ~$28.200, para sedes regionales y programas virtuales). Confírmalo al abrir la nueva convocatoria.',
+      nota: 'El valor oficial se publica con cada calendario en el portal UdeA (~$90.800 COP para sede Medellín y ~$28.200 para sedes regionales o virtuales). Confírmalo al generar la factura.',
     },
     requisitos: [
       'Ser bachiller o estar cursando grado 11.',
@@ -82,13 +82,13 @@ export const PROCESOS_DETALLADOS = {
   },
 
   univalle: {
-    verificado: '2026-07-18',
+    verificado: '2026-09-08',
     fuente: 'https://admisiones.univalle.edu.co/new/',
     nombreFuente: 'Área de Admisiones — Universidad del Valle',
     resumen:
       'Univalle admite por el puntaje del examen Saber 11 (ICFES), ponderado por áreas según el programa al que aspiras. No hay examen propio.',
     convocatoria:
-      'Al verificar, la convocatoria 2026-2 ya había cerrado (inscripciones hasta comienzos de junio de 2026, con resultados a finales de junio). La convocatoria 2027-1 se publica en el portal oficial de admisiones; históricamente abre en el segundo semestre del año.',
+      'Al verificar, la convocatoria 2026-2 ya cerró. La publicación del calendario para pregrado bachilleres 2027-1 se realiza en admisiones.univalle.edu.co (históricamente abre entre octubre y noviembre).',
     costoPin: {
       valor: null,
       nota: 'El valor del PIN se publica con cada convocatoria en admisiones.univalle.edu.co. No lo confirmamos en esta verificación.',
@@ -110,13 +110,13 @@ export const PROCESOS_DETALLADOS = {
   },
 
   uis: {
-    verificado: '2026-07-18',
+    verificado: '2026-09-08',
     fuente: 'https://inscripciones.uis.edu.co/',
     nombreFuente: 'Dirección de Admisiones y Registro Académico — UIS',
     resumen:
       'La UIS admite por el puntaje del examen Saber 11 (ICFES), ponderado según el programa. No hay examen propio.',
     convocatoria:
-      'Al verificar, la convocatoria 2026-2 ya había cerrado (pago de derechos del 4 de mayo al 17 de junio y registro en línea hasta el 18 de junio de 2026). Como referencia, la convocatoria 2026-1 abrió del 8 de octubre al 20 de noviembre de 2025. La próxima se publica en inscripciones.uis.edu.co.',
+      'Al verificar, la convocatoria 2026-2 ya culminó. La convocatoria regular para primer semestre de 2027 (2027-1) está prevista para abrir entre octubre y noviembre en inscripciones.uis.edu.co.',
     costoPin: {
       valor: null,
       nota: 'El valor de los derechos de inscripción se publica en cada convocatoria en el portal oficial. No lo confirmamos en esta verificación.',
