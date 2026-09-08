@@ -123,6 +123,9 @@ export default function App() {
         if (!matchedEstado) return false;
       }
 
+      if (chipsActivos.includes('Examen Propio') && u.tipoAdmision !== 'propio') return false;
+      if (chipsActivos.includes('Saber 11') && u.tipoAdmision !== 'icfes') return false;
+
       if (admisionTipo !== 'todos' && u.tipoAdmision !== admisionTipo) return false;
       if (universidadFiltro !== 'todas' && u.id !== universidadFiltro) return false;
 
@@ -283,9 +286,9 @@ export default function App() {
 
         {/* ── SIDEBAR ── */}
         <aside
-          className={`flex-col overflow-y-auto bg-white transition-all duration-200 z-10 ${
+          className={`flex-col justify-between bg-white transition-all duration-200 z-10 ${
             sidebarAbierto ? 'w-60 px-3' : 'w-0 sm:w-[72px] sm:px-1'
-          } hidden sm:flex shrink-0 border-r border-slate-100 hover:overflow-y-scroll`}
+          } hidden sm:flex shrink-0 border-r border-slate-100 overflow-hidden`}
         >
           <div className="py-2 space-y-1">
             <button onClick={() => { setSeleccion(null); setPestana('buscar'); }} className={sidebarItemClass('buscar')}>
@@ -300,23 +303,38 @@ export default function App() {
                 <circle cx="12" cy="12" r="10"></circle>
                 <polyline points="12 6 12 12 16 14"></polyline>
               </svg>
-              {sidebarAbierto && <span className="truncate">Línea de Tiempo</span>}
+              {sidebarAbierto && <span className="truncate font-semibold text-blue-900">Línea de Tiempo</span>}
             </button>
             <button onClick={() => { setSeleccion(null); setPestana('comparar'); }} className={sidebarItemClass('comparar')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-indigo-600">
-                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path>
+                <path d="M16 3h5v5"></path>
+                <path d="M4 20L21 3"></path>
+                <path d="M21 16v5h-5"></path>
+                <path d="M15 15l6 6"></path>
+                <path d="M4 4l5 5"></path>
               </svg>
               {sidebarAbierto && <span className="truncate">Comparar</span>}
             </button>
             <button onClick={() => { setSeleccion(null); setPestana('gratuidad'); }} className={sidebarItemClass('gratuidad')}>
-              <span className="text-lg leading-none">🏛️</span>
-              {sidebarAbierto && <span className="truncate font-semibold text-emerald-800">Gratuidad 100%</span>}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emerald-600">
+                <path d="M3 21h18"></path>
+                <path d="M3 10h18"></path>
+                <path d="M5 6l7-3 7 3"></path>
+                <path d="M4 10v11"></path>
+                <path d="M20 10v11"></path>
+                <path d="M8 14v4"></path>
+                <path d="M12 14v4"></path>
+                <path d="M16 14v4"></path>
+              </svg>
+              {sidebarAbierto && <span className="truncate font-semibold text-emerald-900">Gratuidad 100%</span>}
             </button>
             <button onClick={() => { setSeleccion(null); setProcesoUni(null); setPestana('proceso'); }} className={sidebarItemClass('proceso')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                <path d="M9 12l2 2 4-4"></path>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
               </svg>
               {sidebarAbierto && <span className="truncate">Procesos de Admisión</span>}
             </button>
@@ -337,8 +355,8 @@ export default function App() {
             </button>
             <button onClick={() => { setSeleccion(null); setPestana('test'); }} className={sidebarItemClass('test')}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M9 11l3 3L22 4"></path>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
               </svg>
               {sidebarAbierto && <span className="truncate">Test Vocacional</span>}
             </button>
@@ -355,117 +373,14 @@ export default function App() {
           </div>
 
           {sidebarAbierto && (
-            <>
-              <div className="my-3 border-t border-slate-200"></div>
-
-              <div className="px-3 pb-1 pt-2">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Filtros Avanzados</h3>
-                  <button 
-                    onClick={() => {
-                      setChipsActivos([]);
-                      setAdmisionTipo('todos'); 
-                      setNivelFormacion('todas');
-                      setUniversidadFiltro('todas'); 
-                      setAreaFiltro('todas'); 
-                      setCarreraFiltro('todas'); 
-                      setRegion('colombia');
-                      setZona('Todas');
-                      setConsulta(''); 
-                      setCarreraInput(''); 
-                      setPestana('buscar');
-                    }}
-                    className="text-[10px] text-blue-600 hover:text-blue-800 font-semibold bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded transition-colors"
-                    title="Limpiar todos los filtros"
-                  >
-                    Reiniciar
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {/* El filtro de Financiación se maneja exclusivamente con los Chips superiores */}
-
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">País / Región</label>
-                    <select value={region} onChange={(e) => setRegion(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="colombia">🇨🇴 Colombia</option>
-                      <option value="latam">🌎 Latinoamérica</option>
-                      <option value="todas">Todas las regiones</option>
-                    </select>
-                  </div>
-
-                  {region === 'colombia' && (
-                    <div>
-                      <label className="text-xs font-medium text-slate-700 block mb-1">Ubicación</label>
-                      <select value={zona} onChange={(e) => setZona(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                        {ZONAS_COLOMBIA.map((z) => (
-                          <option key={z} value={z}>{z === 'Todas' ? 'Todo Colombia' : `Región ${z}`}</option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">Admisión</label>
-                    <select value={admisionTipo} onChange={(e) => setAdmisionTipo(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="todos">Cualquiera</option>
-                      <option value="icfes">ICFES / Saber 11</option>
-                      <option value="propio">Examen Propio</option>
-                      <option value="abierta">Abierta</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">Nivel de Formación</label>
-                    <select value={nivelFormacion} onChange={(e) => setNivelFormacion(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="todas">Todas las Carreras</option>
-                      <option value="profesional">Profesional / Universitaria</option>
-                      <option value="tecnica">Técnica / Tecnológica</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">Universidad Específica</label>
-                    <select value={universidadFiltro} onChange={(e) => setUniversidadFiltro(e.target.value)} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="todas">Todas las Universidades</option>
-                      {listaUniversidades.map((uni) => (
-                        <option key={uni.id} value={uni.id}>{uni.nombre} ({uni.sigla})</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">Área de Conocimiento</label>
-                    <select value={areaFiltro} onChange={(e) => { setAreaFiltro(e.target.value); setCarreraFiltro('todas'); }} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="todas">Todas las Áreas</option>
-                      {TAXONOMIA.map((t) => (
-                        <option key={t.area} value={t.area}>{t.area}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">Carrera / Profesión</label>
-                    <select value={carreraFiltro} onChange={(e) => { setCarreraFiltro(e.target.value); if (e.target.value !== 'todas') setAreaFiltro('todas'); }} className="w-full text-xs rounded border border-slate-300 p-1.5 focus:border-blue-500 outline-none">
-                      <option value="todas">Todas las Profesiones</option>
-                      {listaCarreras.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* El filtro de Estado se maneja exclusivamente con los Chips superiores */}
-                </div>
+            <div className="mt-auto pt-3 pb-4 border-t border-slate-100 px-3 space-y-1 text-slate-400 text-[11px]">
+              <div className="flex items-center gap-1.5 text-slate-600 font-medium text-xs mb-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>UniScoop Colombia</span>
               </div>
-
-              <div className="my-3 border-t border-slate-200"></div>
-
-              <div className="px-3 pb-4 text-[10px] text-slate-400 space-y-1">
-                <p>Curado con propósitos educativos.</p>
-                <p>Verifica fuentes oficiales.</p>
-                <p>© 2026 UniScoop Col.</p>
-              </div>
-            </>
+              <p className="text-[10px] text-slate-400 leading-tight">Guía y buscador de admisiones universitarias.</p>
+              <p className="text-[9px] text-slate-400">© 2026 UniScoop Col.</p>
+            </div>
           )}
         </aside>
 
@@ -560,7 +475,7 @@ export default function App() {
 
               {/* Category Chips (YouTube style quick filters) */}
               <div className="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
-                {['Todas', 'Públicas', 'Privadas', 'Inscripciones Abiertas', 'Matrículas Abiertas', 'Próximamente'].map((chip) => (
+                {['Todas', 'Públicas', 'Privadas', 'Inscripciones Abiertas', 'Matrículas Abiertas', 'Próximamente', 'Examen Propio', 'Saber 11'].map((chip) => (
                   <button
                     key={chip}
                     onClick={() => {
