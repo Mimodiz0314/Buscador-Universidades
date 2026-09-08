@@ -653,16 +653,29 @@ export default function App() {
                         <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">
                           <LogoUniversidad url={uni.web} sigla={uni.sigla} nombre={uni.nombre} uniId={uni.id} size="md" />
                         </div>
-                        {/* Favorito */}
-                        <button
-                          onClick={(e) => { e.stopPropagation(); toggleFavorito(uni.id); }}
-                          className="absolute top-2 right-2 p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 backdrop-blur-sm"
-                          title="Guardar en favoritos"
-                        >
-                          <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-4 h-4 ${esFav ? 'text-amber-400' : ''}`}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-                          </svg>
-                        </button>
+                        {/* Acciones flotantes */}
+                        <div className="absolute top-2 right-2 flex items-center gap-1.5 z-10">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setUnisComparar(prev => [uni.id, ...prev.filter(x => x !== uni.id)].slice(0, 3));
+                              setPestana('comparar');
+                            }}
+                            className="p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 backdrop-blur-sm text-xs"
+                            title="Comparar lado a lado"
+                          >
+                            ⚖️
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); toggleFavorito(uni.id); }}
+                            className="p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 backdrop-blur-sm"
+                            title="Guardar en favoritos"
+                          >
+                            <svg viewBox="0 0 24 24" fill={esFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" className={`w-4 h-4 ${esFav ? 'text-amber-400' : ''}`}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                            </svg>
+                          </button>
+                        </div>
                         {/* Tipo Badge */}
                         <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/80 text-white text-[10px] font-medium backdrop-blur-sm">
                           {uni.tipo === 'pública' ? 'Matrícula $0' : 'Privada'}
