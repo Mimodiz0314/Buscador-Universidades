@@ -16,6 +16,13 @@ body {
 }
 
 /* Custom subtle scrollbar for the sidebar and detail view */
+.custom-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -29,3 +36,14 @@ body {
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
   background-color: #94a3b8;
 }
+
+.dark .custom-scrollbar {
+  scrollbar-color: #334155 transparent;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+.dark .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #475569;
+}
+

@@ -27,7 +27,13 @@ import CalculadoraGratuidad from './components/CalculadoraGratuidad.jsx';
 
 export default function App() {
   const [pestana, setPestana] = useState('buscar');
-  const [sidebarAbierto, setSidebarAbierto] = useState(true);
+  const [sidebarAbierto, setSidebarAbierto] = useState(() => {
+    try {
+      return typeof window !== 'undefined' ? window.innerWidth >= 640 : true;
+    } catch {
+      return true;
+    }
+  });
   const [unisComparar, setUnisComparar] = useState(['unal', 'udea']);
 
   // Dark Mode
@@ -209,7 +215,17 @@ export default function App() {
     if (pestana !== 'buscar') setPestana('buscar');
   }
 
-  const sidebarItemClass = (id) => `flex items-center gap-4 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+  const irAPestana = (nuevaPestana, extra = {}) => {
+    setSeleccion(null);
+    if (extra.procesoUni !== undefined) setProcesoUni(extra.procesoUni);
+    setPestana(nuevaPestana);
+    // En pantallas móviles, cerrar el sidebar/drawer automáticamente al seleccionar una opción
+    if (typeof window !== 'undefined' && window.innerWidth < 640) {
+      setSidebarAbierto(false);
+    }
+  };
+
+  const sidebarItemClass = (id) => `flex items-center gap-4 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors w-full text-left ${
     pestana === id ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
   }`;
 
@@ -316,106 +332,141 @@ export default function App() {
       </header>
 
       {/* ── BODY: Sidebar + Main ── */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+
+        {/* ── BACKDROP PARA MÓVILES CUANDO EL SIDEBAR ESTÁ ABIERTO ── */}
+        {sidebarAbierto && (
+          <div
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 sm:hidden transition-opacity"
+            onClick={() => setSidebarAbierto(false)}
+            aria-label="Cerrar menú lateral"
+          />
+        )}
 
         {/* ── SIDEBAR ── */}
         <aside
-          className={`flex-col justify-between bg-white dark:bg-slate-900 transition-all duration-200 z-10 ${
-            sidebarAbierto ? 'w-60 px-3' : 'w-0 sm:w-[72px] sm:px-1'
-          } hidden sm:flex shrink-0 border-r border-slate-100 dark:border-slate-800 overflow-hidden`}
+          className={`bg-white dark:bg-slate-900 transition-all duration-200 border-r border-slate-100 dark:border-slate-800 ${
+            sidebarAbierto
+              ? 'fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] flex flex-col px-3 shadow-2xl sm:static sm:z-10 sm:w-60 sm:shadow-none'
+              : 'hidden sm:flex sm:flex-col sm:w-[72px] sm:px-1 z-10'
+          } shrink-0 h-full overflow-hidden`}
         >
-          <div className="py-2 space-y-1">
-            <button onClick={() => { setSeleccion(null); setPestana('buscar'); }} className={sidebarItemClass('buscar')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          {/* Cabecera del Drawer en móvil con botón de cierre */}
+          <div className="flex items-center justify-between py-3 px-1 border-b border-slate-100 dark:border-slate-800 sm:hidden shrink-0">
+            <div className="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-blue-600 dark:text-blue-400">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
               </svg>
-              {sidebarAbierto && <span className="truncate">Inicio</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('lineatiempo'); }} className={sidebarItemClass('lineatiempo')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-blue-600">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
+              <span className="text-base font-bold text-slate-900 dark:text-white">UniScoop</span>
+            </div>
+            <button
+              onClick={() => setSidebarAbierto(false)}
+              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Cerrar menú"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
-              {sidebarAbierto && <span className="truncate font-semibold text-blue-900">Línea de Tiempo</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('comparar'); }} className={sidebarItemClass('comparar')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-indigo-600">
-                <path d="M16 3h5v5"></path>
-                <path d="M4 20L21 3"></path>
-                <path d="M21 16v5h-5"></path>
-                <path d="M15 15l6 6"></path>
-                <path d="M4 4l5 5"></path>
-              </svg>
-              {sidebarAbierto && <span className="truncate">Comparar</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('gratuidad'); }} className={sidebarItemClass('gratuidad')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emerald-600">
-                <path d="M3 21h18"></path>
-                <path d="M3 10h18"></path>
-                <path d="M5 6l7-3 7 3"></path>
-                <path d="M4 10v11"></path>
-                <path d="M20 10v11"></path>
-                <path d="M8 14v4"></path>
-                <path d="M12 14v4"></path>
-                <path d="M16 14v4"></path>
-              </svg>
-              {sidebarAbierto && <span className="truncate font-semibold text-emerald-900">Gratuidad 100%</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setProcesoUni(null); setPestana('proceso'); }} className={sidebarItemClass('proceso')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-              {sidebarAbierto && <span className="truncate">Procesos de Admisión</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('simulador'); }} className={sidebarItemClass('simulador')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-              </svg>
-              {sidebarAbierto && <span className="truncate">Simulador ICFES</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('explorar'); }} className={sidebarItemClass('explorar')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
-              </svg>
-              {sidebarAbierto && <span className="truncate">Explorar Áreas</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('test'); }} className={sidebarItemClass('test')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-              </svg>
-              {sidebarAbierto && <span className="truncate">Test Vocacional</span>}
-            </button>
-            <button onClick={() => { setSeleccion(null); setPestana('becas'); }} className={sidebarItemClass('becas')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <polyline points="20 12 20 22 4 22 4 12"></polyline>
-                <rect x="2" y="7" width="20" height="5"></rect>
-                <line x1="12" y1="22" x2="12" y2="7"></line>
-                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
-                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
-              </svg>
-              {sidebarAbierto && <span className="truncate">Becas y Apoyos</span>}
             </button>
           </div>
 
-          {sidebarAbierto && (
-            <div className="mt-auto pt-3 pb-4 border-t border-slate-100 px-3 space-y-1 text-slate-400 text-[11px]">
-              <div className="flex items-center gap-1.5 text-slate-600 font-medium text-xs mb-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>UniScoop Colombia</span>
-              </div>
-              <p className="text-[10px] text-slate-400 leading-tight">Guía y buscador de admisiones universitarias.</p>
-              <p className="text-[9px] text-slate-400">© 2026 UniScoop Col.</p>
+          {/* Contenedor desplazable con soporte táctil completo para móviles y tablets */}
+          <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar touch-pan-y min-h-0 flex flex-col justify-between py-2">
+            <div className="space-y-1">
+              <button onClick={() => irAPestana('buscar')} className={sidebarItemClass('buscar')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Inicio</span>}
+              </button>
+              <button onClick={() => irAPestana('lineatiempo')} className={sidebarItemClass('lineatiempo')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                {sidebarAbierto && <span className="truncate font-semibold text-blue-900 dark:text-blue-300">Línea de Tiempo</span>}
+              </button>
+              <button onClick={() => irAPestana('comparar')} className={sidebarItemClass('comparar')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0">
+                  <path d="M16 3h5v5"></path>
+                  <path d="M4 20L21 3"></path>
+                  <path d="M21 16v5h-5"></path>
+                  <path d="M15 15l6 6"></path>
+                  <path d="M4 4l5 5"></path>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Comparar</span>}
+              </button>
+              <button onClick={() => irAPestana('gratuidad')} className={sidebarItemClass('gratuidad')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0">
+                  <path d="M3 21h18"></path>
+                  <path d="M3 10h18"></path>
+                  <path d="M5 6l7-3 7 3"></path>
+                  <path d="M4 10v11"></path>
+                  <path d="M20 10v11"></path>
+                  <path d="M8 14v4"></path>
+                  <path d="M12 14v4"></path>
+                  <path d="M16 14v4"></path>
+                </svg>
+                {sidebarAbierto && <span className="truncate font-semibold text-emerald-900 dark:text-emerald-300">Gratuidad 100%</span>}
+              </button>
+              <button onClick={() => irAPestana('proceso', { procesoUni: null })} className={sidebarItemClass('proceso')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Procesos de Admisión</span>}
+              </button>
+              <button onClick={() => irAPestana('simulador')} className={sidebarItemClass('simulador')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Simulador ICFES</span>}
+              </button>
+              <button onClick={() => irAPestana('explorar')} className={sidebarItemClass('explorar')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Explorar Áreas</span>}
+              </button>
+              <button onClick={() => irAPestana('test')} className={sidebarItemClass('test')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Test Vocacional</span>}
+              </button>
+              <button onClick={() => irAPestana('becas')} className={sidebarItemClass('becas')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+                  <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                  <rect x="2" y="7" width="20" height="5"></rect>
+                  <line x1="12" y1="22" x2="12" y2="7"></line>
+                  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Becas y Apoyos</span>}
+              </button>
             </div>
-          )}
+
+            {sidebarAbierto && (
+              <div className="mt-4 pt-3 pb-4 border-t border-slate-100 dark:border-slate-800 px-3 space-y-1 text-slate-400 dark:text-slate-500 text-[11px] shrink-0">
+                <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium text-xs mb-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>UniScoop Colombia</span>
+                </div>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">Guía y buscador de admisiones universitarias.</p>
+                <p className="text-[9px] text-slate-400 dark:text-slate-500">© 2026 UniScoop Col.</p>
+              </div>
+            )}
+          </div>
         </aside>
 
         {/* ── MAIN CONTENT ── */}
