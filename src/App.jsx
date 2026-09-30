@@ -24,6 +24,9 @@ import LogoUniversidad from './components/LogoUniversidad.jsx';
 import LineaTiempo from './components/LineaTiempo.jsx';
 import ComparadorUniversidades from './components/ComparadorUniversidades.jsx';
 import CalculadoraGratuidad from './components/CalculadoraGratuidad.jsx';
+import AcercaDe from './components/AcercaDe.jsx';
+import { CREDITOS } from './data/creditos.js';
+import { useInstalacion } from './utils/instalar.js';
 
 export default function App() {
   const [pestana, setPestana] = useState('buscar');
@@ -35,6 +38,7 @@ export default function App() {
     }
   });
   const [unisComparar, setUnisComparar] = useState(['unal', 'udea']);
+  const { instalada } = useInstalacion();
 
   // Dark Mode
   const [temaOscuro, setTemaOscuro] = useState(() => {
@@ -454,6 +458,26 @@ export default function App() {
                 </svg>
                 {sidebarAbierto && <span className="truncate">Becas y Apoyos</span>}
               </button>
+
+              <div className="my-2 border-t border-slate-100 dark:border-slate-800"></div>
+              {!instalada && (
+                <button onClick={() => irAPestana('acerca')} className={sidebarItemClass('instalar')} title="Instalar app">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <path d="M12 7v7"></path>
+                    <polyline points="9 11 12 14 15 11"></polyline>
+                  </svg>
+                  {sidebarAbierto && <span className="truncate font-semibold text-blue-900 dark:text-blue-300">Instalar app</span>}
+                </button>
+              )}
+              <button onClick={() => irAPestana('acerca')} className={sidebarItemClass('acerca')} title="Acerca de y créditos">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                {sidebarAbierto && <span className="truncate">Acerca de · Créditos</span>}
+              </button>
             </div>
 
             {sidebarAbierto && (
@@ -463,7 +487,10 @@ export default function App() {
                   <span>UniScoop Colombia</span>
                 </div>
                 <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">Guía y buscador de admisiones universitarias.</p>
-                <p className="text-[9px] text-slate-400 dark:text-slate-500">© 2026 UniScoop Col.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
+                  Creado por {CREDITOS.autoresCortos} · {CREDITOS.institucion}, {CREDITOS.ciudad.split(' —')[0]}
+                </p>
+                <p className="text-[9px] text-slate-400 dark:text-slate-500">© {CREDITOS.anio} Todos los derechos reservados.</p>
               </div>
             )}
           </div>
@@ -547,6 +574,10 @@ export default function App() {
             <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
               <Simulador />
             </div>
+
+          ) : pestana === 'acerca' ? (
+            /* ── ACERCA DE: créditos, derechos e instalación ── */
+            <AcercaDe />
 
           ) : pestana === 'becas' ? (
             /* ── BECAS ── */
@@ -772,6 +803,20 @@ export default function App() {
                   </button>
                 </div>
               )}
+
+              {/* Pie de créditos */}
+              <footer className="mt-12 pt-5 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+                <p>
+                  UniScoop · Creado por <span className="font-medium text-slate-700 dark:text-slate-300">{CREDITOS.autores.join(', ')}</span>
+                </p>
+                <p>{CREDITOS.institucion} · {CREDITOS.ciudad.split(' —')[0]} · {CREDITOS.evento} {CREDITOS.anio}</p>
+                <p>
+                  © {CREDITOS.anio} Todos los derechos reservados ·{' '}
+                  <button onClick={() => irAPestana('acerca')} className="underline hover:text-blue-600 dark:hover:text-blue-400">
+                    Créditos y avisos legales
+                  </button>
+                </p>
+              </footer>
             </div>
           )}
 
