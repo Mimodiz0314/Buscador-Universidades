@@ -49,7 +49,7 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
   const domain = getDomain(url);
   // Google S2 Favicon API — alta disponibilidad, no requiere API key
   const s2Src = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
-  const localSrc = uniId ? `/logos/${uniId}.png` : s2Src;
+  const localSrc = uniId ? `/logos/${uniId}.webp` : s2Src;
 
   const logoSrc = localFailed ? s2Src : localSrc;
 

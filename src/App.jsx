@@ -6,12 +6,17 @@ import {
 import { TAXONOMIA } from './data/taxonomia.js';
 import { normalizar } from './utils/texto.js';
 import ESTADOS_ADMISION from './data/estados.json';
+import ESTADOS_DETALLE from './data/estados_detalle.json';
 import META_SINCRONIZACION from './data/meta.json';
+import { estadoVigente } from './utils/estados.js';
 
-// Helper to dynamically inject real admission status to universities from estados.json
-const injectEstadoAdmision = (uni) => {
-  return { ...uni, estadoAdmision: ESTADOS_ADMISION[uni.id] || 'cerradas' };
-};
+// Estado de admisiones de cada universidad: si no hay dato confiable y reciente,
+// queda "sin_dato" (nunca "cerradas" por defecto).
+const injectEstadoAdmision = (uni) => ({
+  ...uni,
+  estadoAdmision: estadoVigente(uni.id, { estados: ESTADOS_ADMISION, detalle: ESTADOS_DETALLE, meta: META_SINCRONIZACION }),
+  estadoDetalle: ESTADOS_DETALLE[uni.id] || null,
+});
 
 const UNIVERSIDADES_CON_ESTADO = UNIVERSIDADES.map(injectEstadoAdmision);
 import DetalleUniversidad from './components/DetalleUniversidad.jsx';
@@ -149,7 +154,6 @@ export default function App() {
       if (selectedEstados.length > 0) {
         let matchedEstado = false;
         if (selectedEstados.includes(u.estadoAdmision)) matchedEstado = true;
-        if (u.estadoAdmision === 'ambas' && (selectedEstados.includes('abiertas') || selectedEstados.includes('matriculas'))) matchedEstado = true;
         if (!matchedEstado) return false;
       }
 
@@ -635,9 +639,9 @@ export default function App() {
                   </p>
                 )}
                 {META_SINCRONIZACION?.fechaTexto && (
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 rounded-full px-3 py-1 shadow-xs">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Estados verificados vía IA: <strong>{META_SINCRONIZACION.fechaTexto}</strong></span>
+                  <div className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 rounded-full px-3 py-1 shadow-xs">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                    <span>Estados consultados por IA el <strong>{META_SINCRONIZACION.fechaTexto}</strong> · son orientativos: confirma en el sitio oficial</span>
                   </div>
                 )}
               </div>
@@ -668,9 +672,9 @@ export default function App() {
                       text: 'Convocatoria Cerrada',
                     },
                   }[uni.estadoAdmision] || {
-                    pill: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
-                    dot: 'bg-slate-400',
-                    text: 'Cerrado',
+                    pill: 'bg-white text-slate-500 border-dashed border-slate-300 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-600',
+                    dot: 'bg-slate-300 dark:bg-slate-500',
+                    text: 'Sin confirmar',
                   };
 
                   return (

@@ -10,6 +10,10 @@ export default defineConfig({
     // viaja precacheada) y cada deploy llega solo a los dispositivos.
     VitePWA({
       registerType: 'autoUpdate',
+      // Guardar también los logos (webp) e íconos para que se vean sin internet.
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,webp,png,svg,ico,webmanifest}'],
+      },
       manifest: {
         id: '/',
         start_url: '/',

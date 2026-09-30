@@ -53,18 +53,18 @@ export function estimarAdmision(puntaje, programa, universidad) {
   if (puntaje >= verde) {
     return {
       nivel: 'verde',
-      mensaje: `Con ${puntaje} puntos estás en el rango que históricamente ha sido admitido en programas de demanda ${demanda}. Aun así, el corte cambia cada semestre: inscríbete y verifica el corte oficial.`,
+      mensaje: `Con ${puntaje} puntos estás por encima del corte ESTIMADO para programas de demanda ${demanda}. Es una aproximación, no un dato oficial: el corte real cambia cada semestre, así que inscríbete y verifícalo en la universidad.`,
     };
   }
   if (puntaje >= amarillo) {
     return {
       nivel: 'amarillo',
-      mensaje: `Con ${puntaje} puntos estás en zona límite para demanda ${demanda} (corte aproximado histórico ≈ ${verde}). Tienes opciones reales según la competencia del semestre — inscríbete y ten un plan B.`,
+      mensaje: `Con ${puntaje} puntos estás en zona límite para demanda ${demanda} (corte estimado ≈ ${verde}, no oficial). Tienes opciones reales según la competencia del semestre — inscríbete y ten un plan B.`,
     };
   }
   return {
     nivel: 'rojo',
-    mensaje: `Con ${puntaje} puntos, este programa (demanda ${demanda}, corte histórico ≈ ${verde}) es poco probable este ciclo. Mira el plan de mejora abajo o considera universidades/programas con menor corte.`,
+    mensaje: `Con ${puntaje} puntos, este programa (demanda ${demanda}, corte estimado ≈ ${verde}, no oficial) es poco probable este ciclo. Mira el plan de mejora abajo o considera universidades/programas con menor corte.`,
   };
 }
 

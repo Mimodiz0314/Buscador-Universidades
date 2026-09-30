@@ -3,6 +3,44 @@ import { PROCESOS_DETALLADOS } from '../data/procesos.js';
 import { estadoVerificacion, MESES_VIGENCIA } from '../utils/verificacion.js';
 import LogoUniversidad from './LogoUniversidad.jsx';
 import { generarUrlGoogleCalendar } from '../utils/calendar.js';
+import { analizarFechas } from '../utils/fechas.js';
+import { hoyISO } from '../utils/estados.js';
+
+// Fechas clave: tacha las vencidas y resalta la próxima con los días que faltan.
+function FechasClave({ fechasClave }) {
+  if (!fechasClave?.length) return null;
+  const { items, terminada } = analizarFechas(fechasClave, hoyISO());
+  return (
+    <div className="mb-3 space-y-2">
+      {terminada && (
+        <p className="rounded-lg bg-slate-100 border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">
+          Esta convocatoria ya terminó. Pendiente la próxima: revisa el portal oficial.
+        </p>
+      )}
+      <ul className="space-y-1.5">
+        {items.map((f) => (
+          <li
+            key={f.evento + f.fecha}
+            className={`flex flex-wrap items-baseline gap-x-2 rounded-lg px-3 py-1.5 text-xs border ${
+              f.esProxima ? 'bg-blue-50 border-blue-200 text-blue-900' : f.pasada ? 'bg-white border-slate-100 text-slate-400' : 'bg-white border-slate-200 text-slate-700'
+            }`}
+          >
+            <span className={`font-mono shrink-0 ${f.pasada ? 'line-through' : ''}`}>
+              {f.fecha}{f.hasta ? ` → ${f.hasta}` : ''}
+            </span>
+            <span className={f.pasada ? 'line-through' : 'font-medium'}>{f.evento}</span>
+            {f.pasada && <span className="text-[11px]">(ya pasó)</span>}
+            {f.esProxima && (
+              <span className="font-bold">
+                {f.enCurso ? '· en curso ahora' : f.diasFaltan === 0 ? '· ¡es hoy!' : `· faltan ${f.diasFaltan} días`}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 // Banner grande de confianza: le dice al estudiante, sin rodeos, qué tan
 // confiable es la información que está viendo y siempre lo lleva a la fuente.
@@ -223,7 +261,7 @@ export default function ProcesoInscripcion({ universidades = [], uniInicial = nu
                   titulo: `Admisión ${uni.sigla || uni.nombre}: Fechas Clave`,
                   descripcion: `Guía de admisión ${uni.nombre}.\n${proceso?.convocatoria || ''}\nEnlace oficial: ${uni.admisiones}`,
                   ubicacion: uni.nombre,
-                  fechaInicio: proceso?.verificado || '2026-09-08'
+                  fechaInicio: analizarFechas(proceso?.fechasClave, hoyISO()).proxima?.fecha || hoyISO()
                 })}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -256,6 +294,7 @@ export default function ProcesoInscripcion({ universidades = [], uniInicial = nu
 
               {proceso.convocatoria && (
                 <Seccion titulo="Convocatoria y fechas">
+                  <FechasClave fechasClave={proceso.fechasClave} />
                   <p>{proceso.convocatoria}</p>
                 </Seccion>
               )}

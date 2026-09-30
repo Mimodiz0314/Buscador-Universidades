@@ -2,24 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { UNIVERSIDADES } from '../src/data/universidades.js';
 import { LATAM } from '../src/data/latam.js';
+import { listaUnica } from './reglas_estados.js';
 
-const allUnis = [...UNIVERSIDADES, ...LATAM];
+// Reinicia los estados: todas quedan "sin_dato" hasta que el robot de IA
+// encuentre una fuente oficial (nunca se inventa "abiertas" o "cerradas").
+const allUnis = listaUnica(UNIVERSIDADES, LATAM);
+const initialEstados = Object.fromEntries(allUnis.map((u) => [u.id, 'sin_dato']));
 
-const initialEstados = {};
-allUnis.forEach((u) => {
-  if (u.id === 'unad') {
-    initialEstados[u.id] = 'abiertas';
-  } else if (u.id === 'unal' || u.id === 'udea') {
-    initialEstados[u.id] = 'proximamente';
-  } else {
-    initialEstados[u.id] = 'cerradas';
-  }
-});
+fs.writeFileSync(path.resolve('src/data/estados.json'), JSON.stringify(initialEstados, null, 2) + '\n', 'utf-8');
+fs.writeFileSync(path.resolve('src/data/estados_detalle.json'), '{}\n', 'utf-8');
 
-fs.writeFileSync(
-  path.resolve('src/data/estados.json'),
-  JSON.stringify(initialEstados, null, 2),
-  'utf-8'
-);
-
-console.log('✅ Creado src/data/estados.json con', Object.keys(initialEstados).length, 'universidades.');
+console.log('✅ Reiniciados', allUnis.length, 'estados como "sin_dato".');

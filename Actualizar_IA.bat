@@ -19,7 +19,7 @@ if errorlevel 1 (
 
 echo.
 echo  [2/3] Guardando nueva informacion de admisiones...
-git add src/data/estados.json
+git add src/data/estados.json src/data/estados_detalle.json src/data/meta.json
 git commit -m "bot: actualiza estados de admisiones via IA local" || echo  (No hubo cambios reales)
 
 echo.

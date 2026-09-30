@@ -11,6 +11,7 @@
 //   nombreFuente: 'Oficina de ...',
 //   resumen: 'Cómo funciona la admisión en esta universidad.',
 //   convocatoria: 'Estado/fechas de la convocatoria al momento de verificar.',
+//   fechasClave: [{ evento: '...', fecha: 'YYYY-MM-DD', hasta: 'YYYY-MM-DD' }], // la app tacha las vencidas
 //   costoPin: { valor: 120000, nota: '...' },   // valor null si no se confirmó
 //   requisitos: ['...'],
 //   etapas: [{ titulo: '...', detalle: '...' }],
@@ -27,6 +28,12 @@ export const PROCESOS_DETALLADOS = {
       'La UNAL admite por su PROPIO examen (no usa el puntaje del ICFES). El puntaje que obtengas en la prueba define a qué programa puedes aspirar. Hay admisión regular y programas especiales (PAES, PEAMA, PAET).',
     convocatoria:
       'Convocatoria 2027-1 EN CURSO (Inscripciones cerradas el 19 de agosto de 2026). Próximas fechas: Examen de admisión presencial el domingo 20 de septiembre de 2026. Consulta de puntajes e inscripción de programa curricular del 1 al 6 de octubre de 2026; publicación de resultados de admisión el 9 de octubre de 2026. La próxima convocatoria (2027-2) abrirá en febrero/marzo de 2027.',
+    fechasClave: [
+      { evento: 'Inscripciones (cerraron)', fecha: '2026-08-19' },
+      { evento: 'Examen de admisión', fecha: '2026-09-20' },
+      { evento: 'Consulta de puntajes e inscripción de programa', fecha: '2026-10-01', hasta: '2026-10-06' },
+      { evento: 'Publicación de resultados', fecha: '2026-10-09' },
+    ],
     costoPin: {
       valor: 175000,
       nota: 'Derechos de inscripción de la convocatoria 2027-1 ($175.000 COP; US$87,5 si pagas desde el exterior). La UNAL NO solicita pagos por adjudicación de cupos: cualquier cobro distinto al PIN oficial es fraude.',
@@ -58,6 +65,12 @@ export const PROCESOS_DETALLADOS = {
       'La UdeA admite por su PROPIO examen: prueba de razonamiento lógico y competencia lectora (no usa el puntaje del ICFES para pregrado). Al inscribirte eliges dos opciones de programa.',
     convocatoria:
       'Convocatoria 2027-1 ABIERTA: pago de derechos de inscripción e inscripciones en línea del 14 de agosto al 14 de septiembre de 2026. Descarga de credenciales del 14 al 22 de octubre. Examen de admisión presencial y virtual el 26 y 27 de octubre de 2026. Publicación de resultados de admitidos el 11 de noviembre de 2026.',
+    fechasClave: [
+      { evento: 'Pago e inscripciones en línea', fecha: '2026-08-14', hasta: '2026-09-14' },
+      { evento: 'Descarga de credenciales', fecha: '2026-10-14', hasta: '2026-10-22' },
+      { evento: 'Examen de admisión', fecha: '2026-10-26', hasta: '2026-10-27' },
+      { evento: 'Publicación de admitidos', fecha: '2026-11-11' },
+    ],
     costoPin: {
       valor: null,
       nota: 'El valor oficial se publica con cada calendario en el portal UdeA (~$90.800 COP para sede Medellín y ~$28.200 para sedes regionales o virtuales). Confírmalo al generar la factura.',
@@ -145,6 +158,9 @@ export const PROCESOS_DETALLADOS = {
       'La Universidad del Atlántico admite por el puntaje del examen Saber 11 (ICFES). Para inscribirte no se exige puntaje mínimo; el puntaje define quién obtiene cupo.',
     convocatoria:
       'Al verificar, la ventana de compra de PIN de la convocatoria 2026-2 ya había pasado (6 al 19 de mayo de 2026). El calendario de la siguiente convocatoria se publica en uniatlantico.edu.co (sección Admisiones y Registro Académico).',
+    fechasClave: [
+      { evento: 'Compra de PIN 2026-2 (referencia)', fecha: '2026-05-06', hasta: '2026-05-19' },
+    ],
     costoPin: {
       valor: null,
       nota: 'El PIN se compra en Banco Popular o en línea; al pagar llega a tu correo un PIN de 19 dígitos. Hay inscripción GRATUITA para quienes cumplen los requisitos de la Resolución Rectoral 001620 de 2013 (poblaciones especiales). El valor exacto se publica en cada convocatoria.',
@@ -173,6 +189,11 @@ export const PROCESOS_DETALLADOS = {
       'La Universidad de Cartagena admite por el puntaje del examen Saber 11 (ICFES). La inscripción se hace en la plataforma SMA de la universidad, y el proceso está regulado por acuerdos publicados en el portal (el calendario 2026-2 quedó fijado en el Acuerdo No. 03 del 19 de febrero de 2026).',
     convocatoria:
       'Las fechas exactas de cada periodo se publican en la sección "Calendario de Inscripciones" del portal de aspirantes (en acuerdos descargables). Referencia del ciclo 2026-1: venta de pines hasta el 30 de octubre de 2025, inscripciones hasta el 31 de octubre y resultados el 14 de noviembre de 2025. Verifica el calendario vigente antes de cualquier pago.',
+    fechasClave: [
+      { evento: 'Venta de pines 2026-1 (referencia)', fecha: '2025-10-30' },
+      { evento: 'Cierre de inscripciones 2026-1 (referencia)', fecha: '2025-10-31' },
+      { evento: 'Resultados 2026-1 (referencia)', fecha: '2025-11-14' },
+    ],
     costoPin: {
       valor: null,
       nota: 'El PIN se compra únicamente en línea por PSE. Referencia de la convocatoria 2026-1: $166.704 COP (según Universo U, el portal informativo de la universidad). El valor vigente se publica con cada convocatoria.',
@@ -204,6 +225,10 @@ export const PROCESOS_DETALLADOS = {
       'Uniandes NO tiene examen propio ni cobra inscripción: el formulario es gratuito y en línea, dos veces al año, con publicación de admitidos por cortes. La admisión depende de un excelente resultado en las pruebas que la universidad avala (Saber 11 u otras).',
     convocatoria:
       'El proceso funciona por cortes durante el semestre anterior al ingreso. Referencia 2026-2: apertura de inscripciones el 28 de enero y cierre del último corte el 6 de julio de 2026, con última publicación de admitidos el 9 de julio. Las fechas de cada periodo se publican en aspirantes.uniandes.edu.co.',
+    fechasClave: [
+      { evento: 'Inscripciones 2026-2 por cortes (referencia)', fecha: '2026-01-28', hasta: '2026-07-06' },
+      { evento: 'Última publicación de admitidos 2026-2', fecha: '2026-07-09' },
+    ],
     costoPin: {
       valor: 0,
       nota: 'La inscripción es GRATUITA. Ojo: la MATRÍCULA es privada y se paga cada semestre (varía por programa); revisa becas (Quiero Estudiar), ICETEX y financiación antes de matricularte.',
@@ -232,6 +257,10 @@ export const PROCESOS_DETALLADOS = {
       'Uninorte admite con el formulario en línea (plataforma Pomelo) más el pago de la inscripción; evalúa tus notas de bachillerato y el Saber 11. Algunos programas piden prueba adicional.',
     convocatoria:
       'Referencia 2026-2 al verificar: inscripciones del 2 de marzo al 24 de julio de 2026 (Medicina hasta el 10 de julio), con decisión de admisión notificada al correo desde el 4 de marzo e inicio de clases el 27 de julio. El calendario de cada periodo está en la sección Calendarios del portal de admisiones.',
+    fechasClave: [
+      { evento: 'Inscripciones 2026-2 (referencia)', fecha: '2026-03-02', hasta: '2026-07-24' },
+      { evento: 'Inicio de clases 2026-2', fecha: '2026-07-27' },
+    ],
     costoPin: {
       valor: 150000,
       nota: 'Valor de la inscripción: $150.000 COP, no reembolsable. La MATRÍCULA es privada y se paga por semestre; revisa becas y financiación de la universidad e ICETEX.',

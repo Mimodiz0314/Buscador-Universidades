@@ -115,9 +115,9 @@ export default function Simulador() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">Simulador de Probabilidad de Admisión ICFES</h2>
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">Simulador de Admisión ICFES</h2>
             <p className="mt-0.5 text-xs text-slate-500">
-              Estima tus opciones reales de ingreso cruzando tu puntaje con las ponderaciones por carrera.
+              <strong className="text-amber-700">Estimación orientativa, no oficial.</strong> Compara tu puntaje con cortes aproximados según qué tan demandada es la carrera y qué tan selectiva es la universidad. El corte real lo publica cada universidad en cada convocatoria.
             </p>
           </div>
 
@@ -260,7 +260,7 @@ export default function Simulador() {
           {resultados.infoPonderacion && (
             <div className="bg-emerald-50 border border-emerald-200/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-emerald-900">
               <div>
-                <span className="font-bold uppercase tracking-wider text-[10px] text-emerald-700 block">Ponderación Oficial de la Facultad</span>
+                <span className="font-bold uppercase tracking-wider text-[11px] text-emerald-700 block">Ponderación de referencia (aproximada, no oficial)</span>
                 <span className="font-semibold text-sm">{resultados.infoPonderacion.enfoque}</span>
               </div>
               <div className="bg-white px-3.5 py-1.5 rounded-lg border border-emerald-300 font-bold text-sm text-emerald-800 self-start sm:self-auto shadow-2xs">

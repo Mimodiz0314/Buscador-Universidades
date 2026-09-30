@@ -123,7 +123,7 @@ export const LATAM = [
   U({
     id: 'uy-udelar', nombre: 'Universidad de la República', sigla: 'UdelaR',
     ciudad: 'Montevideo', pais: 'Uruguay', zona: 'Uruguay', tipo: 'pública', ranking: 22,
-    web: 'https://udelar.edu.uy', admisiones: 'https://udelar.edu.uy/portal/inicio-de-cursos/',
+    web: 'https://udelar.edu.uy', admisiones: 'https://udelar.edu.uy/ingresos/',
     notaAdmision:
       'Pública y GRATUITA, con ingreso irrestricto (sin examen de corte) en la mayoría de carreras. Atractiva para extranjeros por eso.',
     costoInscripcion: costoIntl('Matrícula gratuita e ingreso sin examen de corte en la mayoría de carreras. Considera sostenimiento y visa.'),
@@ -132,7 +132,7 @@ export const LATAM = [
   U({
     id: 'cr-ucr', nombre: 'Universidad de Costa Rica', sigla: 'UCR',
     ciudad: 'San José', pais: 'Costa Rica', zona: 'Costa Rica', tipo: 'pública', ranking: 25,
-    web: 'https://www.ucr.ac.cr', admisiones: 'https://admision.ucr.ac.cr',
+    web: 'https://www.ucr.ac.cr', admisiones: 'https://www.ucr.ac.cr/estudiantes/admision.html',
     notaAdmision: 'La principal pública de Costa Rica. Admisión por Prueba de Aptitud Académica propia; con sistema de becas socioeconómicas.',
     costoInscripcion: costoIntl('Pública con matrícula por sistema de becas según ingresos; examen de admisión propio. Revisar condiciones para extranjeros.'),
     programas: ['Medicina', 'Derecho', 'Ingeniería', 'Arquitectura', 'Psicología', 'Economía', 'Biología', 'Computación', 'Comunicación', 'Farmacia'],

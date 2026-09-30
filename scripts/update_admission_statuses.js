@@ -2,8 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import { UNIVERSIDADES } from '../src/data/universidades.js';
 import { LATAM } from '../src/data/latam.js';
+import { listaUnica, decidirEstado, hoyColombia, fechaEnTexto } from './reglas_estados.js';
 
-const allUnis = [...UNIVERSIDADES, ...LATAM];
+// UNIVERSIDADES ya incluye las de Latinoamérica: listaUnica evita consultarlas dos veces.
+const allUnis = listaUnica(UNIVERSIDADES, LATAM);
+const porId = new Map(allUnis.map((u) => [u.id, u]));
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
@@ -11,14 +14,16 @@ if (!apiKey) {
   process.exit(1);
 }
 
-// Cargar estados actuales
+const leerJson = (p, porDefecto) => {
+  try { return JSON.parse(fs.readFileSync(p, 'utf-8')); } catch { return porDefecto; }
+};
+
 const estadosPath = path.resolve('src/data/estados.json');
-let estadosActuales = {};
-try {
-  estadosActuales = JSON.parse(fs.readFileSync(estadosPath, 'utf-8'));
-} catch (e) {
-  console.log('No se pudo cargar estados.json, se creará uno nuevo.');
-}
+const detallePath = path.resolve('src/data/estados_detalle.json');
+const metaPath = path.resolve('src/data/meta.json');
+const estadosActuales = leerJson(estadosPath, {});
+const detalleActual = leerJson(detallePath, {});
+const HOY = hoyColombia();
 
 const batchSize = 8; // Consultar en grupos pequeños para máxima precisión de búsqueda por lote
 const batches = [];
@@ -26,32 +31,38 @@ for (let i = 0; i < allUnis.length; i += batchSize) {
   batches.push(allUnis.slice(i, i + batchSize));
 }
 
-console.log(`Iniciando actualización por IA con Gemini. Total universidades: ${allUnis.length}. Lotes: ${batches.length}`);
+console.log(`Iniciando actualización por IA con Gemini (${HOY}). Total universidades: ${allUnis.length}. Lotes: ${batches.length}`);
 
 async function consultarGeminiConBusqueda(lote) {
-  const listaTexto = lote.map(u => `- ${u.id}: ${u.nombre} (${u.ciudad ? u.ciudad + ', ' : ''}${u.pais || 'Colombia'}) - Portal de admisiones: ${u.admisiones}`).join('\n');
+  const listaTexto = lote.map(u => `- ${u.id}: ${u.nombre} (${u.ciudad ? u.ciudad + ', ' : ''}${u.pais || 'Colombia'}) - Sitio oficial: ${u.web || ''} - Portal de admisiones: ${u.admisiones}`).join('\n');
 
-    const prompt = `Actúa como un experto en el sistema universitario latinoamericano. Tu tarea es investigar el estado real de admisiones (pregrado) hoy para las siguientes universidades. 
-Para cada universidad, debes buscar en internet cuál es su estado actual de inscripción.
+  const prompt = `Hoy es ${HOY} (hora de Colombia). Actúa como un investigador cuidadoso del sistema universitario latinoamericano. Para cada universidad de la lista, busca en su SITIO WEB OFICIAL el estado actual de admisiones de PREGRADO.
 
-Responde ÚNICAMENTE con un objeto JSON plano estructurado dentro de un bloque de código markdown de tipo json (ej. \`\`\`json { ... } \`\`\`), donde las llaves sean el ID de la universidad y el valor sea uno de estos 4 estados:
-- "abiertas" (si hay inscripciones o convocatorias activas para registro de aspirantes en este momento).
-- "matriculas" (si el proceso de inscripción ya cerró pero se encuentra en periodo de matrículas financieras/académicas o inducciones del semestre).
-- "proximamente" (si las inscripciones del periodo actual están cerradas pero la página web oficial ya anuncia la fecha exacta de apertura del próximo periodo).
-- "cerradas" (si no hay procesos de inscripción ni matrículas activas, o si las clases ya iniciaron y no hay convocatorias vigentes).
+Estados posibles:
+- "abiertas": hoy hay inscripciones o convocatoria activa para aspirantes.
+- "matriculas": las inscripciones ya cerraron pero hoy está en periodo de matrículas o inducción.
+- "proximamente": las inscripciones están cerradas pero el sitio oficial ya anuncia la fecha de apertura de la próxima.
+- "cerradas": no hay inscripciones ni matrículas activas.
+
+REGLAS ESTRICTAS:
+- "fuente" debe ser la URL exacta de una página del sitio oficial de ESA universidad donde viste la información (no noticias, blogs ni agregadores).
+- "evidencia" debe ser una frase corta copiada de esa página que respalde el estado.
+- "apertura" y "cierre" son las fechas de inscripción en formato YYYY-MM-DD si aparecen; si no, null.
+- Si no encuentras información oficial clara, responde "estado": null. Es mejor no saber que adivinar.
+- Usa exactamente los IDs de la lista.
 
 Lista de universidades a investigar:
 ${listaTexto}
 
-Responde exclusivamente con el JSON dentro del bloque de código markdown:
+Responde ÚNICAMENTE con un bloque de código json con esta forma:
 \`\`\`json
 {
-  "id_universidad": "estado"
+  "id_universidad": { "estado": "abiertas", "fuente": "https://...", "evidencia": "...", "apertura": "2026-10-01", "cierre": null }
 }
 \`\`\``;
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-  
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+
   const body = {
     contents: [{
       parts: [{ text: prompt }]
@@ -65,7 +76,8 @@ Responde exclusivamente con el JSON dentro del bloque de código markdown:
     try {
       const res = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        // La clave va en la cabecera (no en la dirección) para que no quede en registros.
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify(body)
       });
 
@@ -77,7 +89,7 @@ Responde exclusivamente con el JSON dentro del bloque de código markdown:
       const data = await res.json();
       const parts = data.candidates?.[0]?.content?.parts || [];
       const replyText = parts.map(p => p.text || '').join('\n');
-      
+
       if (!replyText.trim()) {
         throw new Error('Respuesta vacía de Gemini');
       }
@@ -96,23 +108,15 @@ Responde exclusivamente con el JSON dentro del bloque de código markdown:
       cleanJson = cleanJson.replace(/,\s*([}\]])/g, '$1');
 
       const parsed = JSON.parse(cleanJson.trim());
-      
-      // Normalizar claves y valores
-      const normalizado = {};
-      const ESTADOS_VALIDOS = ['abiertas', 'matriculas', 'proximamente', 'cerradas'];
-      for (const [key, rawVal] of Object.entries(parsed)) {
-        let val = String(rawVal).toLowerCase().trim();
-        if (val.includes('abiert')) val = 'abiertas';
-        else if (val.includes('matricul')) val = 'matriculas';
-        else if (val.includes('proxim')) val = 'proximamente';
-        else if (val.includes('cerrad')) val = 'cerradas';
 
-        if (ESTADOS_VALIDOS.includes(val)) {
-          normalizado[key] = val;
-        }
+      // Solo se aceptan IDs que pertenecen a este lote.
+      const idsLote = new Set(lote.map(u => u.id));
+      const respuestas = {};
+      for (const [id, valor] of Object.entries(parsed)) {
+        if (idsLote.has(id) && valor && typeof valor === 'object') respuestas[id] = valor;
+        else if (!idsLote.has(id)) console.log(`  ⚠ ID desconocido ignorado: ${id}`);
       }
-
-      return normalizado;
+      return respuestas;
     } catch (error) {
       console.error(`  Intento ${intento} falló:`, error.message);
       if (intento < 2) {
@@ -127,43 +131,53 @@ Responde exclusivamente con el JSON dentro del bloque de código markdown:
 }
 
 async function ejecutarSincronizacion() {
-  const nuevosEstados = { ...estadosActuales };
-  let exitos = 0;
+  const nuevosEstados = {};
+  const nuevoDetalle = {};
+  const conteo = { aceptado: 0, sin_cambio: 0, pendiente: 0, a_sin_dato: 0 };
+  let lotesOk = 0;
 
   for (let i = 0; i < batches.length; i++) {
     const lote = batches[i];
     console.log(`[Lote ${i + 1}/${batches.length}] Investigando ${lote.length} universidades...`);
-    
-    const resultadoLote = await consultarGeminiConBusqueda(lote);
-    if (resultadoLote) {
-      console.log('Resultados obtenidos del lote:', resultadoLote);
-      Object.assign(nuevosEstados, resultadoLote);
-      exitos++;
-    } else {
-      console.log(`Lote ${i + 1} falló. Se conservarán los estados anteriores para estas universidades.`);
+
+    const respuestas = await consultarGeminiConBusqueda(lote);
+    if (respuestas) lotesOk++;
+    else console.log(`  Lote ${i + 1} falló: se conservan los estados confirmados anteriores.`);
+
+    for (const uni of lote) {
+      const r = decidirEstado({
+        uni,
+        previoEstado: estadosActuales[uni.id],
+        previoDetalle: detalleActual[uni.id],
+        resp: respuestas ? respuestas[uni.id] : undefined,
+        hoy: HOY,
+      });
+      nuevosEstados[uni.id] = r.estado;
+      nuevoDetalle[uni.id] = r.detalle;
+      conteo[r.cambio]++;
+      console.log(`  ${uni.id}: ${r.estado} (${r.cambio}${r.detalle.motivo ? ' — ' + r.detalle.motivo : ''})`);
     }
 
     // Espera corta para evitar saturación de tasa de solicitudes
     await new Promise(r => setTimeout(r, 2000));
   }
 
-  // Guardar los estados consolidados
-  fs.writeFileSync(estadosPath, JSON.stringify(nuevosEstados, null, 2), 'utf-8');
+  fs.writeFileSync(estadosPath, JSON.stringify(nuevosEstados, null, 2) + '\n', 'utf-8');
+  fs.writeFileSync(detallePath, JSON.stringify(nuevoDetalle, null, 2) + '\n', 'utf-8');
 
-  // Guardar metadatos de sincronización
-  const metaPath = path.resolve('src/data/meta.json');
-  const now = new Date();
-  const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-  const fechaTexto = `${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+  const confirmadas = Object.values(nuevoDetalle).filter(d => d.confirmado).length;
   fs.writeFileSync(metaPath, JSON.stringify({
-    ultimaActualizacion: now.toISOString().split('T')[0],
-    fechaTexto,
-    totalSincronizadas: allUnis.length,
-    exitosLotes: exitos,
+    ultimaActualizacion: HOY,
+    fechaTexto: fechaEnTexto(HOY),
+    totalUniversidades: allUnis.length,
+    confirmadas,
+    sinDato: allUnis.length - confirmadas,
+    cambiosPendientes: conteo.pendiente,
+    exitosLotes: lotesOk,
     totalLotes: batches.length
-  }, null, 2), 'utf-8');
+  }, null, 2) + '\n', 'utf-8');
 
-  console.log(`\n🎉 Sincronización finalizada. Sincronizados con éxito ${exitos} de ${batches.length} lotes.`);
+  console.log(`\n🎉 Listo. Lotes OK: ${lotesOk}/${batches.length}. Con fuente oficial: ${confirmadas}/${allUnis.length}. Cambios en espera de 2ª confirmación: ${conteo.pendiente}.`);
 }
 
 ejecutarSincronizacion();

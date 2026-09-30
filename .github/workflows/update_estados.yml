@@ -10,6 +10,7 @@ on:
 # Permisos explícitos para que el GITHUB_TOKEN pueda hacer push al repositorio
 permissions:
   contents: write
+  issues: write   # para abrir el aviso de enlaces rotos
 
 jobs:
   update-statuses:
@@ -40,7 +41,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add src/data/estados.json src/data/meta.json
+          git add src/data/estados.json src/data/estados_detalle.json src/data/meta.json
           # Solo hacer commit si hay cambios en los archivos
           if ! git diff --cached --quiet; then
             git commit -m "chore: actualizacion automatica de estados de admision via IA [skip ci]"
@@ -48,4 +49,18 @@ jobs:
             echo "✅ Cambios subidos e integrados."
           else
             echo "ℹ️ No se detectaron cambios en los estados de admisiones."
+          fi
+
+      - name: Revisar Enlaces Oficiales (solo avisa, no cambia datos)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node --no-warnings scripts/revisar_enlaces.js
+          TITULO="Enlaces rotos detectados por el revisor semanal"
+          NUM=$(gh issue list --state open --search "$TITULO in:title" --json number --jq '.[0].number')
+          if [ -f enlaces_rotos.md ]; then
+            if [ -n "$NUM" ]; then gh issue edit "$NUM" --body-file enlaces_rotos.md; else gh issue create --title "$TITULO" --body-file enlaces_rotos.md; fi
+          elif [ -n "$NUM" ]; then
+            gh issue close "$NUM" --comment "Todos los enlaces respondieron bien en la última revisión."
           fi

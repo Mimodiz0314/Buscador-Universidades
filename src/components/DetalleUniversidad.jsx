@@ -1,6 +1,7 @@
 import { META_DATOS } from '../data/universidades.js';
 import LogoUniversidad from './LogoUniversidad.jsx';
 import { generarUrlGoogleCalendar } from '../utils/calendar.js';
+import { ESTADO_INFO } from '../utils/estados.js';
 
 function ChipVerificado({ verificado }) {
   if (verificado) {
@@ -107,34 +108,9 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
                 <span className={`inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md shadow-sm ${uni.tipo === 'pública' ? 'bg-emerald-600' : 'bg-indigo-600'}`}>
                   {uni.tipo === 'pública' ? 'Pública (Matrícula $0)' : 'Privada'}
                 </span>
-                {uni.estadoAdmision === 'ambas' ? (
-                  <>
-                    <span className="inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md bg-emerald-500 shadow-sm">
-                      Inscripciones
-                    </span>
-                    <span className="inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md bg-blue-600 shadow-sm">
-                      Matrículas
-                    </span>
-                  </>
-                ) : (
-                  <span className={`inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md shadow-sm ${
-                    {
-                      abiertas: 'bg-emerald-500',
-                      matriculas: 'bg-blue-600',
-                      proximamente: 'bg-amber-500',
-                      cerradas: 'bg-slate-500'
-                    }[uni.estadoAdmision] || 'bg-slate-500'
-                  }`}>
-                    {
-                      {
-                        abiertas: 'Inscripciones Abiertas',
-                        matriculas: 'Matrículas Abiertas',
-                        proximamente: 'Próximamente',
-                        cerradas: 'Cerrado'
-                      }[uni.estadoAdmision] || 'Cerrado'
-                    }
-                  </span>
-                )}
+                <span className={`inline-block px-2.5 py-0.5 text-xs font-bold uppercase rounded-md shadow-sm ${(ESTADO_INFO[uni.estadoAdmision] || ESTADO_INFO.sin_dato).solido}`}>
+                  {(ESTADO_INFO[uni.estadoAdmision] || ESTADO_INFO.sin_dato).texto}
+                </span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black leading-tight drop-shadow-md">
                 {uni.nombre}
@@ -212,8 +188,17 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
           </div>
 
           {/* Aviso legal en el detalle */}
-          <div className="mt-3 bg-amber-50 dark:bg-amber-950/40 text-[11px] text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60 rounded-lg p-2.5">
-            ⚠️ <span className="font-bold">Aviso importante:</span> Los calendarios y estados son orientativos. El estudiante tiene la responsabilidad de validar los plazos oficiales ingresando al enlace de **Admisiones** arriba provisto antes de iniciar trámites.
+          <div className="mt-3 bg-amber-50 dark:bg-amber-950/40 text-xs text-amber-900 dark:text-amber-200 border border-amber-200/60 dark:border-amber-800/60 rounded-lg p-3 space-y-1">
+            {uni.estadoAdmision !== 'sin_dato' && uni.estadoDetalle?.confirmado ? (
+              <p>
+                <span className="font-bold">Estado «{(ESTADO_INFO[uni.estadoAdmision] || ESTADO_INFO.sin_dato).texto}»</span>: consultado por IA el {uni.estadoDetalle.consultado} en{' '}
+                <a href={uni.estadoDetalle.fuente} target="_blank" rel="noopener noreferrer" className="underline font-semibold">la página oficial</a>.
+                {uni.estadoDetalle.cierre && <> Cierre anunciado: {uni.estadoDetalle.cierre}.</>}
+              </p>
+            ) : uni.estadoAdmision === 'sin_dato' ? (
+              <p><span className="font-bold">Estado sin confirmar:</span> no encontramos una fuente oficial reciente. Revisa el botón «Admisiones».</p>
+            ) : null}
+            <p>⚠️ <span className="font-bold">Aviso importante:</span> los calendarios y estados son orientativos. Antes de pagar o inscribirte, confirma los plazos en el enlace oficial de <span className="font-bold">Admisiones</span>.</p>
           </div>
 
           {/* Description Box */}

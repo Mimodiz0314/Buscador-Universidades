@@ -92,7 +92,7 @@ export default function ComparadorUniversidades({ universidades = [], selecciona
                 matriculas: { bg: 'bg-blue-600', text: 'Matrículas Abiertas' },
                 proximamente: { bg: 'bg-amber-500', text: 'Próximamente' },
                 cerradas: { bg: 'bg-slate-500', text: 'Cerrado' },
-              }[uni.estadoAdmision] || { bg: 'bg-slate-500', text: 'Cerrado' };
+              }[uni.estadoAdmision] || { bg: 'bg-slate-400', text: 'Sin confirmar' };
 
               return (
                 <div
