@@ -9,6 +9,7 @@ import ESTADOS_ADMISION from './data/estados.json';
 import ESTADOS_DETALLE from './data/estados_detalle.json';
 import META_SINCRONIZACION from './data/meta.json';
 import { estadoVigente } from './utils/estados.js';
+import { leerRuta, escribirRuta } from './utils/rutas.js';
 
 // Estado de admisiones de cada universidad: si no hay dato confiable y reciente,
 // queda "sin_dato" (nunca "cerradas" por defecto).
@@ -33,8 +34,16 @@ import AcercaDe from './components/AcercaDe.jsx';
 import { CREDITOS } from './data/creditos.js';
 import { useInstalacion } from './utils/instalar.js';
 
+// Estado inicial tomado de la dirección (#/u/unal, #/simulador…).
+const rutaInicial = () => {
+  const r = leerRuta(typeof window !== 'undefined' ? window.location.hash : '');
+  const uni = r.uniId ? UNIVERSIDADES_CON_ESTADO.find((u) => u.id === r.uniId) : null;
+  return { ...r, seleccion: uni ? { uni, programas: [] } : null };
+};
+
 export default function App() {
-  const [pestana, setPestana] = useState('buscar');
+  const [ruta0] = useState(rutaInicial);
+  const [pestana, setPestana] = useState(ruta0.pestana);
   const [sidebarAbierto, setSidebarAbierto] = useState(() => {
     try {
       return typeof window !== 'undefined' ? window.innerWidth >= 640 : true;
@@ -99,8 +108,28 @@ export default function App() {
   const [consulta, setConsulta] = useState('');
 
   // Interactions
-  const [seleccion, setSeleccion] = useState(null);
-  const [procesoUni, setProcesoUni] = useState(null);
+  const [seleccion, setSeleccion] = useState(ruta0.seleccion);
+  const [procesoUni, setProcesoUni] = useState(ruta0.procesoUni);
+
+  // Sincronizar pantalla ↔ dirección: cada pantalla nueva queda en el historial
+  // (el botón Atrás del celular vuelve a la anterior en vez de cerrar la app).
+  useEffect(() => {
+    const deseada = escribirRuta({ pestana, uniId: seleccion?.uni?.id, procesoUni });
+    const actual = window.location.hash || '#/';
+    if (actual !== deseada) window.history.pushState(null, '', deseada);
+  }, [pestana, seleccion, procesoUni]);
+
+  useEffect(() => {
+    const alVolver = () => {
+      const r = leerRuta(window.location.hash);
+      const uni = r.uniId ? UNIVERSIDADES_CON_ESTADO.find((u) => u.id === r.uniId) : null;
+      setPestana(r.pestana);
+      setProcesoUni(r.procesoUni);
+      setSeleccion((prev) => (uni ? (prev?.uni?.id === uni.id ? prev : { uni, programas: [] }) : null));
+    };
+    window.addEventListener('popstate', alVolver);
+    return () => window.removeEventListener('popstate', alVolver);
+  }, []);
   const [favoritos, setFavoritos] = useState(() => {
     try {
       return new Set(JSON.parse(localStorage.getItem('buscadoru-favs-yt') || '[]'));
@@ -114,7 +143,7 @@ export default function App() {
       const sig = new Set(prev);
       if (sig.has(id)) sig.delete(id);
       else sig.add(id);
-      localStorage.setItem('buscadoru-favs-yt', JSON.stringify([...sig]));
+      try { localStorage.setItem('buscadoru-favs-yt', JSON.stringify([...sig])); } catch {}
       return sig;
     });
   }
