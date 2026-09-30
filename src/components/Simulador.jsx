@@ -23,6 +23,14 @@ const ETIQUETA_NIVEL = {
 
 const ORDEN_NIVEL = { verde: 0, abierta: 1, amarillo: 2, propio: 3, privada: 4, rojo: 5 };
 
+// Evita puntajes imposibles (p. ej. 172 en un área que va de 0 a 100).
+const limitar = (valor, max) => {
+  if (valor === '') return '';
+  const n = Math.round(Number(valor));
+  if (Number.isNaN(n)) return '';
+  return String(Math.min(max, Math.max(0, n)));
+};
+
 export default function Simulador() {
   const [modoAvanzado, setModoAvanzado] = useState(false);
   const [puntaje, setPuntaje] = useState('');
@@ -122,24 +130,26 @@ export default function Simulador() {
           </div>
 
           {/* Selector de modo */}
-          <div className="flex bg-slate-100 p-1 rounded-xl gap-1 self-start sm:self-auto">
+          <div className="flex shrink-0 bg-slate-100 p-1 rounded-xl gap-1 self-start sm:self-auto" role="group" aria-label="Tipo de simulación">
             <button
               type="button"
               onClick={() => setModoAvanzado(false)}
-              className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
-                !modoAvanzado ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              aria-pressed={!modoAvanzado}
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${
+                !modoAvanzado ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Modo Rápido
+              Puntaje global
             </button>
             <button
               type="button"
               onClick={() => setModoAvanzado(true)}
-              className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
-                modoAvanzado ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              aria-pressed={modoAvanzado}
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg whitespace-nowrap transition-all ${
+                modoAvanzado ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              ⭐ 5 Sub-puntajes
+              ⭐ Por áreas (5)
             </button>
           </div>
         </div>
@@ -158,7 +168,7 @@ export default function Simulador() {
                     max="100"
                     placeholder="0-100"
                     value={subPuntajes.lectura}
-                    onChange={(e) => setSubPuntajes(p => ({ ...p, lectura: e.target.value }))}
+                    onChange={(e) => setSubPuntajes(p => ({ ...p, lectura: limitar(e.target.value, 100) }))}
                     className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white focus:border-blue-500 outline-none"
                   />
                 </div>
@@ -170,7 +180,7 @@ export default function Simulador() {
                     max="100"
                     placeholder="0-100"
                     value={subPuntajes.matematicas}
-                    onChange={(e) => setSubPuntajes(p => ({ ...p, matematicas: e.target.value }))}
+                    onChange={(e) => setSubPuntajes(p => ({ ...p, matematicas: limitar(e.target.value, 100) }))}
                     className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white focus:border-blue-500 outline-none"
                   />
                 </div>
@@ -182,7 +192,7 @@ export default function Simulador() {
                     max="100"
                     placeholder="0-100"
                     value={subPuntajes.sociales}
-                    onChange={(e) => setSubPuntajes(p => ({ ...p, sociales: e.target.value }))}
+                    onChange={(e) => setSubPuntajes(p => ({ ...p, sociales: limitar(e.target.value, 100) }))}
                     className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white focus:border-blue-500 outline-none"
                   />
                 </div>
@@ -194,7 +204,7 @@ export default function Simulador() {
                     max="100"
                     placeholder="0-100"
                     value={subPuntajes.naturales}
-                    onChange={(e) => setSubPuntajes(p => ({ ...p, naturales: e.target.value }))}
+                    onChange={(e) => setSubPuntajes(p => ({ ...p, naturales: limitar(e.target.value, 100) }))}
                     className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white focus:border-blue-500 outline-none"
                   />
                 </div>
@@ -206,7 +216,7 @@ export default function Simulador() {
                     max="100"
                     placeholder="0-100"
                     value={subPuntajes.ingles}
-                    onChange={(e) => setSubPuntajes(p => ({ ...p, ingles: e.target.value }))}
+                    onChange={(e) => setSubPuntajes(p => ({ ...p, ingles: limitar(e.target.value, 100) }))}
                     className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white focus:border-blue-500 outline-none"
                   />
                 </div>
@@ -219,7 +229,7 @@ export default function Simulador() {
                 min="0"
                 max="500"
                 value={puntaje}
-                onChange={(e) => setPuntaje(e.target.value)}
+                onChange={(e) => setPuntaje(limitar(e.target.value, 500))}
                 placeholder="Puntaje global Saber 11 (ej: 320)"
                 className="w-full sm:w-64 text-xs rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 focus:border-blue-500 outline-none"
               />

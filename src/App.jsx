@@ -31,8 +31,13 @@ import LineaTiempo from './components/LineaTiempo.jsx';
 import ComparadorUniversidades from './components/ComparadorUniversidades.jsx';
 import CalculadoraGratuidad from './components/CalculadoraGratuidad.jsx';
 import AcercaDe from './components/AcercaDe.jsx';
+import MiRuta from './components/MiRuta.jsx';
+import { guardarCarreraEnRuta, esCerca } from './utils/ruta.js';
 import { CREDITOS } from './data/creditos.js';
 import { useInstalacion } from './utils/instalar.js';
+
+// Pantallas diseñadas solo en modo claro (ver .zona-clara en index.css).
+const PESTANAS_CLARAS = ['lineatiempo', 'comparar', 'gratuidad', 'proceso', 'simulador', 'test', 'becas', 'ruta'];
 
 // Estado inicial tomado de la dirección (#/u/unal, #/simulador…).
 const rutaInicial = () => {
@@ -170,7 +175,7 @@ export default function App() {
   const resultados = useMemo(() => {
     return UNIVERSIDADES_CON_ESTADO.filter((u) => {
       if (region !== 'todas' && (u.region ?? 'colombia') !== region) return false;
-      if (region === 'colombia' && zona !== 'Todas' && u.zona !== zona) return false;
+      if (region === 'colombia' && zona !== 'Todas' && u.zona !== zona && u.zona !== 'Nacional') return false;
       const selectedTipos = [];
       if (chipsActivos.includes('Públicas')) selectedTipos.push('pública');
       if (chipsActivos.includes('Privadas')) selectedTipos.push('privada');
@@ -186,6 +191,7 @@ export default function App() {
         if (!matchedEstado) return false;
       }
 
+      if (chipsActivos.includes('Cerca de mí (Córdoba y Sucre)') && !esCerca(u)) return false;
       if (chipsActivos.includes('Examen Propio') && u.tipoAdmision !== 'propio') return false;
       if (chipsActivos.includes('Saber 11') && u.tipoAdmision !== 'icfes') return false;
 
@@ -419,6 +425,12 @@ export default function App() {
                 </svg>
                 {sidebarAbierto && <span className="truncate">Inicio</span>}
               </button>
+              <button onClick={() => irAPestana('ruta')} className={sidebarItemClass('ruta')}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-amber-500 shrink-0">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                {sidebarAbierto && <span className="truncate font-semibold text-amber-800 dark:text-amber-300">Mi Ruta</span>}
+              </button>
               <button onClick={() => irAPestana('lineatiempo')} className={sidebarItemClass('lineatiempo')}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -530,7 +542,7 @@ export default function App() {
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 overflow-y-auto bg-slate-50 relative">
+        <main className={`flex-1 overflow-y-auto relative ${!seleccion && PESTANAS_CLARAS.includes(pestana) ? 'zona-clara bg-slate-50' : 'bg-slate-50 dark:bg-slate-950'}`}>
 
           {seleccion ? (
             /* ── WATCH PAGE: Universidad Seleccionada ── */
@@ -595,6 +607,7 @@ export default function App() {
             <div className="p-4 sm:p-6 lg:p-8">
               <TestVocacional
                 onElegirCarrera={(carrera) => {
+                  guardarCarreraEnRuta(carrera);
                   setCarreraInput(carrera);
                   setConsulta(carrera);
                   setPestana('buscar');
@@ -607,6 +620,15 @@ export default function App() {
             <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
               <Simulador />
             </div>
+
+          ) : pestana === 'ruta' ? (
+            /* ── MI RUTA: plan personal ── */
+            <MiRuta
+              universidades={UNIVERSIDADES_CON_ESTADO}
+              onVerDetalle={(uni) => setSeleccion({ uni, programas: [] })}
+              onVerProceso={(id) => { setSeleccion(null); setProcesoUni(id); setPestana('proceso'); }}
+              onIrTest={() => irAPestana('test')}
+            />
 
           ) : pestana === 'acerca' ? (
             /* ── ACERCA DE: créditos, derechos e instalación ── */
@@ -624,7 +646,7 @@ export default function App() {
 
               {/* Category Chips (YouTube style quick filters) */}
               <div className="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
-                {['Todas', 'Públicas', 'Privadas', 'Inscripciones Abiertas', 'Matrículas Abiertas', 'Próximamente', 'Examen Propio', 'Saber 11'].map((chip) => (
+                {['Todas', 'Cerca de mí (Córdoba y Sucre)', 'Públicas', 'Privadas', 'Inscripciones Abiertas', 'Matrículas Abiertas', 'Próximamente', 'Examen Propio', 'Saber 11'].map((chip) => (
                   <button
                     key={chip}
                     onClick={() => {
@@ -911,13 +933,13 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => { setSeleccion(null); setPestana('gratuidad'); }}
+          onClick={() => { setSeleccion(null); setPestana('ruta'); }}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold py-1 px-2 rounded-lg transition-colors ${
-            pestana === 'gratuidad' ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-slate-500 dark:text-slate-400'
+            pestana === 'ruta' ? 'text-amber-600 dark:text-amber-400 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
-          <span className="text-sm leading-none">🏛️</span>
-          <span>Gratuidad</span>
+          <span className="text-sm leading-none">⭐</span>
+          <span>Mi Ruta</span>
         </button>
       </nav>
     </div>

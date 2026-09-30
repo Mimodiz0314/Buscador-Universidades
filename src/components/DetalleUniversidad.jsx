@@ -2,6 +2,7 @@ import { META_DATOS } from '../data/universidades.js';
 import LogoUniversidad from './LogoUniversidad.jsx';
 import { generarUrlGoogleCalendar } from '../utils/calendar.js';
 import { ESTADO_INFO } from '../utils/estados.js';
+import { compartir, enlaceUniversidad } from '../utils/rutas.js';
 
 function ChipVerificado({ verificado }) {
   if (verificado) {
@@ -131,7 +132,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight">{uni.sigla || 'Universidad'}</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  {uni.ciudad} • {uni.ranking ? `Ranking #${uni.ranking}` : 'Acreditada de Alta Calidad'}
+                  {uni.ciudad} • {uni.ranking ? `Ranking #${uni.ranking}` : uni.tipo === 'pública' ? 'Institución pública' : 'Institución privada'}
                 </p>
               </div>
             </div>
@@ -184,6 +185,17 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
               >
                 Admisiones
               </a>
+              <button
+                onClick={() => compartir({
+                  titulo: `${uni.nombre} — UniScoop`,
+                  texto: `Mira ${uni.nombre} (${uni.ciudad.split('(')[0].trim()}) en UniScoop: programas, fechas y cómo inscribirte.`,
+                  url: enlaceUniversidad(uni.id),
+                })}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-full text-sm transition-colors shadow-md flex items-center gap-1.5"
+                title="Compartir por WhatsApp u otra app"
+              >
+                📤 Compartir
+              </button>
             </div>
           </div>
 
@@ -212,7 +224,7 @@ export default function DetalleUniversidad({ uni, programasCoinciden, onCerrar, 
 
             <div className="space-y-5">
               <div>
-                <h4 className="font-bold mb-1">Proceso de Admisión: {uni.tipoAdmision}</h4>
+                <h4 className="font-bold mb-1">Proceso de admisión: {{ icfes: 'por puntaje ICFES (Saber 11)', propio: 'examen propio', abierta: 'admisión abierta', internacional: 'proceso internacional' }[uni.tipoAdmision] || uni.tipoAdmision}</h4>
                 <p className="opacity-90">{uni.notaAdmision}</p>
               </div>
 

@@ -360,13 +360,14 @@ const PUBLICAS = [
     id: 'unicordoba',
     nombre: 'Universidad de Córdoba',
     sigla: 'Unicórdoba',
-    ciudad: 'Montería',
+    ciudad: 'Montería (y sedes Lorica, Sahagún, Montelíbano y Berástegui)',
     departamento: 'Córdoba',
     zona: 'Caribe',
     web: 'https://www.unicordoba.edu.co',
     admisiones: 'https://unicordoba.edu.co/admisiones-y-registro/',
     tipoAdmision: 'icfes',
-    notaAdmision: 'Admisión por puntaje del examen Saber 11 (ICFES).',
+    notaAdmision:
+      'Admisión por puntaje del examen Saber 11 (ICFES). En la sede LORICA ofrece, a distancia (jornada tarde-noche): Ingeniería de Sistemas y Administración en Finanzas y Negocios Internacionales (oferta consultada el 2026-09-29 en su portal oficial).',
     selectividad: 'media',
     pasos: PASOS_ICFES,
     fechas: FECHAS_GENERICAS,
@@ -595,6 +596,39 @@ const PUBLICAS = [
       'Ingeniería de Alimentos', 'Ingeniería Electrónica', 'Agronomía', 'Zootecnia',
       'Comunicación Social', 'Sociología', 'Filosofía', 'Licenciatura en Inglés',
       'Licenciatura en Pedagogía Infantil',
+    ],
+  },
+  {
+    id: 'sena',
+    nombre: 'Servicio Nacional de Aprendizaje (SENA)',
+    sigla: 'SENA',
+    ciudad: 'Todo el país (Regional Córdoba y demás regionales; también virtual)',
+    departamento: 'Nacional',
+    zona: 'Nacional',
+    web: 'https://www.sena.edu.co',
+    admisiones: 'https://betowa.sena.edu.co',
+    tipoAdmision: 'abierta',
+    notaAdmision:
+      'Formación técnica y tecnológica GRATUITA. No selecciona por puntaje de corte del ICFES: te inscribes en línea (portal Betowa) a una oferta concreta —programa, municipio y jornada— y cumples los requisitos de esa oferta (por ejemplo, ser bachiller para tecnólogo).',
+    selectividad: 'abierta',
+    pasos: [
+      'Entra a betowa.sena.edu.co y busca la oferta: presencial y a distancia, virtual o idiomas.',
+      'Filtra por tu departamento y municipio y elige programa y jornada.',
+      'Inscríbete dentro de las fechas del cronograma oficial.',
+      'Revisa los requisitos y documentos que pide esa oferta.',
+      'Consulta si fuiste seleccionado y formaliza la matrícula en las fechas publicadas.',
+    ],
+    fechas: {
+      texto: 'Cronograma oficial 2026 (Betowa): matrícula IV-2026 de la oferta presencial y a distancia del 25 de septiembre al 6 de octubre de 2026; inscripción de alta demanda (virtual) del 7 al 9 de octubre de 2026.',
+      verificado: '2026-09-29',
+    },
+    costoInscripcion: {
+      valor: 0,
+      nota: 'La formación del SENA es gratuita (así lo indica su portal oficial de ofertas, Betowa).',
+      verificado: '2026-09-29',
+    },
+    programas: [
+      'Técnicos y tecnólogos (oferta según tu región)', 'Cursos cortos virtuales', 'Idiomas',
     ],
   },
   {
@@ -1315,7 +1349,53 @@ const PRIVADAS = [
     programas: [
       'Ingeniería en Sistemas de Software e IA', 'Teología', 'Derecho', 'Trabajo Social'
     ],
-  }
+  },
+  {
+    id: 'unisinu',
+    nombre: 'Universidad del Sinú — Elías Bechara Zainúm',
+    sigla: 'Unisinú',
+    ciudad: 'Montería (y sede Cartagena, extensión Bogotá)',
+    departamento: 'Córdoba',
+    zona: 'Caribe',
+    web: 'https://www.unisinu.edu.co',
+    admisiones: 'https://www.unisinu.edu.co/admisiones/',
+    tipoAdmision: 'icfes',
+    notaAdmision:
+      'Universidad privada de Montería, acreditada en alta calidad (Res. 008917 de 2023, MinEducación). Inscripción en línea con tus resultados Saber 11; revisa en su portal los valores de matrícula y el apoyo financiero.',
+    selectividad: 'media',
+    pasos: PASOS_PRIVADA,
+    fechas: FECHAS_GENERICAS,
+    costoInscripcion: COSTO_PRIVADA,
+    programas: [
+      'Medicina', 'Odontología', 'Fisioterapia', 'Psicología', 'Enfermería', 'Instrumentación Quirúrgica',
+      'Administración de Empresas', 'Negocios Internacionales', 'Contaduría Pública',
+      'Ingeniería Eléctrica', 'Ingeniería Civil', 'Ingeniería de Sistemas', 'Ingeniería Electromecánica',
+      'Ingeniería Industrial', 'Derecho', 'Trabajo Social', 'Comunicación Social', 'Arquitectura',
+    ],
+  },
+  {
+    id: 'cecar',
+    nombre: 'Corporación Universitaria del Caribe (CECAR)',
+    sigla: 'CECAR',
+    ciudad: 'Sincelejo',
+    departamento: 'Sucre',
+    zona: 'Caribe',
+    web: 'https://www.cecar.edu.co',
+    admisiones: 'https://www.cecar.edu.co/admisiones/inscripcion-admision-y-matricula',
+    tipoAdmision: 'icfes',
+    notaAdmision:
+      'Institución privada de Sincelejo con programas presenciales y a distancia. Para inscribirte a pregrado pide: resultados Saber 11 (PDF del ICFES), una foto 3x4, diploma o constancia de estar en grado 11 y documento de identidad.',
+    selectividad: 'media',
+    pasos: PASOS_PRIVADA,
+    fechas: FECHAS_GENERICAS,
+    costoInscripcion: COSTO_PRIVADA,
+    programas: [
+      'Ingeniería Industrial', 'Arquitectura', 'Ingeniería de Sistemas', 'Diseño Industrial',
+      'Ciencias del Deporte y la Actividad Física', 'Psicología', 'Trabajo Social',
+      'Licenciatura en Educación Infantil', 'Licenciatura en Literatura y Lengua Castellana',
+      'Derecho', 'Administración de Empresas', 'Contaduría Pública', 'Economía',
+    ],
+  },
 ];
 
 // ── RANKING NACIONAL ORIENTATIVO ────────────────────────────────────────────

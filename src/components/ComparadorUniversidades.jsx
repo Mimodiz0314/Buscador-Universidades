@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import LogoUniversidad from './LogoUniversidad.jsx';
 import { generarUrlGoogleCalendar } from '../utils/calendar.js';
+import { PROCESOS_DETALLADOS } from '../data/procesos.js';
 
 export default function ComparadorUniversidades({ universidades = [], seleccionadasIniciales = [], onVerDetalle, onVerProceso }) {
   // Lista de hasta 3 IDs de universidades para comparar
@@ -29,6 +30,34 @@ export default function ComparadorUniversidades({ universidades = [], selecciona
     setSeleccionadas(prev => prev.filter(item => item !== id));
   }
 
+  const selectorAgregar = (clase) => (
+    <select
+      value={uniAAgregar}
+      onChange={(e) => agregarUniversidad(e.target.value)}
+      aria-label="Agregar universidad a la comparación"
+      className={clase}
+    >
+      <option value="">+ Elegir universidad…</option>
+      {universidades
+        .filter(u => !seleccionadas.includes(u.id))
+        .sort((a, b) => a.nombre.localeCompare(b.nombre))
+        .map(u => (
+          <option key={u.id} value={u.id}>
+            {u.nombre}{u.sigla ? ` (${u.sigla})` : ''}
+          </option>
+        ))}
+    </select>
+  );
+
+  // Costo del PIN: dato verificado de la guía si existe; si no, no se inventa un rango.
+  const textoCostoPin = (uni) => {
+    const guia = PROCESOS_DETALLADOS[uni.id]?.costoPin?.valor;
+    const valor = uni.costoInscripcion?.valor ?? guia ?? null;
+    if (valor === 0) return 'Gratis';
+    if (valor != null) return `$${valor.toLocaleString('es-CO')} COP`;
+    return uni.tipo === 'privada' ? 'Varía: revisa el portal oficial' : 'Se publica en cada convocatoria';
+  };
+
   // Carreras que tienen en común las universidades seleccionadas
   const carrerasComunes = useMemo(() => {
     if (unisComparadas.length < 2) return [];
@@ -52,40 +81,24 @@ export default function ComparadorUniversidades({ universidades = [], selecciona
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Compara Universidades Lado a Lado
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Analiza requisitos, costos de PIN, tipo de examen y gratuidad entre hasta 3 instituciones en simultáneo.
+          <p className="text-xs sm:text-sm text-slate-600 mt-1">
+            Compara requisitos, costo del PIN, tipo de examen y gratuidad de hasta 3 instituciones.
+          </p>
+          <p className="text-xs sm:text-sm text-blue-800 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 mt-3">
+            <strong>Cómo se usa:</strong> toca <strong>✕</strong> en una tarjeta para quitarla y elige otra en la tarjeta
+            <strong> «+ Agregar»</strong>. Llevas {seleccionadas.length} de 3.
           </p>
         </div>
-
-        {/* Selector para añadir una universidad más */}
-        {seleccionadas.length < 3 && (
-          <div className="flex items-center gap-2">
-            <select
-              value={uniAAgregar}
-              onChange={(e) => agregarUniversidad(e.target.value)}
-              className="text-xs sm:text-sm rounded-xl border border-slate-300 p-2.5 bg-white shadow-xs focus:ring-2 focus:ring-blue-500 outline-none max-w-xs"
-            >
-              <option value="">+ Agregar universidad ({seleccionadas.length}/3)...</option>
-              {universidades
-                .filter(u => !seleccionadas.includes(u.id))
-                .sort((a, b) => a.nombre.localeCompare(b.nombre))
-                .map(u => (
-                  <option key={u.id} value={u.id}>
-                    {u.nombre} ({u.sigla || u.tipo})
-                  </option>
-                ))}
-            </select>
-          </div>
-        )}
       </div>
 
       {unisComparadas.length === 0 ? (
-        <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
-          <p className="text-sm text-slate-500">Selecciona al menos dos universidades para comenzar la comparación.</p>
+        <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-300 space-y-3 px-4">
+          <p className="text-sm text-slate-600">Elige al menos dos universidades para comenzar la comparación.</p>
+          {selectorAgregar('w-full max-w-sm text-sm rounded-xl border border-slate-300 p-2.5 bg-white')}
         </div>
       ) : (
         <div className="overflow-x-auto pb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-w-[700px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {unisComparadas.map((uni) => {
               const estadoBadge = {
                 abiertas: { bg: 'bg-emerald-500', text: 'Inscripciones Abiertas' },
@@ -148,11 +161,7 @@ export default function ComparadorUniversidades({ universidades = [], selecciona
                     <div>
                       <span className="font-bold text-[10px] text-slate-400 uppercase tracking-wider block mb-1">Costo de Inscripción (PIN)</span>
                       <p className="font-bold text-slate-900 text-sm">
-                        {uni.costoInscripcion?.valor
-                          ? `$${uni.costoInscripcion.valor.toLocaleString('es-CO')} COP`
-                          : uni.tipo === 'privada'
-                          ? 'Inscripción gratuita o variable'
-                          : 'Aproximadamente $70.000 - $175.000'}
+                        {textoCostoPin(uni)}
                       </p>
                       <p className="text-[11px] text-slate-500 mt-0.5">{uni.costoInscripcion?.nota}</p>
                     </div>
@@ -227,6 +236,16 @@ export default function ComparadorUniversidades({ universidades = [], selecciona
                 </div>
               );
             })}
+
+            {/* Tarjeta para agregar otra universidad */}
+            {seleccionadas.length < 3 && (
+              <div className="rounded-2xl border-2 border-dashed border-blue-300 bg-blue-50/40 flex flex-col items-center justify-center gap-3 p-6 min-h-[220px] text-center">
+                <span className="text-3xl text-blue-500" aria-hidden="true">＋</span>
+                <p className="text-sm font-bold text-slate-900">Agregar universidad ({seleccionadas.length}/3)</p>
+                <p className="text-xs text-slate-600">Elige una de la lista para verla al lado de las demás.</p>
+                {selectorAgregar('w-full text-sm rounded-xl border border-slate-300 p-2.5 bg-white focus:ring-2 focus:ring-blue-500 outline-none')}
+              </div>
+            )}
           </div>
         </div>
       )}

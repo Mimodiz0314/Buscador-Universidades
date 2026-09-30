@@ -5,6 +5,9 @@
  */
 import { useState } from 'react';
 
+// Logos que el sitio oficial publica como dibujo vectorial (SVG).
+const LOGOS_SVG = new Set(['ces', 'eafit']);
+
 const PALETAS = [
   { bg: '#1e3a5f', text: '#93c5fd' },
   { bg: '#14532d', text: '#86efac' },
@@ -49,7 +52,7 @@ export default function LogoUniversidad({ url, sigla, nombre, uniId, size = 'md'
   const domain = getDomain(url);
   // Google S2 Favicon API — alta disponibilidad, no requiere API key
   const s2Src = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
-  const localSrc = uniId ? `/logos/${uniId}.webp` : s2Src;
+  const localSrc = uniId ? `/logos/${uniId}.${LOGOS_SVG.has(uniId) ? 'svg' : 'webp'}` : s2Src;
 
   const logoSrc = localFailed ? s2Src : localSrc;
 

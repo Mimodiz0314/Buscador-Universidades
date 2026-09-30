@@ -366,6 +366,28 @@ export const PROCESOS_DETALLADOS = {
     ],
   },
 
+  sena: {
+    verificado: '2026-09-29',
+    fuente: 'https://betowa.sena.edu.co/',
+    nombreFuente: 'Betowa — Portal oficial de ofertas educativas del SENA',
+    resumen:
+      'El SENA ofrece formación técnica y tecnológica gratuita. No hay puntaje de corte del ICFES: te inscribes a una oferta concreta (programa, municipio y jornada) en el portal Betowa y cumples sus requisitos.',
+    convocatoria:
+      'Cronograma 2026 publicado en Betowa: matrícula IV-2026 de la oferta presencial y a distancia del 25 de septiembre al 6 de octubre de 2026; inscripciones de alta demanda (virtual) del 7 al 9 de octubre de 2026.',
+    fechasClave: [
+      { evento: 'Matrícula IV-2026 (presencial y a distancia)', fecha: '2026-09-25', hasta: '2026-10-06' },
+      { evento: 'Inscripción alta demanda IV-2026 (virtual)', fecha: '2026-10-07', hasta: '2026-10-09' },
+    ],
+    costoPin: { valor: 0, nota: 'La formación del SENA es gratuita.' },
+    etapas: [
+      { titulo: 'Busca la oferta', detalle: 'En betowa.sena.edu.co filtra por modalidad, departamento y municipio.' },
+      { titulo: 'Inscríbete', detalle: 'Dentro de las fechas del cronograma, con tu documento de identidad.' },
+      { titulo: 'Cumple los requisitos', detalle: 'Cada oferta indica sus requisitos (por ejemplo, ser bachiller para tecnólogo).' },
+      { titulo: 'Matricúlate', detalle: 'Si eres seleccionado, formaliza la matrícula en las fechas publicadas.' },
+    ],
+    notas: ['Para dudas: línea gratuita nacional 018000 910270 o las preguntas frecuentes del portal Betowa.'],
+  },
+
   unad: {
     verificado: '2026-09-08',
     fuente: 'https://estudios.unad.edu.co/',

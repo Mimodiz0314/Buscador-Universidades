@@ -6,6 +6,24 @@ body {
   @apply bg-white text-slate-900 antialiased;
 }
 
+/* Pantallas diseñadas solo en modo claro: aunque el celular esté en modo
+   oscuro, se muestran claras con letras oscuras (incluidas las listas
+   desplegables nativas, que si no heredan letras blancas sobre fondo blanco). */
+.zona-clara {
+  color: #0f172a;
+  color-scheme: light;
+}
+.zona-clara select,
+.zona-clara option,
+.zona-clara input,
+.zona-clara textarea {
+  color: #0f172a;
+  background-color: #ffffff;
+}
+.zona-clara input::placeholder {
+  color: #94a3b8;
+}
+
 /* Hide scrollbar for category chips but allow scrolling */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
