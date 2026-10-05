@@ -1,1 +1,570 @@
-{}
+{
+  "unal": {
+    "estado": "matriculas",
+    "fuente": "https://admisiones.unal.edu.co",
+    "apertura": "2026-07-06",
+    "cierre": "2026-08-24",
+    "evidencia": "Del 1 al 6 de octubre: Inscribir un programa curricular; 9 de octubre: Consultar los resultados de admisión; Del 15 al 20 de octubre: Si es admitido, enviar los documentos a la División de Registro y Matrícula.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "udea": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "univalle": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "uis": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "uptc": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "unicartagena": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "uniatlantico": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "ucaldas": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "unicauca": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "udenar": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "ut": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "unimagdalena": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "unicordoba": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "unisucre": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "uniguajira": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "unicesar": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "ufps": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "fuente no oficial"
+  },
+  "unipamplona": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "uniquindio": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "udistrital": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "upn": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "unad": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "sena": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "ucundinamarca": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "unicolmayor": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "usco": {
+    "estado": "abiertas",
+    "fuente": "https://www.usco.edu.co/es/estudia-en-la-usco/proceso-de-admisiones-periodo-2027-1/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Proceso de Admisiones PERÍODO 2027-1, Universidad Surcolombiana.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "unillanos": {
+    "estado": "abiertas",
+    "fuente": "https://www.unillanos.edu.co/index.php/es/inscripciones-abiertas-unillanos",
+    "apertura": "2026-09-30",
+    "cierre": "2026-12-03",
+    "evidencia": "Descargar el recibo de pago de los derechos de inscripción que genera la plataforma y realizar el pago en línea a través de PSE o de manera presencial en las entidades bancarias relacionadas en el recibo (Del 30 de septiembre de 2026 al 03 ",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "uniamazonia": {
+    "estado": "abiertas",
+    "fuente": "https://www.uniamazonia.edu.co/index.php/es/inscripciones-uniamazonia",
+    "apertura": "2026-09-24",
+    "cierre": "2026-12-02",
+    "evidencia": "Pregrados y Posgrados 2027-I Inscripciones abiertas del 24 de septiembre al 2 de diciembre.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "unipacifico": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "utch": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "utp": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "umng": {
+    "estado": "abiertas",
+    "fuente": "https://www.umng.edu.co/calendario-admisiones",
+    "apertura": "2026-09-25",
+    "cierre": "2026-12-02",
+    "evidencia": "CALENDARIO DE ADMISIONES PERIODO ACADÉMICO 2027-1. FECHA APERTURA INSCRIPCIONES: 2026-09-25. FECHA LÍMITE INSCRIPCIÓN: 2026-12-02.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "uniandes": {
+    "estado": "abiertas",
+    "fuente": "https://admisiones.uniandes.edu.co/proceso-de-admision-pregrado",
+    "apertura": "2026-07-21",
+    "cierre": "2026-12-07",
+    "evidencia": "¡Ya están abiertas las inscripciones para pregrado 2027-1! Tienes hasta el 07 de diciembre de 2026 para inscribirte al pregrado 2027-1 de la Universidad de los Andes.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "javeriana": {
+    "estado": "abiertas",
+    "fuente": "https://csg.javeriana.edu.co/cs/CS92GST/SA_LEARNER/s/WEBLIB_STD_ADM.ISCRIPT1.FieldFormula.IScript_FechasAdmision?cmd=resetFechas",
+    "apertura": "2025-11-19",
+    "cierre": "2026-10-14",
+    "evidencia": "Administración de Empresas. Primer Período de 2027. Ingreso a primer semestre. 11/19/2025. 10/14/2026.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "uexternado": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "urosario": {
+    "estado": "abiertas",
+    "fuente": "https://www.urosario.edu.co/aspirantes/pregrado/calendario-admisiones/",
+    "apertura": "2026-08-12",
+    "cierre": null,
+    "evidencia": "CALENDARIO DE ADMISIONES 2027-1. 12. Ago 2026. Inicio de inscripciones.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "unisabana": {
+    "estado": "proximamente",
+    "fuente": "https://www.unisabana.edu.co/programas/pregrado/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Gracias por su interés en la Universidad de La Sabana, para inscribirse en los diferentes programas, ingrese en los siguientes vínculos, según sea su caso: a. Inscripción Pregrado: si desea ingresar a un programa de formación formal. Period",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "eafit": {
+    "estado": "abiertas",
+    "fuente": "https://www.eafit.edu.co/pregrados/Paginas/default.aspx",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscripciones abiertas Pregrado 2027-1. Conoce los programas que tenemos para ti y haz parte de la Universidad que es hogar de una comunidad con el poder de transformarlo todo.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "upb": {
+    "estado": "abiertas",
+    "fuente": "https://www.upb.edu.co/es/admisiones",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Estamos en inscripciones abiertas en Medellín, Bogotá, Bucaramanga, Montería y Palmira. Estudia en la UPB con acreditación de alta calidad en el top 100 de las universidades de Latinoamérica.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "uninorte": {
+    "estado": "cerradas",
+    "fuente": "https://www.uninorte.edu.co/web/admisiones/pregrado",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "No se encontraron fechas de inscripción de pregrado activas para el período 2027-1 directamente en el portal de admisiones al 2026-10-05.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "icesi": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "ces": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "unab": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "unilibre": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "usantotomas": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "lasalle": {
+    "estado": "abiertas",
+    "fuente": "https://www.lasalle.edu.co/admisiones-y-registro/proceso-de-inscripcion-pregrado",
+    "apertura": "2026-09-01",
+    "cierre": "2027-01-29",
+    "evidencia": "Proceso de inscripción 2027-1. Pregrado. Fecha de inicio: 1 de septiembre de 2026. Fecha de cierre: 29 de enero de 2027.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "utadeo": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "unbosque": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "ucc": {
+    "estado": "abiertas",
+    "fuente": "https://www.ucc.edu.co/inscripciones",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscripciones Abiertas. Pregrado.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "uniminuto": {
+    "estado": "abiertas",
+    "fuente": "https://www.uniminuto.edu/admisiones",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "¡Inscripciones abiertas! 2027-1",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "unisimon": {
+    "estado": "abiertas",
+    "fuente": "https://www.unisimon.edu.co/futuros-estudiantes/pregrados",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "¡Inscripciones abiertas! Aspirante, inicia tu proceso ahora.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "uao": {
+    "estado": "abiertas",
+    "fuente": "https://www.uao.edu.co/admisiones/pregrado",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscripciones abiertas para Pregrado 2027-1",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "udemedellin": {
+    "estado": "abiertas",
+    "fuente": "https://udemedellin.edu.co/programas-academicos/pregrado/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscripciones abiertas. Semestre 2027-1.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "umb": {
+    "estado": "abiertas",
+    "fuente": "https://umb.edu.co/aspirantes/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscripciones abiertas ¡Estudia en 2027-1!",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "unicorsalud": {
+    "estado": "abiertas",
+    "fuente": "https://unicorsalud.edu.co/programas-academicos/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscripciones abiertas para 2027-1",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "unicervantes": {
+    "estado": "abiertas",
+    "fuente": "https://unicervantes.edu.co/admisiones/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscripciones Abiertas para el primer periodo académico 2027",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "unisinu": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "estado no válido"
+  },
+  "cecar": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "mx-unam": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "mx-tec": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "ar-uba": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "ar-unlp": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "cl-uchile": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "cl-puc": {
+    "confirmado": false,
+    "estado": "sin_dato",
+    "ultimoIntento": "2026-10-05",
+    "motivo": "sin respuesta"
+  },
+  "br-usp": {
+    "estado": "abiertas",
+    "fuente": "https://www.fuvest.br",
+    "apertura": "2026-08-17",
+    "cierre": "2026-10-09",
+    "evidencia": "A FUVEST abre nesta segunda-feira, 17 de agosto, ao meio-dia, o período de inscrições para o Vestibular 2027 da Universidade de São Paulo (USP). As inscrições, no valor de R$ 228,00, deverão ser feitas até 9 de outubro pelo site da fundação",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "br-unicamp": {
+    "estado": "abiertas",
+    "fuente": "https://www.comvest.unicamp.br/",
+    "apertura": "2026-10-01",
+    "cierre": "2026-11-07",
+    "evidencia": "A Comissão Permanente para os Vestibulares da Unicamp (Comvest) abriu as inscrições para o processo seletivo Enem-Unicamp 2027, que oferece 431 vagas em cursos de graduação [...] As inscrições poderão ser feitas de 1º de outubro a 7 de nove",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "pe-pucp": {
+    "estado": "abiertas",
+    "fuente": "https://www.pucp.edu.pe/admision/pregrado/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Admisión por Rendimiento Superior - ARS (Inscripciones abiertas)",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "pe-unmsm": {
+    "estado": "abiertas",
+    "fuente": "https://admision.unmsm.edu.pe",
+    "apertura": null,
+    "cierre": "2026-10-09",
+    "evidencia": "Postulantes tienen hasta el 9 de octubre para inscribirse al Examen de Admisión UNMSM 2027-I.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "uy-udelar": {
+    "estado": "proximamente",
+    "fuente": "https://udelar.edu.uy/ingresos/",
+    "apertura": "2027-02-01",
+    "cierre": null,
+    "evidencia": "Las inscripciones 2027 se realizarán durante el mes de febrero.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "cr-ucr": {
+    "estado": "cerradas",
+    "fuente": "https://www.ucr.ac.cr/estudiantes/admision.html",
+    "apertura": "2026-02-16",
+    "cierre": "2026-03-20",
+    "evidencia": "Con el período de inscripción ya en marcha para el proceso de admisión 2026-2027, la Universidad de Costa Rica (UCR) les recuerda a estudiantes y a colegios que deben inscribirse en la Prueba de Aptitud Académica. Esta inscripción es un pas",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "ec-usfq": {
+    "estado": "abiertas",
+    "fuente": "https://www.usfq.edu.ec/es/admisiones/pregrado/aplica",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Regístrate para iniciar tu proceso de admisión a la USFQ.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "mx-uam": {
+    "estado": "abiertas",
+    "fuente": "https://www.uam.mx/admision/",
+    "apertura": "2026-10-04",
+    "cierre": null,
+    "evidencia": "La Universidad Autónoma Metropolitana (UAM) anunció un proceso de admisión extraordinaria [...] La convocatoria sale a más tardar el 4 de octubre y el examen será del 29 de octubre al 15 de noviembre.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "cl-usach": {
+    "estado": "abiertas",
+    "fuente": "https://admision.usach.cl/admision-especial",
+    "apertura": "2026-08-24",
+    "cierre": "2026-12-23",
+    "evidencia": "La Universidad de Santiago de Chile cuenta con distintas vías de Admisión Especial que amplían las oportunidades de ingreso a la Universidad [...] ✓ PA: Postulación Abierta.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  },
+  "ar-utn": {
+    "estado": "abiertas",
+    "fuente": "https://www.frba.utn.edu.ar/grado/acceso/",
+    "apertura": "2026-09-01",
+    "cierre": "2026-12-16",
+    "evidencia": "Inscripción Ingreso 2027 UTNBA - CARRERAS DE INGENIERÍA. La inscripción se realizará desde el 🗓️ Jueves 27 de agosto a las 10 hs hasta el 🗓️ viernes 4 de diciembre de 2026 para el Ingreso 2027.",
+    "confirmado": true,
+    "consultado": "2026-10-05",
+    "pendiente": null
+  }
+}

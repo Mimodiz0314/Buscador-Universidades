@@ -1,7 +1,10 @@
 {
-  "ultimaActualizacion": "2026-09-30",
-  "fechaTexto": "29 de septiembre de 2026",
-  "totalSincronizadas": 87,
-  "exitosLotes": 11,
-  "totalLotes": 11
+  "ultimaActualizacion": "2026-10-05",
+  "fechaTexto": "5 de octubre de 2026",
+  "totalUniversidades": 74,
+  "confirmadas": 31,
+  "sinDato": 43,
+  "cambiosPendientes": 0,
+  "exitosLotes": 10,
+  "totalLotes": 10
 }
