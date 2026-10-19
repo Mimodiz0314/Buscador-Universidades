@@ -1,19 +1,23 @@
 {
   "unal": {
     "estado": "matriculas",
-    "fuente": "https://admisiones.unal.edu.co/pregrado/informacion-para-aspirantes/",
-    "apertura": null,
-    "cierre": null,
-    "evidencia": "Del 15 al 20 de octubre: Si es admitido, enviar los documentos requeridos a la respectica Divisón de Registro y Matrícula, teniendo en cuenta el calendario establecido.",
+    "fuente": "https://admisiones.unal.edu.co/pregrado/guia-paso-a-paso/",
+    "apertura": "2026-07-06",
+    "cierre": "2026-08-24",
+    "evidencia": "Primera asignación de cupos y programas curriculares de Música y Música Instrumental, desde el 15 al 20 de octubre de 2026. [...] Si es admitido, enviar los documentos a la División de Registro y Matrícula, Del 15 al 20 de octubre de 2026.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "udea": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "cerradas",
+    "fuente": "https://www.udea.edu.co/wps/portal/udea/web/inicio/estudiar-udea/pregrado/admisiones",
+    "apertura": "2026-08-14",
+    "cierre": "2026-09-14",
+    "evidencia": "Las inscripciones estarán disponibles hasta el 14 de septiembre. El examen de admisión se presentará los días 26 y 27 de octubre.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "univalle": {
     "estado": "abiertas",
@@ -23,7 +27,9 @@
     "evidencia": "La Universidad del Valle Seccional Buenaventura informa que entre el 23 de septiembre y el 18 de noviembre de 2026 estará realizándose el proceso de inscripción a Primer Semestre para el período académico Febrero - Junio 2027 (2027-1).",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "uis": {
     "estado": "abiertas",
@@ -33,38 +39,44 @@
     "evidencia": "Pago de inscripción: del 23 de septiembre al 10 de noviembre. Inscripciones web: del 24 de septiembre al 12 de noviembre.",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "uptc": {
     "estado": "abiertas",
-    "fuente": "https://www.uptc.edu.co/sitio/portal/sitios/universidad/vic_aca/adm_reg/1aspi/pre/",
+    "fuente": "https://www.uptc.edu.co/sitio/portal/sitios/universidad/vic_aca/adm_reg/",
     "apertura": "2026-09-21",
-    "cierre": "2026-10-23",
-    "evidencia": "Venta de pines. Presencial desde el 21 de septiembre hasta el 21 de octubre. Inscripciones. Presencial hasta el 23 de octubre.",
+    "cierre": "2026-11-06",
+    "evidencia": "La Universidad Pedagógica y Tecnológica de Colombia UPTC, habilitó la venta de pines de inscripción para los programas de pregrado del primer semestre académico de 2027, la cual estará abierta hasta el 21 de octubre, e inscripciones hasta e",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "unicartagena": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.unicartagena.edu.co/web/ingresar/pregrado-modalidad-presencial",
+    "apertura": "2026-09-01",
+    "cierre": "2026-11-06",
+    "evidencia": "Período Pago de Pines: Desde el 1 de septiembre hasta el 5 de noviembre de 2026 (sólo por Internet). Inscripciones Página Web (Plataforma Académica SMA): Hasta el 6 de noviembre de 2026.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "uniatlantico": {
     "confirmado": false,
     "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "ucaldas": {
     "estado": "abiertas",
-    "fuente": "https://viceacademica.ucaldas.edu.co/pregrados-presenciales/",
-    "apertura": "2026-09-18",
-    "cierre": "2026-10-21",
-    "evidencia": "Diligenciamiento en línea del formulario de inscripción a pregrados regulares. Del 18 de septiembre al 21 de octubre de 2026. Pago oportuno del formulario de inscripción. Entre el 18 de septiembre y el 22 de octubre de 2026.",
+    "fuente": "https://www.ucaldas.edu.co/portal/admisiones/",
+    "apertura": "2026-10-01",
+    "cierre": "2026-10-22",
+    "evidencia": "La Universidad de Caldas tiene abiertas las inscripciones para los programas de pregrado presenciales correspondientes al período académico 2027-1, con oferta académica en Manizales y La Dorada. El proceso estará habilitado hasta el 22 de o",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "unicauca": {
@@ -75,7 +87,9 @@
     "evidencia": "Unicauca hace historia: inscripciones abiertas a la Ingeniería en Inteligencia Artificial y Ciencia de Datos, el primer pregrado 100% virtual que conecta al talento de nuestra región. Hasta el 18 de octubre, la Alma Mater caucana tiene abie",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "udenar": {
     "estado": "proximamente",
@@ -85,12 +99,14 @@
     "evidencia": "Calendario de ingreso a primer semestre, inscripciones, admisiones y matrículas, periodo académico 2027 A octubre 9, 2026",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "ut": {
     "confirmado": false,
     "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "unimagdalena": {
@@ -101,7 +117,9 @@
     "evidencia": "Registro de inscripción en la web; el formulario de inscripción se podrá diligenciar... Hasta el 9 de julio de 2026.",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "unicordoba": {
     "estado": "cerradas",
@@ -111,16 +129,20 @@
     "evidencia": "INSCRIPCIONES ABIERTAS. 00. Días. 00. Horas. 00. Minutos. 00. Segundos.",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": {
+      "estado": "abiertas",
+      "desde": "2026-10-19",
+      "fuente": "https://unicordoba.edu.co/admisiones-y-registro/"
+    }
   },
   "unisucre": {
     "estado": "abiertas",
-    "fuente": "https://unisucre.edu.co/inscripciones-abiertas-programas-de-pregrado-2027-1/",
+    "fuente": "https://unisucre.edu.co/inscripciones-unisucre-2027-1/",
     "apertura": "2026-09-17",
     "cierre": null,
-    "evidencia": "La Universidad de Sucre... informa que tiene abierta las inscripciones para la oferta de programas de pregrado período 2027-1",
+    "evidencia": "Inscripciones Abiertas Programas de Pregrado 2027-1. La Universidad de Sucre a través del Centro de Admisiones, Registro y Control Académico, informa que tiene abierta las inscripciones para la oferta de programas de pregrado período 2027-1",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "uniguajira": {
@@ -131,7 +153,9 @@
     "evidencia": "La educación abre puertas: inscríbete a un programa de pregrado en Uniguajira 2027-1.",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "unicesar": {
     "estado": "abiertas",
@@ -141,42 +165,48 @@
     "evidencia": "la Universidad Popular del Cesar, abrió sus inscripciones, esta vez, para el periodo académico 2027-1... Los interesados podrán realizar su proceso de inscripción hasta el próximo 6 de noviembre del presente año",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "ufps": {
     "estado": "abiertas",
-    "fuente": "https://ww2.ufps.edu.co/noticias/ufps-abrio-inscripciones-para-programas-de-pregrado-presenciales-del-primer-semestre-de-2027",
-    "apertura": null,
+    "fuente": "https://ww2.ufps.edu.co/universidad/perfiles/aspirantes/952",
+    "apertura": "2026-10-06",
     "cierre": "2026-11-06",
-    "evidencia": "Como primer paso, los interesados podrán adquirir el PIN de inscripción hasta el 30 de octubre de 2026 y avanzar posteriormente en el registro y cargue de la documentación requerida. Esta etapa estará disponible hasta el 6 de noviembre de 2",
+    "evidencia": "La Universidad Francisco de Paula Santander (UFPS) abrió el proceso de inscripción para los aspirantes interesados en ingresar a sus programas de pregrado presenciales durante el primer semestre de 2027. Como primer paso, los interesados po",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "unipamplona": {
     "estado": "abiertas",
-    "fuente": "https://www.unipamplona.edu.co/unipamplona/portalIG/home_103/recursos/registro_y_control_academico/admisiones/06032018/PregradoPresencial.jsp",
-    "apertura": null,
-    "cierre": null,
-    "evidencia": "INSCRIPCIONES 2027-1. ... Inscripciones Pregrado Presencial. Inscríbete Aquí.",
+    "fuente": "https://www.unipamplona.edu.co/unipamplona/portalIG/home_1/recursos/aspirantes/15072016/Inscripciones_Pregrado_Presencial.jsp",
+    "apertura": "2026-09-18",
+    "cierre": "2026-12-30",
+    "evidencia": "La Unipamplona tiene abiertas las inscripciones para sus programas académicos de pregrado 2027-I. Inscripciones abiertas hasta el 30 de diciembre de 2026.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "uniquindio": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.uniquindio.edu.co/noticias/3159/construiremos-juntos-el-futuro-abiertas-las-inscripciones-para-2027-1",
+    "apertura": "2026-10-01",
+    "cierre": "2026-12-11",
+    "evidencia": "Abiertas las inscripciones para 2027-1. Tenemos 32 programas de pregrado, en las modalidades presencial, a distancia y virtual, a los que podrás inscribirte hasta el 11 de diciembre de 2026. Inscripciones y venta de PINES: del 1 de octubre ",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "udistrital": {
     "estado": "abiertas",
-    "fuente": "https://www.udistrital.edu.co/admisiones/",
-    "apertura": "2026-09-17",
+    "fuente": "https://www.udistrital.edu.co/admisiones-pregrado/pasos-para-la-inscripcion",
+    "apertura": "2026-09-16",
     "cierre": "2026-11-04",
-    "evidencia": "La inscripción en línea inicia el 17 de septiembre y finaliza el 04 de noviembre del 2026.",
+    "evidencia": "El proceso de pre-registro del periodo académico 2027-1 debe realizarse entre el 16 de septiembre al 03 de noviembre del 2026. La inscripción en línea inicia el 17 de septiembre y finaliza el 04 de noviembre del 2026.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "upn": {
@@ -187,30 +217,38 @@
     "evidencia": "Nuevas admisiones (Acuerdo 053 de 2022) Programas de Pregrado y Posgrado 31-ago-26 02-oct-26",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": {
+      "estado": "abiertas",
+      "desde": "2026-10-19",
+      "fuente": "https://admisiones.upn.edu.co/requisitos-pregrado"
+    }
   },
   "unad": {
     "confirmado": false,
     "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "sena": {
     "confirmado": false,
     "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "ucundinamarca": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.ucundinamarca.edu.co/index.php/component/content/article/117-admisiones/7325-pregrado?Itemid=437",
+    "apertura": "2026-09-01",
+    "cierre": "2026-10-31",
+    "evidencia": "Fechas clave. IPA 2027. Icono Calendario Inscripciones. Del 01 de septiembre al 31 de octubre.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "unicolmayor": {
     "confirmado": false,
     "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "usco": {
@@ -222,7 +260,7 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "unillanos": {
@@ -234,7 +272,7 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "uniamazonia": {
@@ -245,32 +283,30 @@
     "evidencia": "Pregrados y Posgrados 2027-I Inscripciones abiertas del 24 de septiembre al 2 de diciembre.",
     "confirmado": true,
     "consultado": "2026-10-05",
-    "pendiente": {
-      "estado": "proximamente",
-      "desde": "2026-10-12",
-      "fuente": "https://www.uniamazonia.edu.co"
-    }
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "unipacifico": {
     "confirmado": false,
     "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "utch": {
     "confirmado": false,
     "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "utp": {
     "estado": "abiertas",
-    "fuente": "https://www.utp.edu.co",
-    "apertura": null,
-    "cierre": null,
-    "evidencia": "Calendario de Inscripciones Pregrado Primer Semestre De 2027. Dada en Pereira a los ocho (8) días del mes de octubre de dos mil veintiséis (2026).",
+    "fuente": "https://www.utp.edu.co/gtisi/apps/",
+    "apertura": "2026-10-08",
+    "cierre": "2026-11-11",
+    "evidencia": "Inscripciones primer semestre de 2027, Del 08 de octubre al 11 de noviembre de 2026.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "umng": {
@@ -281,16 +317,18 @@
     "evidencia": "Proceso de Inscripción ... Paso 4: Haga clic en la opción Diligencie su inscripción.",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "uniandes": {
     "estado": "abiertas",
-    "fuente": "https://admisiones.uniandes.edu.co/",
-    "apertura": null,
+    "fuente": "https://admisiones.uniandes.edu.co",
+    "apertura": "2026-07-21",
     "cierre": "2026-12-07",
-    "evidencia": "¡Ya están abiertas las inscripciones para pregrado 2027-1! Tienes hasta el 07 de diciembre de 2026 para inscribirte al pregrado 2027-10 de la Universidad de los Andes.",
+    "evidencia": "¡Ya están abiertas las inscripciones para pregrado 2027-1! Tienes hasta el 07 de diciembre de 2026 para inscribirte.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "javeriana": {
@@ -301,27 +339,33 @@
     "evidencia": "Administración de Empresas. Primer Período de 2027. Ingreso a primer semestre. 11/19/2025. 10/14/2026.",
     "confirmado": true,
     "consultado": "2026-10-05",
-    "pendiente": null,
+    "pendiente": {
+      "estado": "cerradas",
+      "desde": "2026-10-19",
+      "fuente": "https://www.javeriana.edu.co/admisiones"
+    },
     "ultimoIntento": "2026-10-12",
     "motivo": "estado no válido"
   },
   "uexternado": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.uexternado.edu.co/admision/pregrado/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Las inscripciones para el periodo 2027-1 ya están abiertas.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "urosario": {
     "estado": "abiertas",
-    "fuente": "https://www.urosario.edu.co/aspirantes/pregrado/calendario-admisiones/",
+    "fuente": "https://urosario.edu.co/admisiones/pregrado/calendario-de-admisiones/",
     "apertura": "2026-08-12",
-    "cierre": null,
+    "cierre": "2026-12-08",
     "evidencia": "CALENDARIO DE ADMISIONES 2027-1. 12. Ago 2026. Inicio de inscripciones.",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": null,
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "unisabana": {
     "estado": "proximamente",
@@ -331,33 +375,33 @@
     "evidencia": "Gracias por su interés en la Universidad de La Sabana, para inscribirse en los diferentes programas, ingrese en los siguientes vínculos, según sea su caso: a. Inscripción Pregrado: si desea ingresar a un programa de formación formal. Period",
     "confirmado": true,
     "consultado": "2026-10-05",
-    "pendiente": null,
+    "pendiente": {
+      "estado": "abiertas",
+      "desde": "2026-10-19",
+      "fuente": "https://www.unisabana.edu.co/programas/pregrados/admisiones/"
+    },
     "ultimoIntento": "2026-10-12",
     "motivo": "estado no válido"
   },
   "eafit": {
     "estado": "abiertas",
-    "fuente": "https://www.eafit.edu.co/pregrados/Paginas/default.aspx",
+    "fuente": "https://www.eafit.edu.co/pregrados",
     "apertura": null,
     "cierre": null,
-    "evidencia": "Inscripciones abiertas Pregrado 2027-1. Conoce los programas que tenemos para ti y haz parte de la Universidad que es hogar de una comunidad con el poder de transformarlo todo.",
+    "evidencia": "Inscripciones abiertas Pregrado 2027-1.",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": null,
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "upb": {
     "estado": "abiertas",
-    "fuente": "https://www.upb.edu.co/es/admisiones",
+    "fuente": "https://www.upb.edu.co/es/estudia-en-la-upb/admisiones",
     "apertura": null,
     "cierre": null,
-    "evidencia": "Estamos en inscripciones abiertas en Medellín, Bogotá, Bucaramanga, Montería y Palmira. Estudia en la UPB con acreditación de alta calidad en el top 100 de las universidades de Latinoamérica.",
+    "evidencia": "Estamos en inscripciones abiertas para estudiar en la Universidad.",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": null,
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "uninorte": {
     "estado": "cerradas",
@@ -368,64 +412,88 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "icesi": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.icesi.edu.co/aspirantes/admisiones-de-pregrado",
+    "apertura": "2026-08-03",
+    "cierre": null,
+    "evidencia": "Inscripciones: 03 de agosto de 2026",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "ces": {
     "estado": "abiertas",
-    "fuente": "https://www.ces.edu.co/calendario-academico-pregrado/",
-    "apertura": "2026-07-01",
-    "cierre": "2027-01-12",
-    "evidencia": "Fecha de inscripción y solicitud de transferencias, Del 1 de julio del 2026 al 12 de enero del 2027.",
+    "fuente": "https://www.ces.edu.co/admisiones/inscripciones-pregrado/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Proceso de inscripción - Pregrado. En esta página. Proceso de inscripción - Pregrado",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "unab": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://admisiones.unab.edu.co/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Abrimos el proceso de Admisión Directa 2027.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "unilibre": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.unilibre.edu.co/admisiones-y-registro/",
+    "apertura": "2026-09-15",
+    "cierre": "2027-01-22",
+    "evidencia": "Fechas de inscripción para estudiantes nuevos periodo 2027 - 1. Pregrado. 15 de septiembre de 2026. 22 de enero de 2027.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "usantotomas": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.usta.edu.co/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscríbete Aquí",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "lasalle": {
     "estado": "abiertas",
-    "fuente": "https://www.lasalle.edu.co/proceso-inscripcion-pregrado",
-    "apertura": "2026-09-01",
-    "cierre": "2027-01-29",
-    "evidencia": "Proceso de inscripción 2027-1. Pregrado. Fecha de inicio: 1 de septiembre de 2026. Fecha de cierre: 29 de enero de 2027.",
+    "fuente": "https://www.lasalle.edu.co/admisiones/proceso-de-inscripcion-pregrado",
+    "apertura": "2026-09-02",
+    "cierre": null,
+    "evidencia": "Proceso de Inscripción pregrado. Consulta los pasos para tu inscripción de pregrado virtual o presencial.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "utadeo": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.utadeo.edu.co/es/admisiones/nuevos-aspirantes",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Ingresa aquí a nuestro formulario de preinscripción.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "unbosque": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.unbosque.edu.co/inscripciones",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Inscribete ahora a la educación superior. [...] Explora nuestras opciones de pregrado.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "ucc": {
     "estado": "abiertas",
@@ -436,7 +504,7 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "uniminuto": {
@@ -448,7 +516,7 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "unisimon": {
@@ -459,7 +527,11 @@
     "evidencia": "¡Inscripciones abiertas! Aspirante, inicia tu proceso ahora.",
     "confirmado": true,
     "consultado": "2026-10-05",
-    "pendiente": null,
+    "pendiente": {
+      "estado": "cerradas",
+      "desde": "2026-10-19",
+      "fuente": "https://www.unisimon.edu.co/admisiones-pregrado"
+    },
     "ultimoIntento": "2026-10-12",
     "motivo": "estado no válido"
   },
@@ -472,7 +544,7 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "udemedellin": {
@@ -483,7 +555,9 @@
     "evidencia": "Inscripciones pregrado para el período académico 2027-1: A partir del 1 de septiembre de 2026.",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": null,
+    "ultimoIntento": "2026-10-19",
+    "motivo": "estado no válido"
   },
   "umb": {
     "estado": "abiertas",
@@ -494,7 +568,7 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "unicorsalud": {
@@ -506,7 +580,7 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "unicervantes": {
@@ -518,20 +592,28 @@
     "confirmado": true,
     "consultado": "2026-10-05",
     "pendiente": null,
-    "ultimoIntento": "2026-10-12",
+    "ultimoIntento": "2026-10-19",
     "motivo": "estado no válido"
   },
   "unisinu": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "proximamente",
+    "fuente": "https://www.unisinu.edu.co/admisiones/",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Primer período académico · 2027-1 Fechas para estudiantes de los diferentes programas de pregrado.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "cecar": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://www.cecar.edu.co/admisiones/inscripcion-admision-y-matricula",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "VALOR INSCRIPCIÓN No reembolsables en ningún caso. Presencial: $137.830 - 30% dto $96.481.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "mx-unam": {
     "estado": "abiertas",
@@ -541,170 +623,160 @@
     "evidencia": "El registro será exclusivamente vía internet, a partir de las 14:00 horas del 8 de octubre y hasta las 19:00 horas del 12 de octubre de 2026 (hora del centro de México).",
     "confirmado": true,
     "consultado": "2026-10-12",
-    "pendiente": null
+    "pendiente": {
+      "estado": "cerradas",
+      "desde": "2026-10-19",
+      "fuente": "https://www.escolar.unam.mx"
+    }
   },
   "mx-tec": {
-    "confirmado": false,
-    "estado": "sin_dato",
-    "ultimoIntento": "2026-10-12",
-    "motivo": "estado no válido"
+    "estado": "abiertas",
+    "fuente": "https://admision.tec.mx",
+    "apertura": null,
+    "cierre": null,
+    "evidencia": "Profesional. Proceso de admisión · Inicia tu admisión.",
+    "confirmado": true,
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "ar-uba": {
     "estado": "proximamente",
     "fuente": "https://www.cbc.uba.ar/",
     "apertura": "2026-11-12",
     "cierre": "2026-11-26",
-    "evidencia": "Del 12 al 26 de noviembre vas a poder realizar la inscripción para el primer cuatrimestre de 2027.",
+    "evidencia": "PRE-INGRESO 2027. PRE-INGRESO A LA UBA 2027. ¿Querés empezar a estudiar en la UBA? Tu camino empieza en el CBC. [...] la preinscripción para el 1er cuatrimestre de 2027 se realizará del 12 al 26 de Noviembre 2026.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "ar-unlp": {
     "estado": "proximamente",
-    "fuente": "https://unlp.edu.ar/",
+    "fuente": "https://unlp.edu.ar/pregrado/",
     "apertura": "2026-11-09",
     "cierre": "2026-12-11",
-    "evidencia": "la preinscripción online se realizará del 9 de noviembre al 11 de diciembre de 2026.",
+    "evidencia": "La Universidad Nacional de La Plata tendrá abierta la inscripción desde mediados de noviembre hasta mediados de diciembre para el ciclo lectivo 2027. [...] La inscripción para 2027 será del 9 de noviembre al 11 de diciembre.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "cl-uchile": {
     "estado": "abiertas",
     "fuente": "https://www.uchile.cl/admision",
     "apertura": "2026-08-01",
-    "cierre": null,
-    "evidencia": "Sistema de Ingreso Prioritario de Equidad Educativa (SIPEE): postulaciones abiertas.",
+    "cierre": "2027-01-07",
+    "evidencia": "Otras vías especiales que requieren postulación son las dirigidas a deportistas destacados/as, cuya postulación cierra el 5 de noviembre; y las pensadas para estudiantes pertenecientes a pueblos indígenas y estudiantes en situación de disca",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "cl-puc": {
     "estado": "abiertas",
     "fuente": "https://admision.uc.cl/",
-    "apertura": "2026-09-28",
+    "apertura": "2026-09-29",
     "cierre": "2026-10-28",
-    "evidencia": "Segundo período de postulación [Admisión Especial - Ingreso Primer Semestre 2027]. 28 de septiembre al 28 de octubre del 2026 hasta las 13:00 horas.",
+    "evidencia": "Admisión Especial - Primer Semestre 2027. Segundo período de postulación: 29 de septiembre al 28 de octubre de 2026 hasta las 13:00 horas.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "br-usp": {
-    "estado": "abiertas",
-    "fuente": "https://www.fuvest.br",
+    "estado": "cerradas",
+    "fuente": "https://www.fuvest.br/vestibular-da-usp-2027/",
     "apertura": "2026-08-17",
     "cierre": "2026-10-09",
-    "evidencia": "A FUVEST abre nesta segunda-feira, 17 de agosto, ao meio-dia, o período de inscrições para o Vestibular 2027 da Universidade de São Paulo (USP). As inscrições, no valor de R$ 228,00, deverão ser feitas até 9 de outubro pelo site da fundação",
+    "evidencia": "As inscrições para a Fuvest 2027 ocorrem no dia 17 de Agosto de 2026, às 12h até o dia 9 de Outubro de 2026, às 12h — sendo este último a data limite para o pagamento da taxa de inscrição.",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": {
-      "estado": "cerradas",
-      "desde": "2026-10-12",
-      "fuente": "https://www.fuvest.br"
-    }
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "br-unicamp": {
-    "estado": "abiertas",
+    "estado": "cerradas",
     "fuente": "https://www.comvest.unicamp.br/",
-    "apertura": "2026-10-01",
-    "cierre": "2026-11-07",
-    "evidencia": "A Comissão Permanente para os Vestibulares da Unicamp (Comvest) abriu as inscrições para o processo seletivo Enem-Unicamp 2027, que oferece 431 vagas em cursos de graduação [...] As inscrições poderão ser feitas de 1º de outubro a 7 de nove",
+    "apertura": "2026-08-03",
+    "cierre": "2026-09-08",
+    "evidencia": "O Vestibular Unicamp 2027 tem inscrições de 3 a 31 de agosto de 2026. Unicamp prorroga inscrições para o vestibular 2027 até 8 de setembro.",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": {
-      "estado": "cerradas",
-      "desde": "2026-10-12",
-      "fuente": "https://www.comvest.unicamp.br"
-    }
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "pe-pucp": {
     "estado": "abiertas",
-    "fuente": "https://admision.pucp.edu.pe/guia-del-postulante/modalidades-de-admision/",
+    "fuente": "https://www.pucp.edu.pe/admision/",
     "apertura": null,
     "cierre": null,
     "evidencia": "Admisión por Rendimiento Superior - ARS (Inscripciones abiertas); Diploma de Bachillerato (Inscripciones abiertas); La Primera Opción ® (Inscripciones abiertas)",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "pe-unmsm": {
-    "estado": "abiertas",
-    "fuente": "https://admision.unmsm.edu.pe",
-    "apertura": null,
+    "estado": "cerradas",
+    "fuente": "https://admision.unmsm.edu.pe/",
+    "apertura": "2026-08-17",
     "cierre": "2026-10-09",
-    "evidencia": "Postulantes tienen hasta el 9 de octubre para inscribirse al Examen de Admisión UNMSM 2027-I.",
+    "evidencia": "La inscripción al Proceso de Admisión UNMSM 2027-I se realizará de acuerdo con la letra inicial del primer apellido del postulante: A, B, C, CH, D, E y F: del 17 al 30 de agosto de 2026. G, H, I, J, K, L, LL, M, N, Ñ y O: del 31 de agosto a",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": {
-      "estado": "cerradas",
-      "desde": "2026-10-12",
-      "fuente": "https://admision.unmsm.edu.pe/"
-    }
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "uy-udelar": {
     "estado": "proximamente",
     "fuente": "https://udelar.edu.uy/ingresos/",
-    "apertura": "2027-02-01",
+    "apertura": null,
     "cierre": null,
     "evidencia": "Las inscripciones 2027 se realizarán durante el mes de febrero.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "cr-ucr": {
     "estado": "cerradas",
     "fuente": "https://www.ucr.ac.cr/estudiantes/admision.html",
-    "apertura": "2026-02-16",
-    "cierre": "2026-03-20",
-    "evidencia": "Con el período de inscripción ya en marcha para el proceso de admisión 2026-2027, la Universidad de Costa Rica (UCR) les recuerda a estudiantes y a colegios que deben inscribirse en la Prueba de Aptitud Académica. Esta inscripción es un pas",
+    "apertura": null,
+    "cierre": "2026-03-27",
+    "evidencia": "La Universidad de Costa Rica (UCR) amplió el periodo de inscripción para la Prueba de Aptitud Académica (PAA) del proceso de admisión 2026-2027. El nuevo plazo estará disponible hasta el 27 de marzo de 2026.",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": null,
-    "ultimoIntento": "2026-10-12",
-    "motivo": "fuente no oficial"
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "ec-usfq": {
     "estado": "abiertas",
-    "fuente": "https://www.usfq.edu.ec/es/admisiones/pregrado/aplica",
+    "fuente": "https://www.usfq.edu.ec/es/admisiones",
     "apertura": null,
     "cierre": null,
-    "evidencia": "Regístrate para iniciar tu proceso de admisión a la USFQ. Ingresa a https://www.usfq.edu.ec/es/admisiones/pregrado/aplica. Completa el formulario inicial y haz clic en “Pagar proceso de admisión”.",
+    "evidencia": "Ingresa al formulario de admisión, completa tus datos y realiza el pago del proceso de admisión.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "mx-uam": {
-    "estado": "abiertas",
+    "estado": "cerradas",
     "fuente": "https://www.uam.mx/admision/",
-    "apertura": "2026-10-04",
-    "cierre": null,
-    "evidencia": "La Universidad Autónoma Metropolitana (UAM) anunció un proceso de admisión extraordinaria [...] La convocatoria sale a más tardar el 4 de octubre y el examen será del 29 de octubre al 15 de noviembre.",
+    "apertura": "2026-10-05",
+    "cierre": "2026-10-11",
+    "evidencia": "Registro: del 5 al 11 de octubre de 2026 en admision.uam.mx. El pago del derecho a examen podrá realizarse hasta el 12 de octubre de 2026.",
     "confirmado": true,
-    "consultado": "2026-10-05",
-    "pendiente": {
-      "estado": "cerradas",
-      "desde": "2026-10-12",
-      "fuente": "https://www.uam.mx/admision/"
-    }
+    "consultado": "2026-10-19",
+    "pendiente": null
   },
   "cl-usach": {
     "estado": "abiertas",
-    "fuente": "https://admision.usach.cl/admision-especial/competencias-destacadas-usach",
+    "fuente": "https://admision.usach.cl/admision-especial",
     "apertura": "2026-08-24",
     "cierre": "2026-12-23",
-    "evidencia": "Postulación Lunes 24 de agosto hasta domingo 23 de diciembre de 2026.",
+    "evidencia": "✓ PA: Postulación Abierta.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   },
   "ar-utn": {
     "estado": "abiertas",
-    "fuente": "https://www.frba.utn.edu.ar/inscripcion-ingreso-2027/",
+    "fuente": "https://www.utn.edu.ar/es/estudiar-utn/ingresar/ingreso-2027",
     "apertura": "2026-08-27",
     "cierre": "2026-12-04",
-    "evidencia": "La inscripción se realizará desde el 🗓️ Jueves 27 de agosto a las 10 hs hasta el 🗓️ viernes 4 de diciembre de 2026 para el Ingreso 2027.",
+    "evidencia": "La inscripción se realizará desde el jueves 27 de agosto a las 10 hs hasta el viernes 4 de diciembre de 2026 para el Ingreso 2027.",
     "confirmado": true,
-    "consultado": "2026-10-12",
+    "consultado": "2026-10-19",
     "pendiente": null
   }
 }
